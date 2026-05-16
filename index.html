@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pizza Bellizzi Beroun - online menu pizz, nápojů, otevírací doba, kontakt a mapa provozovny.">
+  <title>Pizza Bellizzi Beroun | Menu pizzy a rozvoz</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Bricolage+Grotesque:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="statusbar">
+    <div class="statusbar-inner">
+      <div class="statusbar-left">
+        <span>Plzeňská 86, Beroun-Město</span>
+        <span>Rozvoz po Berouně zdarma</span>
+        <span>pizzabellizzi@gmail.com</span>
+      </div>
+      <div class="statusbar-right">
+        <span class="pill-open" id="openStatus">Otevřeno</span>
+      </div>
+    </div>
+  </div>
+
+  <header class="header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="Pizza Bellizzi domů">
+        <span class="brand-mark">
+          <img src="assets/logo.png" alt="Pizza Bellizzi logo">
+        </span>
+        <span class="brand-text">
+          <span class="brand-word"><span>Pizza</span><span>Bellizzi</span></span>
+          <span class="brand-sub">Beroun · rozvoz pizzy</span>
+        </span>
+      </a>
+
+      <span class="pill-open mobile-open" id="openStatusMobile">Otevřeno</span>
+
+      <button class="header-cart" id="cartBtn" aria-label="Otevřít košík">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21.5 8H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="10" cy="20" r="1.6" fill="currentColor"/>
+          <circle cx="17" cy="20" r="1.6" fill="currentColor"/>
+        </svg>
+        <span class="cart-label">Košík</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+
+      <nav class="nav" aria-label="Hlavní navigace">
+        <a href="#menu">Menu</a>
+        <a href="#pizzy">Pizzy</a>
+        <a href="#napoje">Nápoje</a>
+        <a href="#rozvoz">Rozvoz</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+
+      <a class="header-call" href="tel:+420722177006">+420 722 177 006</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="menu">
+      <div class="hero-banner">
+        <img src="assets/provozovna.png" alt="Provozovna Pizza Bellizzi Beroun s rozvozovým autem">
+        <div class="hero-stripe" aria-hidden="true"></div>
+        <div class="hero-overlay">
+          <h1>Pizza Bellizzi <span>přímo k vašim dveřím</span></h1>
+          <p>Čerstvá pizza z kvalitních surovin, online menu a rozvoz po Berouně zdarma.</p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#pizzy">Vybrat pizzu</a>
+            <a class="btn-secondary hero-call" href="tel:+420722177006">Zavolat +420 722 177 006</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section deals-section" id="slevy">
+      <div class="section-head">
+        <div>
+          <h2><span>Aktuální</span> slevy a novinky</h2>
+          <p>Vyzvedněte si akční nabídky tento týden.</p>
+        </div>
+      </div>
+      <div class="deals-grid">
+        <article class="deal-card red">
+          <span class="deal-tag">Akce týdne</span>
+          <h3>2× Bellizzi + 2× nápoj</h3>
+          <p>Náš podnikový mix se slevou 12 %. Klasická velikost, hotově nebo kartou.</p>
+          <div class="deal-foot">
+            <span class="deal-price"><s>520 Kč</s> 459 Kč</span>
+            <a class="btn-primary deal-cta" href="#pizzy">Objednat</a>
+          </div>
+        </article>
+        <article class="deal-card green">
+          <span class="deal-tag">Rozvoz</span>
+          <h3>Po Berouně zdarma</h3>
+          <p>Minimální objednávka 250 Kč. Mimo Beroun se domluvíme telefonicky.</p>
+          <div class="deal-foot">
+            <span class="deal-price">0 Kč doprava</span>
+            <a class="btn-secondary dark deal-cta" href="#rozvoz">Kam dovážíme</a>
+          </div>
+        </article>
+        <article class="deal-card black">
+          <span class="deal-tag">Studentská</span>
+          <h3>Každé úterý −10 %</h3>
+          <p>Po předložení studentské karty (ISIC) získáte 10 % slevu na celou objednávku.</p>
+          <div class="deal-foot">
+            <span class="deal-price">−10 %</span>
+            <a class="btn-secondary dark deal-cta" href="tel:+420722177006">Zavolat</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="pizzy">
+      <div class="section-head">
+        <div>
+          <h2><span>Naše</span> pizzy</h2>
+          <p>Vyberte si z 20 pizz, přidejte si suroviny navíc, vyměňte základ nebo si dejte každou polovinu jinou.</p>
+        </div>
+        <div class="head-controls">
+          <div class="filters" aria-label="Filtry pizz">
+            <button class="chip active" data-filter="all">Všechny</button>
+            <button class="chip" data-filter="veg">Vegetariánské</button>
+            <button class="chip" data-filter="classic">Klasické</button>
+            <button class="chip" data-filter="spicy">Pikantní</button>
+            <button class="chip" data-filter="cream">Smetanové</button>
+          </div>
+          <div class="view-toggle" role="tablist" aria-label="Zobrazení">
+            <button class="view-btn active" data-view="grid" role="tab" aria-selected="true" title="Dlaždice">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5" fill="currentColor"/><rect x="13" y="3" width="8" height="8" rx="1.5" fill="currentColor"/><rect x="3" y="13" width="8" height="8" rx="1.5" fill="currentColor"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="currentColor"/></svg>
+              <span>Dlaždice</span>
+            </button>
+            <button class="view-btn" data-view="list" role="tab" aria-selected="false" title="Seznam">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="3" y="4" width="18" height="3" rx="1" fill="currentColor"/><rect x="3" y="10.5" width="18" height="3" rx="1" fill="currentColor"/><rect x="3" y="17" width="18" height="3" rx="1" fill="currentColor"/></svg>
+              <span>Seznam</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="pizza-grid" id="pizzaGrid"></div>
+    </section>
+
+    <section class="section" id="napoje">
+      <div class="section-head">
+        <div>
+          <h2><span>K tomu</span> nápoj</h2>
+          <p>Vychlazené nápoje k pizze.</p>
+        </div>
+      </div>
+      <div class="drink-grid" id="drinkGrid"></div>
+    </section>
+
+    <section class="section" id="rozvoz">
+      <div class="section-head">
+        <div>
+          <h2><span>Rozvoz</span> a provozovna</h2>
+          <p>Pizza Bellizzi sídlí na Plzeňské ulici v Berouně. Mapa níže ukazuje přesnou polohu provozovny.</p>
+        </div>
+      </div>
+      <div class="delivery-panel">
+        <div class="delivery-copy">
+          <h3>Pizza až k vám</h3>
+          <p>Rozvoz pizzy po Berouně zdarma. Pro objednávku volejte na uvedené telefonní číslo nebo si vyberte přes košík.</p>
+          <ul class="check-list">
+            <li>Čerstvě připravené pizzy</li>
+            <li>Rozvoz po Berouně zdarma</li>
+            <li>Platba kartou nebo v hotovosti</li>
+          </ul>
+        </div>
+        <div class="map-card">
+          <iframe
+            title="Mapa Pizza Bellizzi Beroun"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Plze%C5%88sk%C3%A1%2086%2C%20266%2001%20Beroun&output=embed">
+          </iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="kontakt">
+      <div class="contact-card">
+        <div>
+          <span class="hero-eyebrow dark">Kontakt</span>
+          <h2>Pizza Bellizzi Beroun</h2>
+          <p>Plzeňská 86, Beroun-Město, 266 01 Beroun</p>
+          <div class="contact-actions">
+            <a class="btn-primary" href="tel:+420722177006">Zavolat +420 722 177 006</a>
+            <a class="btn-secondary dark" href="mailto:pizzabellizzi@gmail.com">Napsat e-mail</a>
+          </div>
+        </div>
+        <div class="hours-card">
+          <h3>Otevírací doba</h3>
+          <dl>
+            <div><dt>Po-Čt</dt><dd>9:30-19:00</dd></div>
+            <div><dt>Pátek</dt><dd>9:30-21:00</dd></div>
+            <div><dt>Sobota</dt><dd>10:30-21:00</dd></div>
+            <div><dt>Neděle</dt><dd>Zavřeno</dd></div>
+          </dl>
+          <p>Bankovní účet: 2101226817/2010</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section allergens-section" id="alergeny">
+      <details class="allergens-details">
+        <summary class="allergens-summary">
+          <div class="allergens-head-text">
+            <h2><span>Seznam</span> alergenů</h2>
+            <p>Označení alergenů dle nařízení EU č. 1169/2011. Klikněte pro zobrazení.</p>
+          </div>
+          <span class="toggle-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </summary>
+        <ol class="allergens-list" id="allergensList"></ol>
+      </details>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="brand-word footer-brand"><span>Pizza</span><span>Bellizzi</span></div>
+        <p>Čerstvá pizza, rozvoz po Berouně zdarma. Plzeňská 86, Beroun.</p>
+      </div>
+      <div>
+        <h3>Odkazy</h3>
+        <a href="#alergeny">Seznam alergenů</a>
+        <a href="https://www.pizzabellizzi.cz/obchodni-podminky/">Obchodní podmínky</a>
+        <a href="https://www.pizzabellizzi.cz/ochrana-osobnich-udaju/">Ochrana osobních údajů</a>
+      </div>
+      <div>
+        <h3>Sociální sítě</h3>
+        <a href="https://www.facebook.com/pizzabellizzi">Facebook</a>
+        <a href="https://www.instagram.com/pizzabellizzi/">Instagram</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 PizzaBellizzi.cz</div>
+  </footer>
+
+  <!-- Pizza customizer modal -->
+  <div class="modal-backdrop" id="pizzaModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Zavřít">✕</button>
+      <div class="modal-head">
+        <div class="modal-img">
+          <img id="modalImg" src="" alt="">
+        </div>
+        <div class="modal-title">
+          <span class="modal-kicker">Vlastní pizza</span>
+          <h2 id="modalTitle">Pizza</h2>
+          <p id="modalDesc" class="modal-desc"></p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="opt-group">
+          <div class="opt-group-head">
+            <h4>Základ</h4>
+            <span class="hint">Změna základu +20 Kč</span>
+          </div>
+          <div class="opt-row" id="baseRow">
+            <button class="opt-pill sel" data-base="tomato">Rajčatový <span class="px">v ceně</span></button>
+            <button class="opt-pill" data-base="cream">Smetanový <span class="px">+20 Kč</span></button>
+          </div>
+        </div>
+
+        <div class="opt-group">
+          <div class="opt-group-head">
+            <h4>Půlky pizzy</h4>
+            <span class="hint">Levá a pravá půlka může být jiná pizza</span>
+          </div>
+          <div class="halves-grid">
+            <div class="half-block">
+              <label>Levá půlka</label>
+              <select id="halfLeft"></select>
+            </div>
+            <div class="half-block">
+              <label>Pravá půlka</label>
+              <select id="halfRight"></select>
+            </div>
+          </div>
+          <p class="hint-note">Cena vychází z dražší poloviny.</p>
+        </div>
+
+        <div class="opt-group">
+          <div class="opt-group-head">
+            <h4>Suroviny navíc</h4>
+            <span class="hint">Každá +15 Kč</span>
+          </div>
+          <div class="extras-list" id="extrasList"></div>
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <div class="qty">
+          <button id="qtyMinus" aria-label="Méně">−</button>
+          <span class="v" id="qtyVal">1</span>
+          <button id="qtyPlus" aria-label="Více">+</button>
+        </div>
+        <button class="modal-add" id="modalAdd">
+          Přidat do košíku
+          <span class="total" id="modalTotal">0 Kč</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart drawer -->
+  <div class="cart-backdrop" id="cartBackdrop" aria-hidden="true"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Košík">
+    <div class="cart-head">
+      <h2>Košík</h2>
+      <button class="cart-close" id="cartClose" aria-label="Zavřít košík">✕</button>
+    </div>
+    <div class="cart-body" id="cartBody">
+      <div class="cart-empty">
+        <div class="cart-empty-icon">🛒</div>
+        <p>Váš košík je prázdný.</p>
+        <a class="btn-primary" href="#pizzy" id="cartEmptyCta">Vybrat pizzu</a>
+      </div>
+    </div>
+    <div class="cart-foot" id="cartFoot" hidden>
+      <div class="totals">
+        <div class="totals-row"><span>Mezisoučet</span><span id="subtotal">0 Kč</span></div>
+        <div class="totals-row"><span>Doprava (Beroun)</span><span class="free-shipping">ZDARMA</span></div>
+        <div class="totals-row total"><span>Celkem</span><span id="grandTotal">0 Kč</span></div>
+      </div>
+      <button class="checkout-btn" id="checkoutBtn">Pokračovat k objednávce · <span id="checkoutTotal">0 Kč</span></button>
+      <p class="cart-note">Doprava po Berouně zdarma. Připravujeme i online platby.</p>
+    </div>
+  </aside>
+
+  <!-- Checkout modal: kontaktní údaje + platba (simulace) -->
+  <div class="modal-backdrop checkout-backdrop" id="checkoutModal" aria-hidden="true">
+    <div class="modal checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+      <button class="modal-close" id="checkoutClose" aria-label="Zavřít">✕</button>
+      <div class="checkout-steps" id="checkoutSteps">
+        <div class="step active" data-step="1"><span>1</span> Kontakt</div>
+        <div class="step" data-step="2"><span>2</span> Platba</div>
+        <div class="step" data-step="3"><span>3</span> Hotovo</div>
+      </div>
+
+      <form class="checkout-body" id="checkoutForm" novalidate>
+        <!-- Step 1: kontakt -->
+        <section class="step-panel active" data-step="1">
+          <h2 id="checkoutTitle">Kontaktní a doručovací údaje</h2>
+          <div class="form-grid">
+            <label class="form-field"><span>Jméno a příjmení *</span><input type="text" name="name" required autocomplete="name"></label>
+            <label class="form-field"><span>Telefon *</span><input type="tel" name="phone" required placeholder="+420 ___ ___ ___" autocomplete="tel"></label>
+            <label class="form-field full"><span>E-mail (pro potvrzení) *</span><input type="email" name="email" required autocomplete="email"></label>
+            <label class="form-field full"><span>Ulice a č. p. *</span><input type="text" name="street" required placeholder="Plzeňská 86" autocomplete="street-address"></label>
+            <label class="form-field"><span>Město *</span><input type="text" name="city" required value="Beroun" autocomplete="address-level2"></label>
+            <label class="form-field"><span>PSČ *</span><input type="text" name="zip" required placeholder="266 01" autocomplete="postal-code"></label>
+            <label class="form-field full"><span>Poznámka pro řidiče</span><textarea name="note" rows="2" placeholder="Patro, zvonek, alergie…"></textarea></label>
+          </div>
+        </section>
+
+        <!-- Step 2: platba -->
+        <section class="step-panel" data-step="2">
+          <h2>Vyberte způsob platby</h2>
+          <div class="pay-methods">
+            <label class="pay-opt"><input type="radio" name="pay" value="cash" checked>
+              <span><strong>Hotově při převzetí</strong><small>Zaplatíte řidiči v hotovosti.</small></span>
+            </label>
+            <label class="pay-opt"><input type="radio" name="pay" value="card-on">
+              <span><strong>Kartou při převzetí</strong><small>Řidič přiveze platební terminál.</small></span>
+            </label>
+            <label class="pay-opt"><input type="radio" name="pay" value="card-online">
+              <span><strong>Online kartou</strong><small>Simulace platby — bez skutečné transakce.</small></span>
+            </label>
+          </div>
+
+          <div class="card-form" id="cardForm" hidden>
+            <h3>Údaje platební karty <span class="demo-tag">DEMO</span></h3>
+            <div class="form-grid">
+              <label class="form-field full"><span>Číslo karty</span><input type="text" name="cardNumber" placeholder="4242 4242 4242 4242" maxlength="23" inputmode="numeric"></label>
+              <label class="form-field"><span>Platnost</span><input type="text" name="cardExp" placeholder="MM/RR" maxlength="5" inputmode="numeric"></label>
+              <label class="form-field"><span>CVC</span><input type="text" name="cardCvc" placeholder="123" maxlength="4" inputmode="numeric"></label>
+              <label class="form-field full"><span>Jméno na kartě</span><input type="text" name="cardName" placeholder="JAN NOVAK"></label>
+            </div>
+            <p class="cart-note">Žádné údaje se neukládají ani neodesílají — jde o simulaci pro návrh.</p>
+          </div>
+        </section>
+
+        <!-- Step 3: hotovo -->
+        <section class="step-panel" data-step="3">
+          <div class="thanks">
+            <div class="thanks-icon">✓</div>
+            <h2>Objednávka odeslána</h2>
+            <p id="thanksMsg">Děkujeme! Brzy vás zkontaktujeme kvůli potvrzení.</p>
+            <div class="thanks-summary" id="thanksSummary"></div>
+          </div>
+        </section>
+      </form>
+
+      <div class="checkout-foot">
+        <button type="button" class="btn-secondary dark" id="checkoutBack" hidden>← Zpět</button>
+        <div class="checkout-total">Celkem <strong id="checkoutTotalLg">0 Kč</strong></div>
+        <button type="button" class="modal-add" id="checkoutNext">Pokračovat</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="to-top" aria-label="Zpět nahoru">↑</button>
+  <script src="script.js"></script>
+</body>
+</html>
