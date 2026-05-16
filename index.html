@@ -247,33 +247,36 @@
   <div class="modal-backdrop" id="pizzaModal" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <button class="modal-close" id="modalClose" aria-label="Zavřít">✕</button>
-      <div class="modal-head">
+
+      <div class="modal-hero">
         <div class="modal-img">
           <img id="modalImg" src="" alt="">
         </div>
+        <span class="modal-tag" id="modalTagBase">Rajčatový základ</span>
         <div class="modal-title">
-          <span class="modal-kicker">Vlastní pizza</span>
           <h2 id="modalTitle">Pizza</h2>
           <p id="modalDesc" class="modal-desc"></p>
+        </div>
+        <!-- Výběr základu jako overlay přes fotku -->
+        <div class="modal-base-overlay" id="baseRow" role="tablist" aria-label="Základ pizzy">
+          <button class="base-pill sel" data-base="tomato">
+            <span class="base-dot tomato" aria-hidden="true"></span>
+            Rajčatový
+            <span class="base-px">v ceně</span>
+          </button>
+          <button class="base-pill" data-base="cream">
+            <span class="base-dot cream" aria-hidden="true"></span>
+            Smetanový
+            <span class="base-px">+20 Kč</span>
+          </button>
         </div>
       </div>
 
       <div class="modal-body">
         <div class="opt-group">
           <div class="opt-group-head">
-            <h4>Základ</h4>
-            <span class="hint">Změna základu +20 Kč</span>
-          </div>
-          <div class="opt-row" id="baseRow">
-            <button class="opt-pill sel" data-base="tomato">Rajčatový <span class="px">v ceně</span></button>
-            <button class="opt-pill" data-base="cream">Smetanový <span class="px">+20 Kč</span></button>
-          </div>
-        </div>
-
-        <div class="opt-group">
-          <div class="opt-group-head">
             <h4>Půlky pizzy</h4>
-            <span class="hint">Levá a pravá půlka může být jiná pizza</span>
+            <span class="hint">Levá a pravá půlka může být jiná</span>
           </div>
           <div class="halves-grid">
             <div class="half-block">

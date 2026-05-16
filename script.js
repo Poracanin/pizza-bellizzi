@@ -225,7 +225,6 @@ function renderPizzas(filter = currentFilter) {
     return `
       <article class="pizza-card">
         <div class="pizza-img">
-          <span class="pizza-num">${pizza.id}</span>
           <div class="pizza-badges">${badges}</div>
           <img src="jidla-pizza-vylepsene-webp/${pizza.img}" alt="Pizza ${pizza.name}" loading="lazy" width="900" height="900">
         </div>
@@ -233,9 +232,18 @@ function renderPizzas(filter = currentFilter) {
           <h3>${pizza.name}</h3>
           <p class="pizza-desc">${baseLabel}, ${pizza.desc}</p>
           <p class="pizza-allerg">Alergeny: ${pizza.allergens.join(", ")}</p>
-          <div class="pizza-foot">
-            <span class="price">${pizza.price}<small>Kč</small></span>
-            <button class="card-action" data-open-pizza="${pizza.id}">Upravit · do košíku</button>
+          <div class="pizza-price-row">
+            <span class="price">${pizza.price}<small> Kč</small></span>
+          </div>
+          <div class="pizza-actions">
+            <button class="btn-edit" data-open-pizza="${pizza.id}" aria-label="Upravit pizzu ${pizza.name}">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M3 17.5V21h3.5L17 10.5 13.5 7 3 17.5zM20.7 7.3c.4-.4.4-1 0-1.4l-2.6-2.6c-.4-.4-1-.4-1.4 0L15 5l3.5 3.5 2.2-2.2z" fill="currentColor"/></svg>
+              Upravit
+            </button>
+            <button class="btn-quick-add" data-quick-add="${pizza.id}">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21.5 8H6.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.6" fill="currentColor"/><circle cx="17" cy="20" r="1.6" fill="currentColor"/></svg>
+              Do košíku
+            </button>
           </div>
         </div>
       </article>
@@ -277,6 +285,7 @@ const modalTitle = $("#modalTitle");
 const modalDesc = $("#modalDesc");
 const modalAdd = $("#modalAdd");
 const modalTotalEl = $("#modalTotal");
+const modalTagBase = $("#modalTagBase");
 const baseRow = $("#baseRow");
 const halfLeft = $("#halfLeft");
 const halfRight = $("#halfRight");
@@ -342,9 +351,12 @@ function closePizzaModal() {
 }
 
 function syncBasePills() {
-  $$(".opt-pill", baseRow).forEach((el) => {
+  $$(".base-pill", baseRow).forEach((el) => {
     el.classList.toggle("sel", el.dataset.base === modalState.base);
   });
+  if (modalTagBase) {
+    modalTagBase.textContent = modalState.base === "cream" ? "Smetanový základ" : "Rajčatový základ";
+  }
 }
 
 function syncQty() { qtyVal.textContent = modalState.qty; }
@@ -356,7 +368,7 @@ function updateModalTotal() {
 }
 
 baseRow.addEventListener("click", (e) => {
-  const btn = e.target.closest(".opt-pill");
+  const btn = e.target.closest(".base-pill");
   if (!btn || !modalState) return;
   modalState.base = btn.dataset.base;
   syncBasePills();
@@ -700,8 +712,26 @@ checkoutForm.addEventListener("input", (e) => {
    ============================================================ */
 
 pizzaGrid.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-open-pizza]");
-  if (btn) openPizzaModal(Number(btn.dataset.openPizza));
+  const editBtn = e.target.closest("[data-open-pizza]");
+  if (editBtn) {
+    openPizzaModal(Number(editBtn.dataset.openPizza));
+    return;
+  }
+  const quickBtn = e.target.closest("[data-quick-add]");
+  if (quickBtn) {
+    const pizza = findPizza(Number(quickBtn.dataset.quickAdd));
+    if (!pizza) return;
+    addToCart({
+      id: uid(),
+      kind: "pizza",
+      leftId: pizza.id,
+      rightId: pizza.id,
+      base: pizza.base,
+      extras: [],
+      qty: 1
+    });
+    openCart();
+  }
 });
 
 drinkGrid.addEventListener("click", (e) => {

@@ -624,6 +624,7 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 }
 
 .pizza-card {
+  position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -631,13 +632,26 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   border-radius: var(--r-lg);
   background: var(--bianco);
   box-shadow: var(--shadow-sm);
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .2s ease;
 }
 
 .pizza-card:hover {
   transform: translateY(-4px);
   border-color: var(--grigio-300);
   box-shadow: var(--shadow-pop);
+}
+
+.pizza-card:hover .pizza-img img {
+  transform: scale(1.04);
+}
+
+.pizza-card.view-list:hover .pizza-img img,
+.view-list .pizza-card:hover .pizza-img img {
+  transform: none;
+}
+
+.pizza-img img {
+  transition: transform .4s ease;
 }
 
 .pizza-img {
@@ -654,23 +668,7 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   object-position: center;
 }
 
-.pizza-num {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: 2;
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--bianco);
-  border-radius: 50%;
-  background: var(--nero);
-  color: var(--bianco);
-  font-size: 14px;
-  font-weight: 900;
-}
+.pizza-num { display: none; }
 
 .pizza-badges {
   position: absolute;
@@ -741,21 +739,78 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   gap: 12px;
 }
 
+.pizza-price-row {
+  margin-top: auto;
+  padding-top: 12px;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .price {
   font-family: var(--font-heading);
-  font-size: 23px;
+  font-size: 30px;
   font-weight: 900;
-  letter-spacing: -.02em;
+  letter-spacing: -.03em;
   white-space: nowrap;
+  color: var(--rosso);
+  line-height: 1;
 }
 
 .price small {
-  margin-left: 2px;
-  color: var(--grigio-500);
-  font-size: 13px;
+  margin-left: 1px;
+  color: var(--rosso);
+  font-size: 14px;
   font-weight: 800;
+  opacity: .85;
 }
 
+.pizza-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.btn-edit,
+.btn-quick-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  transition: background .15s ease, color .15s ease, border-color .15s ease, transform .12s ease;
+}
+
+.btn-edit {
+  background: var(--bianco);
+  color: var(--nero);
+  border: 1.5px solid var(--grigio-200);
+}
+.btn-edit:hover {
+  border-color: var(--nero);
+  background: var(--grigio-50);
+}
+.btn-edit svg { color: var(--grigio-700); }
+
+.btn-quick-add {
+  background: var(--rosso);
+  color: var(--bianco);
+  box-shadow: 0 4px 12px rgba(225,35,43,.3);
+}
+.btn-quick-add:hover {
+  background: var(--rosso-dark);
+  transform: translateY(-1px);
+}
+.btn-quick-add svg { color: var(--bianco); }
+
+/* zpětná kompatibilita — někde se ještě může vyskytovat .card-action */
 .card-action {
   display: inline-flex;
   align-items: center;
@@ -767,10 +822,7 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   font-size: 14px;
   font-weight: 900;
   box-shadow: 0 4px 10px rgba(225,35,43,.3);
-  transition: background .15s ease;
 }
-
-.card-action:hover { background: var(--rosso-dark); }
 
 /* ===== Pizza list view ===== */
 .pizza-grid.view-list {
@@ -801,43 +853,43 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   object-fit: cover;
 }
 
-.view-list .pizza-num {
-  width: 26px;
-  height: 26px;
-  font-size: 12px;
-  top: 8px;
-  left: 8px;
-}
-
 .view-list .pizza-badges { display: none; }
 
 .view-list .pizza-body {
   flex-direction: row;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   padding: 12px 18px;
 }
 
 .view-list .pizza-body h3 { font-size: 18px; flex: 0 0 auto; min-width: 140px; }
 .view-list .pizza-desc { margin: 0; min-height: 0; font-size: 13px; flex: 1; }
 .view-list .pizza-allerg { margin: 0; flex: 0 0 auto; }
-.view-list .pizza-foot {
+
+.view-list .pizza-price-row {
   margin: 0;
   padding: 0;
   flex: 0 0 auto;
-  gap: 14px;
 }
-.view-list .price { font-size: 20px; }
+.view-list .pizza-actions {
+  margin: 0;
+  flex: 0 0 auto;
+  grid-template-columns: auto auto;
+  width: auto;
+}
+.view-list .btn-edit,
+.view-list .btn-quick-add { min-height: 36px; padding: 0 10px; font-size: 12px; }
+.view-list .price { font-size: 22px; }
 
 @media (max-width: 760px) {
   .view-list .pizza-body {
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
-    padding: 12px;
+    gap: 4px;
+    padding: 10px 12px;
   }
   .view-list .pizza-body h3 { min-width: 0; }
-  .view-list .pizza-foot { width: 100%; justify-content: space-between; }
+  .view-list .pizza-actions { width: 100%; grid-template-columns: 1fr 1.4fr; }
   .view-list .pizza-allerg { font-size: 10px; }
 }
 
@@ -1231,8 +1283,8 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 
 .modal {
   position: relative;
-  width: min(720px, 100%);
-  max-height: 92vh;
+  width: min(640px, 100%);
+  max-height: 94vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1242,7 +1294,7 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   border: 1px solid var(--grigio-200);
 }
 
-.modal-head,
+.modal-hero,
 .modal-foot { flex: 0 0 auto; }
 .modal-body {
   flex: 1 1 auto;
@@ -1250,6 +1302,159 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ===== Pizza modal hero — čtvercová fotka + overlay s názvem a základem ===== */
+.modal-hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-height: 56vh;
+  overflow: hidden;
+  background: #1a1a1a;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+
+.modal-hero .modal-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+.modal-hero .modal-img::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, transparent 30%, rgba(0,0,0,.35) 100%);
+  z-index: 1;
+}
+
+.modal-hero .modal-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center 42%;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.4));
+}
+
+/* Dolní gradient pro titulek */
+.modal-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 55%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,.45) 55%,
+    rgba(0,0,0,.85) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.modal-tag {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 3;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(255,255,255,.92);
+  color: var(--nero);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+}
+
+.modal-hero .modal-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 70px;
+  z-index: 3;
+  padding: 0 22px;
+  color: var(--bianco);
+}
+
+.modal-hero .modal-title h2 {
+  margin: 0 0 4px;
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 4.5vw, 38px);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.02;
+  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+}
+
+.modal-hero .modal-desc {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 1px 8px rgba(0,0,0,.55);
+  max-width: 90%;
+}
+
+/* Výběr základu jako pill řádek dole nad spodním okrajem */
+.modal-base-overlay {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+  background: rgba(255,255,255,.95);
+  border-radius: var(--r-pill);
+  padding: 5px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  backdrop-filter: blur(8px);
+}
+
+.base-pill {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--nero);
+  font-weight: 800;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background .15s ease, color .15s ease;
+}
+
+.base-pill:hover { background: var(--grigio-100); }
+
+.base-pill.sel {
+  background: var(--nero);
+  color: var(--bianco);
+}
+
+.base-pill .base-px {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: .65;
+}
+
+.base-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: 0 0 12px;
+  border: 1.5px solid rgba(0,0,0,.15);
+}
+.base-dot.tomato { background: #e1232b; }
+.base-dot.cream { background: #fff5cf; border-color: #d4c98a; }
+.base-pill.sel .base-dot { border-color: rgba(255,255,255,.4); }
 
 .modal-close {
   position: absolute;
@@ -1266,32 +1471,8 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   box-shadow: var(--shadow-md);
 }
 
-.modal-head {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 18px;
-  padding: 18px 18px 0;
-}
-
-.modal-img {
-  width: 180px;
-  height: 180px;
-  border-radius: var(--r-md);
-  overflow: hidden;
-  background: var(--grigio-100);
-  flex: 0 0 auto;
-}
-
-.modal-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.modal-title { padding-top: 6px; }
-
 .modal-kicker {
-  display: inline-block;
+  display: none;
   padding: 3px 10px;
   border-radius: var(--r-pill);
   background: var(--rosso-soft);
@@ -1536,6 +1717,7 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   z-index: 85;
   width: min(420px, 100%);
   height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   background: var(--bianco);
@@ -1643,12 +1825,15 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 }
 
 .cart-foot {
-  padding: 16px 20px 20px;
+  padding: 16px 20px calc(20px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--grigio-200);
   background: var(--grigio-50);
   display: grid;
   gap: 14px;
+  flex: 0 0 auto;
 }
+
+.cart-body { flex: 1 1 auto; min-height: 0; overscroll-behavior: contain; }
 
 .totals { display: grid; gap: 6px; }
 .totals-row {
@@ -1713,6 +1898,8 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 .checkout-modal {
   width: min(640px, 100%);
   max-height: 92vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .checkout-steps {
@@ -1722,6 +1909,7 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   padding: 18px 22px;
   border-bottom: 1px solid var(--grigio-200);
   background: var(--grigio-50);
+  flex: 0 0 auto;
 }
 
 .checkout-steps .step {
@@ -1761,7 +1949,10 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 .checkout-body {
   padding: 22px;
   overflow-y: auto;
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .step-panel { display: none; }
@@ -1873,9 +2064,10 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 22px;
+  padding: 14px 22px calc(14px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--grigio-200);
   background: var(--bianco);
+  flex: 0 0 auto;
 }
 
 .checkout-total {
@@ -1960,13 +2152,6 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   .head-controls { align-items: flex-start; width: 100%; }
   .filters { justify-content: flex-start; }
   .hero-overlay { padding: 14px 22px; }
-  .modal-head { grid-template-columns: 1fr; padding: 0; }
-  .modal-img {
-    width: 100%;
-    height: 260px;
-    border-radius: var(--r-lg) var(--r-lg) 0 0;
-  }
-  .modal-title { padding: 18px 18px 0; }
 }
 
 @media (max-width: 640px) {
@@ -2065,45 +2250,64 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   .filters::-webkit-scrollbar { display: none; }
   .chip { flex: 0 0 auto; white-space: nowrap; }
 
-  /* Default na mobilu = seznam, kompaktnější karty s přesně čtvercovou fotkou */
+  /* Default na mobilu = seznam, fotka přesný čtverec až ke spodní hraně karty */
   .pizza-grid { grid-template-columns: 1fr; }
   .pizza-grid.view-list { gap: 8px; }
   .view-list .pizza-card {
-    min-height: 120px;
+    height: 128px;
     align-items: stretch;
+    overflow: hidden;
   }
   .view-list .pizza-img {
-    width: 120px;
-    height: 120px;
-    flex: 0 0 120px;
+    width: 128px;
+    height: 128px;
+    flex: 0 0 128px;
     aspect-ratio: 1;
     align-self: stretch;
+    overflow: hidden;
+    background: var(--grigio-100);
   }
   .view-list .pizza-img img {
     width: 100%;
     height: 100%;
-    min-height: 120px;
     object-fit: cover;
+    object-position: center;
   }
-  .view-list .pizza-body { padding: 10px 12px; gap: 3px; justify-content: space-between; }
-  .view-list .pizza-body h3 { font-size: 16px; line-height: 1.1; }
+  .view-list .pizza-body {
+    padding: 8px 10px;
+    gap: 2px;
+    justify-content: space-between;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .view-list .pizza-body h3 { font-size: 15px; line-height: 1.1; margin: 0; }
   .view-list .pizza-desc {
-    font-size: 12px;
-    line-height: 1.3;
+    font-size: 11.5px;
+    line-height: 1.25;
     margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .view-list .pizza-allerg { font-size: 10px; margin: 0; }
-  .view-list .pizza-foot { padding-top: 4px; margin-top: 0; }
-  .view-list .price { font-size: 18px; }
-  .view-list .card-action {
-    min-height: 32px;
-    padding: 0 11px;
-    font-size: 12px;
+  .view-list .pizza-allerg { display: none; }
+  .view-list .pizza-price-row { padding-top: 0; }
+  .view-list .price { font-size: 19px; }
+  .view-list .price small { font-size: 11px; }
+  .view-list .pizza-actions {
+    margin-top: 2px;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 5px;
   }
+  .view-list .btn-edit,
+  .view-list .btn-quick-add {
+    min-height: 30px;
+    padding: 0 8px;
+    font-size: 11px;
+    gap: 4px;
+  }
+  .view-list .btn-edit svg,
+  .view-list .btn-quick-add svg { width: 13px; height: 13px; }
   .drink-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   /* Kontakt */
@@ -2112,7 +2316,7 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   .contact-card h2 { color: var(--nero); text-shadow: none; }
   .contact-card p { color: var(--nero-soft); }
 
-  /* Modal — fullscreen na mobilu, fotka čtverec a fixní nahoře */
+  /* Modal — fullscreen na mobilu, fotka čtverec s overlay obsahem */
   .modal-backdrop { padding: 0; align-items: stretch; }
   .modal {
     width: 100%;
@@ -2125,102 +2329,46 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
     display: flex;
     flex-direction: column;
   }
-  /* Foto + titulek překryvný — názvy přes fotku */
-  .modal-head {
-    position: relative;
-    flex: 0 0 auto;
-    overflow: hidden;
-  }
-  .modal-img {
-    width: 100%;
-    height: auto;
+  .modal-hero {
     aspect-ratio: 1;
-    max-height: 38vh;
+    max-height: 52vh;
     border-radius: 0;
-    background: #111;
-    position: relative;
   }
-  .modal-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+  .modal-hero .modal-title { bottom: 72px; padding: 0 18px; }
+  .modal-hero .modal-title h2 { font-size: 28px; }
+  .modal-hero .modal-desc { font-size: 13px; }
+  .modal-base-overlay {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
   }
-  /* Tmavý gradient na spodku fotky pro čitelnost titulku */
-  .modal-img::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0,0,0,0) 30%,
-      rgba(0,0,0,.55) 65%,
-      rgba(0,0,0,.88) 100%
-    );
-    pointer-events: none;
-  }
-  /* Titulek překrývá spodek fotky */
-  .modal-title {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
-    padding: 14px 18px;
-    color: var(--bianco);
-  }
-  .modal-title h2 {
-    margin: 0 0 4px;
-    font-size: 26px;
-    line-height: 1.05;
-    text-shadow: 0 2px 12px rgba(0,0,0,.55);
-  }
-  .modal-desc {
-    margin: 0;
-    font-size: 13px;
-    color: rgba(255,255,255,.92);
-    text-shadow: 0 1px 6px rgba(0,0,0,.55);
-  }
-  .modal-kicker { display: none; }
+  .base-pill { padding: 9px 10px; font-size: 12px; }
+  .modal-tag { top: 14px; left: 14px; font-size: 10px; padding: 4px 10px; }
 
-  /* Body je jediná scrollovací oblast, položky větší */
   .modal-body {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    padding: 16px 14px;
+    padding: 16px 14px calc(16px + env(safe-area-inset-bottom));
     gap: 14px;
   }
-
-  .modal-body .opt-group { padding: 14px 14px; }
+  .modal-body .opt-group { padding: 14px; }
   .modal-body .opt-group-head h4 { font-size: 17px; }
-  .modal-body .opt-pill {
-    padding: 11px 14px;
-    font-size: 15px;
-  }
-  .modal-body .opt-pill .px { font-size: 12px; }
   .modal-body .half-block select {
     padding: 12px 14px;
     font-size: 15px;
   }
-  .extras-list {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  .extra-opt {
-    padding: 12px 12px;
-    font-size: 15px;
-  }
+  .extras-list { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .extra-opt { padding: 12px; font-size: 15px; }
   .extra-opt .check { width: 20px; height: 20px; }
   .extra-opt .px { font-size: 13px; }
 
-  .modal-foot { flex: 0 0 auto; }
+  .modal-foot { flex: 0 0 auto; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
   .modal-foot .modal-add { font-size: 16px; padding: 14px 18px; }
   .modal-foot .qty button { width: 36px; height: 36px; font-size: 18px; }
-  .modal-body { padding: 14px 16px; }
-  .modal-foot { padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
+
   .modal-close {
     background: rgba(255,255,255,.92);
     box-shadow: 0 2px 8px rgba(0,0,0,.3);
@@ -2235,6 +2383,7 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
     border-radius: 0;
     max-height: 100vh;
     height: 100vh;
+    height: 100dvh;
   }
   .checkout-foot { flex-wrap: wrap; }
   .checkout-total { order: -1; flex: 1 1 100%; text-align: left; }
