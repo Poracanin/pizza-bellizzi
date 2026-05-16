@@ -170,8 +170,8 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   gap: 8px;
 }
 
-.brand-word span:first-child { color: #6fd989; }
-.brand-word span:last-child { color: #ff5e66; }
+.brand-word span:first-child { color: var(--verde); }
+.brand-word span:last-child { color: var(--rosso); }
 
 .brand-sub {
   display: block;
@@ -179,7 +179,7 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   font-size: 10.5px;
   letter-spacing: .22em;
   text-transform: uppercase;
-  color: #b5b1a4;
+  color: var(--grigio-500);
 }
 
 .mobile-open { display: none; }
@@ -202,15 +202,15 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   position: relative;
   padding: 10px 15px;
   border-radius: var(--r-pill);
-  color: #f0eee8;
+  color: var(--nero-soft);
   font-weight: 700;
   transition: background .15s ease, color .15s ease;
 }
 
-.nav a:hover { color: var(--bianco); background: rgba(255,255,255,.08); }
+.nav a:hover,
 .nav a.active {
-  background: rgba(255,255,255,.12);
-  color: #ff5e66;
+  background: var(--grigio-100);
+  color: var(--rosso);
 }
 
 .header-call {
@@ -235,14 +235,14 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   min-height: 42px;
   padding: 10px 16px 10px 14px;
   border-radius: var(--r-pill);
-  background: var(--bianco);
-  color: var(--nero);
+  background: var(--nero);
+  color: var(--bianco);
   font-weight: 800;
-  box-shadow: 0 4px 14px rgba(0,0,0,.25);
-  transition: background .15s ease, color .15s ease;
+  box-shadow: var(--shadow-md);
+  transition: background .15s ease;
 }
 
-.header-cart:hover { background: var(--rosso); color: var(--bianco); }
+.header-cart:hover { background: var(--rosso); }
 
 .cart-count {
   display: inline-flex;
@@ -1943,7 +1943,13 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   .statusbar-left { gap: 10px; }
   .header-inner { gap: 14px; }
   /* tablet a níž: nav je na vlastní řádce, košík stále úplně vpravo */
-  .nav { order: 5; width: 100%; overflow-x: auto; justify-content: flex-start; }
+  .nav {
+    order: 5;
+    width: 100%;
+    justify-content: space-between;
+    gap: 2px;
+  }
+  .nav a { padding: 8px 10px; font-size: 14px; }
   .header-call { order: 3; }
   .header-cart { order: 4; margin-left: auto; }
   .deals-grid,
@@ -1999,6 +2005,24 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
     font-size: 11px;
   }
   .header-call { display: none; }
+
+  /* Nav na mobilu — rovnoměrně rozložené položky bez scrollu */
+  .nav {
+    order: 5;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 0;
+    overflow-x: visible;
+  }
+  .nav a {
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 8px 4px;
+    font-size: 13px;
+    letter-spacing: -.01em;
+    white-space: nowrap;
+  }
 
   /* Hero */
   .hero { margin-top: 12px; }
