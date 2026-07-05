@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#FBFAF7;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  *{box-sizing:border-box}
+  input,select,button{font-family:'Geist',system-ui,sans-serif}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#E0DACF;border-radius:8px;border:3px solid #FBFAF7}
+  @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
+  @keyframes modalIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes growBar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  button{transition:transform .16s ease,box-shadow .16s ease,background .16s ease,border-color .16s ease}
+  button:hover{transform:translateY(-1px)}
+  .nav-rail{width:68px;flex:none;background:#111;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;padding:16px 10px;gap:8px}
+  .nav-rail::before{display:none}
+  .brand-card{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:14px;opacity:.96}
+  .brand-card img{width:100%;height:100%;object-fit:cover}
+  .nav-item{width:44px;height:44px;border-radius:12px;border:none;background:var(--navBg);color:var(--navFg);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:none}
+  .nav-item:hover{background:rgba(255,255,255,.08)}
+  .nav-item::before{display:none}
+  .nav-icon{width:44px;height:44px;border-radius:12px;background:transparent;color:var(--navIconFg);display:flex;align-items:center;justify-content:center}
+  .nav-label{display:none}
+  .nav-user{margin-top:auto;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);color:#E7E2D9;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px}
+  .menu-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .tab-shell{display:flex;background:#EFE8DC;border-radius:13px;padding:4px;gap:3px}
+  .menu-warning{display:flex;align-items:center;gap:10px;background:#FFF1C2;border:1px solid #E7C95F;color:#7B5512;border-radius:12px;padding:12px 14px;margin-bottom:16px;font:600 13px 'Geist'}
+  .menu-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(330px,.75fr);gap:18px;align-items:start}
+  .menu-grid{display:grid;grid-template-columns:repeat(2,minmax(250px,1fr));gap:12px}
+  .menu-card{width:100%;min-height:118px;text-align:left;display:flex;gap:12px;align-items:flex-start;border-radius:16px;border:1.5px solid var(--cardBorder);background:var(--cardBg);box-shadow:var(--cardShadow);opacity:var(--cardOpacity);padding:12px;cursor:pointer}
+  .menu-card:hover{border-color:#D6B27C;box-shadow:0 12px 24px rgba(64,44,24,.08)}
+  .menu-thumb{width:58px;height:58px;border-radius:13px;object-fit:cover;flex:none}
+  .menu-placeholder{width:58px;height:58px;border-radius:13px;background:#F0E9DD;display:flex;align-items:center;justify-content:center;flex:none;color:#A79F92}
+  .pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:4px 8px;font:700 10.5px 'Geist';letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
+  .order-card{background:var(--orderBg);border:1.5px solid var(--orderBorder);border-radius:18px;padding:16px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(220px,.82fr);gap:15px;cursor:pointer;box-shadow:var(--orderShadow)}
+  .order-card:hover{transform:translateY(-1px);box-shadow:var(--orderHoverShadow)}
+  .order-left{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .order-side{background:var(--orderItemsBg);border:1px solid var(--orderItemsBorder);border-radius:15px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+  .order-item-line{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;padding:8px;border-radius:11px;background:rgba(255,255,255,.64)}
+  .order-item-qty{min-width:27px;height:27px;border-radius:9px;background:#211E1A;color:#fff;display:flex;align-items:center;justify-content:center;font:800 11.5px 'Geist Mono'}
+  .order-alert{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:12px;background:#FFE9CF;color:#8B421B;border:1px solid #F0BE82;font:800 12px 'Geist'}
+  .done-btn{box-shadow:0 12px 24px rgba(47,125,73,.18)}
+  .editor-panel{background:#fff;border:1px solid #E5DED2;border-radius:18px;padding:18px;box-shadow:0 18px 42px rgba(55,40,20,.08);position:sticky;top:0}
+  .field-label{font:700 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+  .input-like{width:100%;border:1px solid #E5DED2;border-radius:12px;background:#FBFAF7;color:#211E1A;outline:none;font:600 14px 'Geist';padding:12px 13px}
+  .textarea-like{min-height:78px;resize:vertical;line-height:1.4}
+  .price-row{display:flex;align-items:center;gap:8px;border:1.5px solid #E5DED2;border-radius:13px;background:#FBFAF7;padding:9px 12px}
+  .promo-grid{width:100%;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr);gap:18px;align-items:start}
+  .promo-panel{background:#fff;border:1px solid #E5DED2;border-radius:18px;padding:20px;box-shadow:0 18px 42px rgba(55,40,20,.07)}
+  .promo-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+  .promo-card{display:flex;gap:12px;align-items:center;border:1px solid #E5DED2;border-radius:15px;background:#FBFAF7;padding:12px}
+  .add-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;max-height:360px;overflow:auto;padding-right:4px}
+  .no-builder{margin:14px 24px 0;padding:14px;border:1px solid #E5DED2;border-radius:16px;background:#FFFDF8;display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.62fr);gap:14px;flex:none}
+  .no-builder select{width:100%;border:1px solid #E5DED2;border-radius:10px;background:#fff;color:#211E1A;font:700 12.5px 'Geist';padding:9px 10px;outline:none}
+  .no-builder-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .no-extra-list{display:flex;flex-wrap:wrap;gap:7px;max-height:84px;overflow:auto;padding-right:2px}
+  .no-extra-chip{border:1px solid #E2D8CA;border-radius:999px;background:#fff;color:#5E574E;font:800 11.5px 'Geist';padding:7px 9px;cursor:pointer}
+  .no-extra-chip.is-on{background:#E7F0E7;color:#2F6F45;border-color:#B8D2BE}
+  .no-cart-list{display:flex;flex-direction:column;gap:6px;max-height:112px;overflow:auto;margin-bottom:12px}
+  .no-cart-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:9px;align-items:center;background:#FBFAF7;border:1px solid #EEEAE2;border-radius:11px;padding:8px 10px}
+  .income-grid{width:100%;display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:14px}
+  .metric-card{background:#fff;border:1px solid #E5DED2;border-radius:16px;padding:18px;min-height:132px}
+  .metric-card.primary{background:#211E1A;border-color:#211E1A;color:#fff}
+  .income-main{width:100%;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(340px,.65fr);gap:16px;margin-top:16px}
+  .panel{background:#fff;border:1px solid #E5DED2;border-radius:18px;padding:22px}
+  @media (max-width:1100px){.menu-layout,.promo-grid,.income-main{grid-template-columns:1fr}.editor-panel{position:relative}.income-grid{grid-template-columns:repeat(2,minmax(160px,1fr))}}
+  @media (max-width:980px){.order-card{grid-template-columns:1fr}}
+  @media (max-width:920px){.no-builder{grid-template-columns:1fr}}
+  @media (max-width:760px){.nav-rail{width:58px;padding-left:7px;padding-right:7px}.nav-item{width:40px;height:40px}.nav-icon{width:40px;height:40px}.menu-grid,.promo-items,.add-list,.income-grid{grid-template-columns:1fr}}
+</style>
+</helmet>
+
+<div style="display:flex;height:100vh;overflow:hidden">
+  <!-- NAV RAIL -->
+  <div class="nav-rail">
+    <div class="brand-card"><img src="assets/logo.png" alt=""></div>
+    <div onClick="{{ goOrders }}" class="nav-item" style="--navBg:{{ nav.orders.bg }};--navFg:{{ nav.orders.fg }};--navBorder:{{ nav.orders.border }};--navShadow:{{ nav.orders.shadow }};--navIconBg:{{ nav.orders.iconBg }};--navIconFg:{{ nav.orders.iconFg }};--navLabelFg:{{ nav.orders.labelFg }};--navAccent:{{ nav.orders.accent }};--navAccentColor:{{ nav.orders.accentColor }}">
+      <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg></div><span class="nav-label">Objednávky</span>
+    </div>
+    <div onClick="{{ goMenu }}" class="nav-item" style="--navBg:{{ nav.menu.bg }};--navFg:{{ nav.menu.fg }};--navBorder:{{ nav.menu.border }};--navShadow:{{ nav.menu.shadow }};--navIconBg:{{ nav.menu.iconBg }};--navIconFg:{{ nav.menu.iconFg }};--navLabelFg:{{ nav.menu.labelFg }};--navAccent:{{ nav.menu.accent }};--navAccentColor:{{ nav.menu.accentColor }}">
+      <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v9l6.5 3.5"/></svg></div><span class="nav-label">Menu</span>
+    </div>
+    <div onClick="{{ goAkce }}" class="nav-item" style="--navBg:{{ nav.akce.bg }};--navFg:{{ nav.akce.fg }};--navBorder:{{ nav.akce.border }};--navShadow:{{ nav.akce.shadow }};--navIconBg:{{ nav.akce.iconBg }};--navIconFg:{{ nav.akce.iconFg }};--navLabelFg:{{ nav.akce.labelFg }};--navAccent:{{ nav.akce.accent }};--navAccentColor:{{ nav.akce.accentColor }}">
+      <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M20.6 13.4 13 5.8V3H5.8L3 5.8V13l7.6 7.6a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-3z"/><circle cx="8" cy="8" r="1.3"/></svg></div><span class="nav-label">Akce</span>
+    </div>
+    <div onClick="{{ goPrijmy }}" class="nav-item" style="--navBg:{{ nav.prijmy.bg }};--navFg:{{ nav.prijmy.fg }};--navBorder:{{ nav.prijmy.border }};--navShadow:{{ nav.prijmy.shadow }};--navIconBg:{{ nav.prijmy.iconBg }};--navIconFg:{{ nav.prijmy.iconFg }};--navLabelFg:{{ nav.prijmy.labelFg }};--navAccent:{{ nav.prijmy.accent }};--navAccentColor:{{ nav.prijmy.accentColor }}">
+      <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><span class="nav-label">Příjmy</span>
+    </div>
+    <div onClick="{{ goAdresy }}" class="nav-item" style="--navBg:{{ nav.adresy.bg }};--navFg:{{ nav.adresy.fg }};--navBorder:{{ nav.adresy.border }};--navShadow:{{ nav.adresy.shadow }};--navIconBg:{{ nav.adresy.iconBg }};--navIconFg:{{ nav.adresy.iconFg }};--navLabelFg:{{ nav.adresy.labelFg }};--navAccent:{{ nav.adresy.accent }};--navAccentColor:{{ nav.adresy.accentColor }}">
+      <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.6"/></svg></div><span class="nav-label">Adresy</span>
+    </div>
+    <div class="nav-user">PB</div>
+  </div>
+
+  <!-- MAIN -->
+  <div style="flex:1;display:flex;flex-direction:column;background:#FBFAF7;min-width:0">
+    <!-- HEADER -->
+    <div style="display:flex;align-items:center;gap:16px;padding:20px 30px;border-bottom:1px solid #EEEAE2">
+      <div><div style="font:600 22px/1.1 'Geist';color:#211E1A;letter-spacing:-.01em">{{ head.title }}</div><div style="font:500 12.5px/1 'Geist';color:#8B857A;margin-top:5px">{{ head.sub }}</div></div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;gap:7px;padding:8px 13px;background:#EAF2EA;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:#4B8B5C;animation:pulseDot 2s infinite"></span><span style="font:600 12.5px 'Geist';color:#3B6B48">Otevřeno do 19:00</span></div>
+        <button style="position:relative;width:42px;height:42px;border-radius:12px;border:1px solid #E7E2D9;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="20" height="20" fill="none" stroke="#4A443B" stroke-width="1.6" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span style="position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:#C15F3C;border:2px solid #fff"></span></button>
+        <button onClick="{{ openNew }}" style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:12px;border:none;background:#211E1A;color:#fff;font:600 13.5px 'Geist';cursor:pointer"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Objednávka</button>
+      </div>
+    </div>
+
+    <!-- ========== VIEW: OBJEDNÁVKY ========== -->
+    <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;overflow-y:auto;padding:22px 30px 40px">
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px"><span style="font:600 13px 'Geist';color:#211E1A;text-transform:uppercase;letter-spacing:.06em">Aktivní</span><span style="font:600 12px 'Geist Mono';color:#8B857A">{{ activeCount }}</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <sc-for list="{{ active }}" as="o" hint-placeholder-count="4">
+          <div onClick="{{ o.open }}" class="order-card" style="--orderBg:{{ o.cardBg }};--orderBorder:{{ o.borderColor }};--orderShadow:{{ o.glow }};--orderHoverShadow:{{ o.hoverGlow }};--orderItemsBg:{{ o.itemsBg }};--orderItemsBorder:{{ o.itemsBorder }}">
+            <div class="order-left">
+              <div style="display:flex;align-items:center;gap:9px">
+                <span style="font:800 11px 'Geist';color:#fff;padding:6px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;background:{{ o.statusBg }}">{{ o.statusLabel }}</span>
+                <span style="font:700 12px 'Geist Mono';color:#8B857A;background:{{ o.timeBg }};padding:5px 9px;border-radius:999px">{{ o.agoText }}</span>
+                <span style="margin-left:auto;font:800 13px 'Geist Mono';color:#B9B2A6">#{{ o.num }}</span>
+              </div>
+              <sc-if value="{{ o.hasAlert }}" hint-placeholder-val="">
+                <div class="order-alert"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v5M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>{{ o.alertText }}</div>
+              </sc-if>
+              <div><div style="font:800 18px/1.2 'Geist';color:#211E1A">{{ o.name }}</div><div style="font:600 13px 'Geist';color:#8B857A;margin-top:4px">{{ o.addressLine }}</div></div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:auto"><span style="font:900 18px 'Geist Mono';color:#211E1A">{{ o.priceText }}</span><span style="font:700 11.5px 'Geist';padding:4px 9px;border-radius:7px;color:{{ o.payFg }};background:{{ o.payBg }}">{{ o.payLabel }}</span><span style="margin-left:auto;font:700 12px 'Geist';color:#8B857A">{{ o.withinText }}</span></div>
+              <sc-if value="{{ o.isNew }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;gap:9px;margin-top:2px">
+                  <button onClick="{{ o.onReject }}" style="flex:1;padding:13px;border-radius:12px;border:1px solid #E4CFC7;background:#fff;color:#B4472B;font:800 14px 'Geist';cursor:pointer">Odmítnout</button>
+                  <button onClick="{{ o.open }}" style="flex:1.8;padding:13px;border-radius:12px;border:none;background:#211E1A;color:#fff;font:800 14px 'Geist';cursor:pointer">Potvrdit →</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ o.notNew }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ o.onAdvance }}" class="{{ o.btnClass }}" style="padding:13px;border-radius:12px;border:none;color:#fff;font:800 14px 'Geist';cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;background:{{ o.btnBg }}">{{ o.btnLabel }}</button>
+              </sc-if>
+            </div>
+            <div class="order-side">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font:800 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em">Objednáno</span><span style="font:800 11px 'Geist Mono';color:#B9B2A6">{{ o.itemsCountLabel }}</span></div>
+              <sc-for list="{{ o.itemsPreview }}" as="li" hint-placeholder-count="2">
+                <div class="order-item-line">
+                  <span class="order-item-qty">{{ li.qtyText }}</span>
+                  <div style="min-width:0"><div style="font:800 13.5px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ li.name }}</div><div style="font:600 11.5px 'Geist';color:#8B857A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ li.desc }}</div></div>
+                  <span style="font:800 12px 'Geist Mono';color:#4A443B">{{ li.lineText }}</span>
+                </div>
+              </sc-for>
+              <sc-if value="{{ o.hasMoreItems }}" hint-placeholder-val="">
+                <div style="font:800 12px 'Geist';color:#8B857A;text-align:center;padding:3px 0">{{ o.moreItemsText }}</div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;margin:24px 0 12px"><span style="font:600 13px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em">Dokončeno dnes</span><span style="font:600 12px 'Geist Mono';color:#B9B2A6">{{ doneSummary }}</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ done }}" as="o" hint-placeholder-count="2">
+          <div onClick="{{ o.open }}" style="display:flex;align-items:center;gap:14px;padding:12px 18px;background:#F5F2EC;border-radius:12px;cursor:pointer;opacity:.9">
+            <span style="width:8px;height:8px;border-radius:50%;background:#4B8B5C"></span>
+            <span style="font:600 14px 'Geist';color:#4A443B;width:160px">{{ o.name }}</span>
+            <span style="font:500 13px 'Geist';color:#8B857A;flex:1">{{ o.doneLine }}</span>
+            <span style="font:600 11.5px 'Geist';padding:3px 8px;border-radius:6px;color:{{ o.payFg }};background:{{ o.payBg }}">{{ o.payLabel }}</span>
+            <span style="font:600 14px 'Geist Mono';color:#211E1A;width:70px;text-align:right">{{ o.priceText }}</span>
+            <span style="font:500 12px 'Geist Mono';color:#B9B2A6;width:48px;text-align:right">{{ o.time }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ========== VIEW: MENU ========== -->
+    <sc-if value="{{ isMenu }}" hint-placeholder-val="">
+    <div style="flex:1;overflow-y:auto;padding:22px 30px 40px">
+      <div class="menu-toolbar">
+        <div class="tab-shell">
+          <button onClick="{{ menu.tabPizza }}" style="padding:10px 18px;border-radius:10px;border:none;font:700 13.5px 'Geist';cursor:pointer;background:{{ menu.pizzaTabBg }};color:{{ menu.pizzaTabFg }}">Pizzy · {{ menu.pizzaCount }}</button>
+          <button onClick="{{ menu.tabDrink }}" style="padding:10px 18px;border-radius:10px;border:none;font:700 13.5px 'Geist';cursor:pointer;background:{{ menu.drinkTabBg }};color:{{ menu.drinkTabFg }}">Nápoje · {{ menu.drinkCount }}</button>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+          <span class="pill" style="background:#E9EFF7;color:#315F92">{{ menu.totalLabel }}</span>
+          <span class="pill" style="background:{{ menu.soldPillBg }};color:{{ menu.soldPillFg }}">{{ menu.soldLabel }}</span>
+        </div>
+      </div>
+      <sc-if value="{{ menu.hasSoldOut }}" hint-placeholder-val="">
+        <div class="menu-warning">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" style="flex:none"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+          <span>Pozor, tyto položky nejsou v nabídce: {{ menu.soldOutNames }}</span>
+        </div>
+      </sc-if>
+      <div class="menu-layout">
+        <div>
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px">
+            <span style="font:700 12px 'Geist';color:#211E1A;text-transform:uppercase;letter-spacing:.07em">{{ menu.sectionTitle }}</span>
+            <span style="font:600 12px 'Geist Mono';color:#A79F92">{{ menu.availableLabel }}</span>
+          </div>
+          <div class="menu-grid">
+            <sc-for list="{{ menu.items }}" as="it">
+              <button onClick="{{ it.select }}" class="menu-card" style="--cardBg:{{ it.cardBg }};--cardBorder:{{ it.cardBorder }};--cardShadow:{{ it.cardShadow }};--cardOpacity:{{ it.rowOpacity }}">
+                <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" class="menu-thumb"></sc-if>
+                <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div class="menu-placeholder"><svg width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
+                <div style="flex:1;min-width:0">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px"><span style="font:700 15px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.name }}</span><span class="pill" style="background:{{ it.soldBg }};color:{{ it.soldFg }}">{{ it.soldLabel }}</span></div>
+                  <div style="font:500 12.5px/1.35 'Geist';color:#7B7469;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ it.desc }}</div>
+                  <div style="display:flex;align-items:center;gap:8px;margin-top:12px"><span style="font:800 17px 'Geist Mono';color:#211E1A">{{ it.priceText }}</span><sc-if value="{{ it.inPromo }}" hint-placeholder-val=""><span class="pill" style="background:#FBF0DB;color:#9A5A16">Akce</span></sc-if></div>
+                </div>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+        <div class="editor-panel">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+            <sc-if value="{{ menu.selected.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ menu.selected.img }}" style="width:66px;height:66px;border-radius:16px;object-fit:cover;flex:none"></sc-if>
+            <sc-if value="{{ menu.selected.noImg }}" hint-placeholder-val=""><div class="menu-placeholder" style="width:66px;height:66px"><svg width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
+            <div style="min-width:0">
+              <div style="font:700 12px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.07em">Vybraná položka</div>
+              <div style="font:800 19px/1.15 'Geist';color:#211E1A;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ menu.selected.name }}</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div><div class="field-label">Název</div><input class="input-like" value="{{ menu.selected.name }}" onInput="{{ menu.selected.setName }}"></div>
+            <div><div class="field-label">Popis</div><textarea class="input-like textarea-like" value="{{ menu.selected.desc }}" onInput="{{ menu.selected.setDesc }}"></textarea></div>
+            <div>
+              <div class="field-label">Cena</div>
+              <div class="price-row"><input type="number" value="{{ menu.selected.price }}" onInput="{{ menu.selected.setPrice }}" style="width:100%;border:none;background:transparent;font:800 24px 'Geist Mono';color:#211E1A;outline:none;text-align:right"><span style="font:700 14px 'Geist';color:#8B857A">Kč</span></div>
+            </div>
+            <button onClick="{{ menu.selected.toggleSold }}" style="width:100%;padding:13px 14px;border-radius:13px;border:none;background:{{ menu.selected.soldBtnBg }};color:{{ menu.selected.soldBtnFg }};font:800 13.5px 'Geist';cursor:pointer">{{ menu.selected.soldBtnLabel }}</button>
+            <button onClick="{{ menu.selected.togglePromo }}" style="width:100%;padding:13px 14px;border-radius:13px;border:1px solid #E5DED2;background:#FBFAF7;color:#211E1A;font:800 13.5px 'Geist';cursor:pointer">{{ menu.selected.promoBtnLabel }}</button>
+            <div style="border-top:1px solid #EEEAE2;padding-top:14px;display:flex;align-items:center;justify-content:space-between">
+              <span style="font:600 12px 'Geist';color:#8B857A">Stav položky</span>
+              <span class="pill" style="background:{{ menu.selected.statusBg }};color:{{ menu.selected.statusFg }}">{{ menu.selected.statusText }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ========== VIEW: AKCE ========== -->
+    <sc-if value="{{ isAkce }}" hint-placeholder-val="">
+    <div style="flex:1;overflow-y:auto;padding:24px 30px 40px">
+      <div class="promo-grid">
+        <div class="promo-panel">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+            <div style="width:52px;height:52px;border-radius:16px;background:#211E1A;color:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M20.6 13.4 13 5.8V3H5.8L3 5.8V13l7.6 7.6a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-3z"/><circle cx="8" cy="8" r="1.3"/></svg></div>
+            <div style="flex:1"><div style="font:800 22px 'Geist';color:#211E1A;letter-spacing:-.01em">Polední akce</div><div style="font:600 13px 'Geist';color:#8B857A;margin-top:4px">Pondělí-Pátek · 9:30-14:00</div></div>
+            <div onClick="{{ akce.toggleActive }}" style="display:flex;align-items:center;gap:9px;cursor:pointer"><span style="font:800 12.5px 'Geist';color:{{ akce.activeFg }}">{{ akce.activeLabel }}</span><div style="width:48px;height:28px;border-radius:999px;padding:3px;background:{{ akce.switchBg }};display:flex;justify-content:{{ akce.switchJustify }}"><div style="width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.18)"></div></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 170px;gap:14px;margin-bottom:22px">
+            <div style="background:#FBFAF7;border:1px solid #E5DED2;border-radius:15px;padding:15px"><div class="field-label">Akční položky</div><div style="font:800 25px 'Geist Mono';color:#211E1A">{{ akce.itemCount }}</div><div style="font:600 12px 'Geist';color:#8B857A;margin-top:3px">aktivní výběr</div></div>
+            <div style="background:#FBF0DB;border:1px solid #E9C98C;border-radius:15px;padding:15px"><div class="field-label" style="color:#9A5A16">Cena v akci</div><div style="display:flex;align-items:center;gap:6px"><input type="number" value="{{ akce.price }}" onInput="{{ akce.setPrice }}" style="width:88px;border:none;background:transparent;font:800 24px 'Geist Mono';color:#211E1A;text-align:right;outline:none"><span style="font:800 14px 'Geist';color:#9A5A16">Kč</span></div></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div class="field-label" style="margin:0">Položky v akci</div><span class="pill" style="background:#E7F0E7;color:#3B6B48">{{ akce.activeSummary }}</span></div>
+          <div class="promo-items">
+            <sc-for list="{{ akce.items }}" as="it">
+              <div class="promo-card">
+                <img src="{{ it.img }}" style="width:54px;height:54px;border-radius:13px;object-fit:cover;flex:none">
+                <div style="flex:1;min-width:0"><div style="font:800 14.5px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.name }}</div><div style="font:600 12px 'Geist';color:#8B857A;margin-top:3px"><s>{{ it.origText }}</s> <span style="color:#C15F3C">{{ akce.priceText }}</span></div></div>
+                <button onClick="{{ it.remove }}" style="width:32px;height:32px;border-radius:10px;border:none;background:#F1EDE5;color:#7B7469;font:800 16px 'Geist';cursor:pointer;line-height:1">×</button>
+              </div>
+            </sc-for>
+          </div>
+          <div style="height:1px;background:#EEEAE2;margin:20px 0"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div class="field-label" style="margin:0">Přidat do akce</div><span style="font:600 12px 'Geist';color:#8B857A">{{ akce.availableSummary }}</span></div>
+          <div class="add-list">
+            <sc-for list="{{ akce.addItems }}" as="it">
+              <div class="promo-card" style="background:{{ it.bg }};opacity:{{ it.opacity }}">
+                <img src="{{ it.img }}" style="width:46px;height:46px;border-radius:12px;object-fit:cover;flex:none">
+                <div style="flex:1;min-width:0"><div style="font:700 13.5px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.name }}</div><div style="font:600 12px 'Geist Mono';color:#8B857A;margin-top:2px">{{ it.priceText }}</div></div>
+                <button onClick="{{ it.toggle }}" style="padding:9px 11px;border-radius:10px;border:none;background:{{ it.btnBg }};color:{{ it.btnFg }};font:800 12px 'Geist';cursor:pointer">{{ it.btnLabel }}</button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="promo-panel">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+            <div style="width:46px;height:46px;border-radius:14px;background:#E9EFF7;color:#315F92;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 7h16v10H4z"/><path d="M8 7v10M16 7v10"/></svg></div>
+            <div><div style="font:800 19px 'Geist';color:#211E1A">Slevový kód</div><div style="font:600 12.5px 'Geist';color:#8B857A;margin-top:3px">{{ akce.codeStatus }}</div></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div><div class="field-label">Kód</div><input class="input-like" value="{{ akce.code }}" onInput="{{ akce.setCode }}" style="text-transform:uppercase;font:800 16px 'Geist Mono'"></div>
+            <div><div class="field-label">Sleva</div><div class="price-row"><input type="number" value="{{ akce.discount }}" onInput="{{ akce.setDiscount }}" style="width:100%;border:none;background:transparent;font:800 23px 'Geist Mono';color:#211E1A;outline:none;text-align:right"><span style="font:800 14px 'Geist';color:#8B857A">%</span></div></div>
+            <div><div class="field-label">Platí do</div><input class="input-like" type="date" value="{{ akce.validUntil }}" onInput="{{ akce.setValidUntil }}"></div>
+            <button onClick="{{ akce.toggleCode }}" style="width:100%;padding:13px 14px;border-radius:13px;border:none;background:{{ akce.codeBtnBg }};color:{{ akce.codeBtnFg }};font:800 13.5px 'Geist';cursor:pointer">{{ akce.codeBtnLabel }}</button>
+            <div style="background:#FBFAF7;border:1px solid #EEEAE2;border-radius:14px;padding:15px">
+              <div class="field-label">Náhled</div>
+              <div style="font:800 20px 'Geist Mono';color:#211E1A">{{ akce.codePreview }}</div>
+              <div style="font:600 13px/1.45 'Geist';color:#7B7469;margin-top:8px">{{ akce.codePreviewText }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ========== VIEW: PŘÍJMY ========== -->
+    <sc-if value="{{ isPrijmy }}" hint-placeholder-val="">
+    <div style="flex:1;overflow-y:auto;padding:24px 30px 40px">
+      <div class="income-grid">
+        <sc-for list="{{ prijmy.metrics }}" as="m" hint-placeholder-count="4">
+          <div class="metric-card" style="background:{{ m.bg }};border-color:{{ m.border }}">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><span style="font:800 11px 'Geist';color:{{ m.muted }};text-transform:uppercase;letter-spacing:.07em">{{ m.label }}</span><span class="pill" style="background:{{ m.badgeBg }};color:{{ m.badgeFg }}">{{ m.delta }}</span></div>
+            <div style="font:900 27px 'Geist Mono';color:{{ m.fg }};margin-top:16px;white-space:nowrap">{{ m.value }}</div>
+            <div style="font:600 13px 'Geist';color:{{ m.muted }};margin-top:7px">{{ m.sub }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div class="income-main">
+        <div class="panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <div><div style="font:800 16px 'Geist';color:#211E1A">Tržby za posledních 7 dní</div><div style="font:600 12.5px 'Geist';color:#8B857A;margin-top:4px">Srovnání denních obratů a aktuálního dne</div></div>
+            <span class="pill" style="background:#F6E3E0;color:#B4472B">Dnes 8,45k</span>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:14px;height:220px">
+            <sc-for list="{{ prijmy.bars }}" as="b" hint-placeholder-count="7">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;height:100%;justify-content:flex-end;min-width:0">
+                <span style="font:800 10.5px 'Geist Mono';color:#8B857A">{{ b.kLabel }}</span>
+                <div style="width:100%;min-width:28px;border-radius:10px 10px 5px 5px;background:{{ b.color }};height:{{ b.h }};transform-origin:bottom;animation:growBar .5s ease;box-shadow:{{ b.shadow }}"></div>
+                <span style="font:800 11.5px 'Geist';color:{{ b.dayFg }}">{{ b.day }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px">
+            <sc-for list="{{ prijmy.hours }}" as="h" hint-placeholder-count="4">
+              <div style="border:1px solid #EEEAE2;border-radius:13px;padding:12px;background:#FBFAF7"><div style="font:800 12px 'Geist';color:#211E1A">{{ h.range }}</div><div style="font:800 16px 'Geist Mono';color:#C15F3C;margin-top:7px">{{ h.value }}</div><div style="font:600 11.5px 'Geist';color:#8B857A;margin-top:3px">{{ h.orders }}</div></div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="panel">
+          <div style="font:800 16px 'Geist';color:#211E1A;margin-bottom:18px">Platby dnes</div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <sc-for list="{{ prijmy.payRows }}" as="p" hint-placeholder-count="2">
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font:800 13px 'Geist';color:{{ p.color }}">{{ p.label }}</span><span style="font:800 13px 'Geist Mono';color:#211E1A">{{ p.value }}</span></div>
+                <div style="height:10px;border-radius:7px;background:#EEEAE2;overflow:hidden"><div style="height:100%;width:{{ p.width }};border-radius:7px;background:{{ p.color }}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="height:1px;background:#EEEAE2;margin:20px 0"></div>
+          <div style="font:800 12px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Nejprodávanější</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ prijmy.best }}" as="b" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="width:28px;height:28px;border-radius:9px;background:#F1EDE5;color:#6B655C;display:flex;align-items:center;justify-content:center;font:800 12px 'Geist Mono'">{{ b.rank }}</span>
+                <span style="font:700 13.5px 'Geist';color:#4A443B;flex:1">{{ b.name }}</span>
+                <span style="font:800 12.5px 'Geist Mono';color:#211E1A">{{ b.count }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ========== VIEW: ADRESY ========== -->
+    <sc-if value="{{ isAdresy }}" hint-placeholder-val="">
+    <div style="flex:1;overflow-y:auto;padding:24px 30px 40px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;max-width:920px;margin-bottom:26px">
+        <sc-for list="{{ adresy.zones }}" as="z" hint-placeholder-count="3">
+          <div style="background:#fff;border:1px solid #E7E2D9;border-radius:16px;padding:18px 20px">
+            <div style="display:flex;align-items:center;gap:9px"><span style="width:10px;height:10px;border-radius:50%;background:{{ z.dot }}"></span><span style="font:600 15px 'Geist';color:#211E1A">{{ z.name }}</span></div>
+            <div style="font:500 13px 'Geist';color:#8B857A;margin-top:8px">{{ z.area }}</div>
+            <div style="display:flex;gap:16px;margin-top:14px"><div><div style="font:700 16px 'Geist Mono';color:#211E1A">{{ z.feeText }}</div><div style="font:500 11px 'Geist';color:#A79F92;margin-top:2px">rozvoz</div></div><div><div style="font:700 16px 'Geist Mono';color:#211E1A">{{ z.time }}</div><div style="font:500 11px 'Geist';color:#A79F92;margin-top:2px">doručení</div></div></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;max-width:920px">
+        <span style="font:600 13px 'Geist';color:#211E1A;text-transform:uppercase;letter-spacing:.06em">Zákazníci</span>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid #E7E2D9;border-radius:11px;padding:9px 13px;background:#fff;width:280px"><svg width="16" height="16" fill="none" stroke="#A79F92" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input value="{{ adresy.query }}" onInput="{{ adresy.setQuery }}" placeholder="Hledat jméno nebo adresu" style="border:none;background:transparent;outline:none;font:500 13.5px 'Geist';color:#211E1A;width:100%"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:920px">
+        <sc-for list="{{ adresy.customers }}" as="c" hint-placeholder-count="6">
+          <div style="display:flex;align-items:center;gap:14px;background:#fff;border:1px solid #E7E2D9;border-radius:13px;padding:12px 16px">
+            <div style="width:40px;height:40px;border-radius:50%;background:#F1EDE5;display:flex;align-items:center;justify-content:center;font:600 13px 'Geist';color:#6B655C;flex:none">{{ c.initials }}</div>
+            <div style="width:180px"><div style="font:600 14.5px 'Geist';color:#211E1A">{{ c.name }}</div><div style="font:500 12px 'Geist Mono';color:#8B857A;margin-top:2px">{{ c.phone }}</div></div>
+            <div style="flex:1"><div style="font:500 13.5px 'Geist';color:#4A443B">{{ c.address }}</div><div style="font:500 12px 'Geist';color:#A79F92;margin-top:2px">{{ c.city }}</div></div>
+            <span style="font:600 11.5px 'Geist';padding:4px 10px;border-radius:7px;color:{{ c.zoneFg }};background:{{ c.zoneBg }}">{{ c.zone }}</span>
+            <div style="text-align:right;width:96px"><div style="font:600 13.5px 'Geist Mono';color:#211E1A">{{ c.orders }}× obj.</div><div style="font:500 11.5px 'Geist';color:#A79F92;margin-top:2px">{{ c.last }}</div></div>
+            <button onClick="{{ c.startOrder }}" style="padding:9px 14px;border-radius:10px;border:1px solid #E7E2D9;background:#FBFAF7;color:#211E1A;font:600 12.5px 'Geist';cursor:pointer;white-space:nowrap">+ Objednávka</button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+
+  <!-- ============ DETAIL MODAL ============ -->
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="">
+    <div onClick="{{ closeModal }}" style="position:fixed;inset:0;background:rgba(28,20,12,.42);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:50;animation:fadeIn .15s ease;padding:30px">
+      <div onClick="{{ stop }}" style="width:660px;max-width:100%;max-height:88vh;background:#fff;border-radius:22px;box-shadow:0 30px 80px -20px rgba(40,25,10,.5);display:flex;flex-direction:column;overflow:hidden;animation:modalIn .22s cubic-bezier(.2,.9,.3,1)">
+        <div style="padding:24px 28px 20px;border-bottom:1px solid #EEEAE2;display:flex;align-items:flex-start;gap:14px;position:relative">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:10px"><span style="font:600 11px 'Geist';color:#fff;padding:4px 11px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;background:{{ selected.statusBg }}">{{ selected.statusLabel }}</span><span style="font:600 13px 'Geist Mono';color:#8B857A">přišla {{ selected.agoText }} · {{ selected.placedAt }}</span></div>
+            <div style="font:600 25px/1.15 'Geist';color:#211E1A;margin-top:12px;letter-spacing:-.01em">{{ selected.name }}</div>
+            <div style="font:500 14px 'Geist';color:#8B857A;margin-top:5px">{{ selected.addressFull }}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px"><svg width="15" height="15" fill="none" stroke="#8B857A" stroke-width="1.7" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><span style="font:500 13.5px 'Geist';color:#4A443B">{{ selected.phone }}</span></div>
+          </div>
+          <div style="text-align:right">
+            <div style="font:600 12px 'Geist Mono';color:#B9B2A6">#{{ selected.num }}</div>
+            <div style="font:700 27px 'Geist Mono';color:#211E1A;margin-top:6px">{{ selected.priceText }}</div>
+            <div style="font:600 12px 'Geist';padding:4px 10px;border-radius:7px;margin-top:7px;display:inline-block;color:{{ selected.payFg }};background:{{ selected.payBg }}">{{ selected.payFull }}</div>
+          </div>
+          <button onClick="{{ closeModal }}" style="position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:10px;border:none;background:#F1EDE5;color:#6B655C;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:22px 28px">
+          <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:13px">Položky</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ selected.items }}" as="it">
+              <div style="display:flex;align-items:center;gap:14px">
+                <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" style="width:52px;height:52px;border-radius:12px;object-fit:cover;flex:none"></sc-if>
+                <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div style="width:52px;height:52px;border-radius:12px;background:#F1EDE5;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" fill="none" stroke="#B0A896" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
+                <div style="flex:1"><div style="font:600 15px 'Geist';color:#211E1A">{{ it.name }}</div><div style="font:500 12px 'Geist';color:#8B857A;margin-top:2px">{{ it.desc }}</div></div>
+                <span style="font:600 13px 'Geist Mono';color:#8B857A">{{ it.qtyText }}</span>
+                <span style="font:600 15px 'Geist Mono';color:#211E1A;width:74px;text-align:right">{{ it.lineText }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ selected.hasNote }}" hint-placeholder-val="">
+            <div style="margin-top:18px;background:#FBF3E6;border:1px solid #F0E1C4;border-radius:14px;padding:14px 16px;display:flex;gap:11px;align-items:flex-start">
+              <svg width="18" height="18" fill="none" stroke="#B98518" stroke-width="1.7" viewBox="0 0 24 24" style="flex:none;margin-top:1px"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+              <div><div style="font:600 11px 'Geist';color:#9A6A1E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Poznámka zákazníka</div><div style="font:500 14px/1.45 'Geist';color:#7A5A14">{{ selected.note }}</div></div>
+            </div>
+          </sc-if>
+          <div style="height:1px;background:#EEEAE2;margin:20px 0"></div>
+          <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Průběh objednávky</div>
+          <div style="display:flex;gap:10px">
+            <sc-for list="{{ selected.timeline }}" as="st" hint-placeholder-count="4">
+              <div style="flex:1;display:flex;flex-direction:column;gap:7px">
+                <span style="font:600 11.5px 'Geist';color:{{ st.labelColor }}">{{ st.label }}</span>
+                <div style="height:6px;border-radius:6px;background:{{ st.barBg }}"></div>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ selected.isNew }}" hint-placeholder-val="">
+            <div style="margin-top:22px">
+              <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Čas doručení</div>
+              <div style="display:flex;gap:9px">
+                <sc-for list="{{ selected.timeChips }}" as="c" hint-placeholder-count="5">
+                  <button onClick="{{ c.onClick }}" style="flex:1;padding:14px 6px;border-radius:12px;font:600 14px 'Geist';cursor:pointer;border-width:1.5px;border-style:solid;background:{{ c.bg }};color:{{ c.fg }};border-color:{{ c.border }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        <div style="padding:18px 28px;border-top:1px solid #EEEAE2;display:flex;gap:12px;align-items:center">
+          <div style="font:500 13px 'Geist';color:#8B857A">{{ selected.footerHint }}</div>
+          <sc-if value="{{ selected.hasSecondary }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ selected.secondaryAction }}" style="margin-left:auto;padding:15px 22px;border-radius:13px;border:1px solid #E4CFC7;background:#fff;color:#B4472B;font:600 14px 'Geist';cursor:pointer">{{ selected.secondaryLabel }}</button>
+          </sc-if>
+          <button onClick="{{ selected.primaryAction }}" style="padding:15px 30px;border-radius:13px;border:none;color:#fff;font:600 15px 'Geist';cursor:pointer;background:{{ selected.primaryBg }}">{{ selected.primaryLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ NOVÁ OBJEDNÁVKA MODAL ============ -->
+  <sc-if value="{{ no.open }}" hint-placeholder-val="">
+    <div onClick="{{ no.close }}" style="position:fixed;inset:0;background:rgba(28,20,12,.42);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:60;animation:fadeIn .15s ease;padding:24px">
+      <div onClick="{{ stop }}" style="width:1120px;max-width:100%;height:760px;max-height:92vh;background:#fff;border-radius:22px;box-shadow:0 30px 80px -20px rgba(40,25,10,.5);display:flex;flex-direction:column;overflow:hidden;animation:modalIn .22s cubic-bezier(.2,.9,.3,1)">
+        <div style="padding:20px 26px;border-bottom:1px solid #EEEAE2;display:flex;align-items:center">
+          <div style="font:600 19px 'Geist';color:#211E1A">Nová objednávka</div>
+          <button onClick="{{ no.close }}" style="margin-left:auto;width:34px;height:34px;border-radius:10px;border:none;background:#F1EDE5;color:#6B655C;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+        <div style="flex:1;display:flex;min-height:0">
+          <!-- LEFT: zákazník + platba -->
+          <div style="width:400px;flex:none;border-right:1px solid #EEEAE2;display:flex;flex-direction:column;overflow-y:auto;padding:22px 24px">
+            <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Zákazník</div>
+            <sc-if value="{{ no.hasCustomer }}" hint-placeholder-val="">
+              <div style="background:#F6F3EC;border:1px solid #E7E2D9;border-radius:14px;padding:16px;position:relative">
+                <button onClick="{{ no.clearCustomer }}" style="position:absolute;top:12px;right:12px;border:none;background:transparent;color:#8B857A;font:600 12px 'Geist';cursor:pointer">Změnit</button>
+                <div style="font:600 16px 'Geist';color:#211E1A">{{ no.custName }}</div>
+                <div style="font:500 13px 'Geist';color:#8B857A;margin-top:4px">{{ no.custAddress }}</div>
+                <div style="font:500 13px 'Geist Mono';color:#8B857A;margin-top:2px">{{ no.custPhone }}</div>
+                <span style="display:inline-block;margin-top:10px;font:600 11px 'Geist';padding:4px 10px;border-radius:7px;color:#3B6B48;background:#E7F0E7">{{ no.custZone }}</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ no.noCustomer }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:8px;border:1px solid #E7E2D9;border-radius:11px;padding:11px 13px;background:#FBFAF7"><svg width="16" height="16" fill="none" stroke="#A79F92" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input value="{{ no.query }}" onInput="{{ no.setQuery }}" placeholder="Hledat podle jména nebo adresy" style="border:none;background:transparent;outline:none;font:500 13.5px 'Geist';color:#211E1A;width:100%"></div>
+              <sc-if value="{{ no.hasResults }}" hint-placeholder-val="">
+                <div style="margin-top:8px;border:1px solid #E7E2D9;border-radius:12px;overflow:hidden">
+                  <sc-for list="{{ no.results }}" as="r" hint-placeholder-count="3">
+                    <div onClick="{{ r.pick }}" style="padding:11px 14px;border-bottom:1px solid #F1EDE5;cursor:pointer"><div style="font:600 13.5px 'Geist';color:#211E1A">{{ r.name }}</div><div style="font:500 12px 'Geist';color:#8B857A;margin-top:1px">{{ r.address }} · {{ r.phone }}</div></div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="display:flex;align-items:center;gap:10px;margin:16px 0 12px"><div style="flex:1;height:1px;background:#EEEAE2"></div><span style="font:500 11px 'Geist';color:#A79F92">nebo nový zákazník</span><div style="flex:1;height:1px;background:#EEEAE2"></div></div>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <input value="{{ no.ncName }}" onInput="{{ no.setName }}" placeholder="Jméno a příjmení" style="border:1px solid #E7E2D9;border-radius:10px;padding:11px 13px;font:500 13.5px 'Geist';color:#211E1A;outline:none;background:#FBFAF7">
+                <input value="{{ no.ncPhone }}" onInput="{{ no.setPhone }}" placeholder="Telefon" style="border:1px solid #E7E2D9;border-radius:10px;padding:11px 13px;font:500 13.5px 'Geist';color:#211E1A;outline:none;background:#FBFAF7">
+                <input value="{{ no.ncAddress }}" onInput="{{ no.setAddress }}" placeholder="Ulice a číslo" style="border:1px solid #E7E2D9;border-radius:10px;padding:11px 13px;font:500 13.5px 'Geist';color:#211E1A;outline:none;background:#FBFAF7">
+                <select value="{{ no.ncZone }}" onChange="{{ no.setZone }}" style="border:1px solid #E7E2D9;border-radius:10px;padding:11px 13px;font:500 13.5px 'Geist';color:#211E1A;outline:none;background:#FBFAF7"><option>Zóna 1</option><option>Zóna 2</option><option>Zóna 3</option></select>
+              </div>
+            </sc-if>
+            <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 12px">Platba</div>
+            <div style="display:flex;gap:8px;margin-bottom:18px">
+              <button onClick="{{ no.payCash }}" style="flex:1;padding:12px;border-radius:11px;font:600 13.5px 'Geist';cursor:pointer;border-width:1.5px;border-style:solid;background:{{ no.cashBg }};color:{{ no.cashFg }};border-color:{{ no.cashBorder }}">Hotově</button>
+              <button onClick="{{ no.payOnline }}" style="flex:1;padding:12px;border-radius:11px;font:600 13.5px 'Geist';cursor:pointer;border-width:1.5px;border-style:solid;background:{{ no.onlineBg }};color:{{ no.onlineFg }};border-color:{{ no.onlineBorder }}">Online</button>
+            </div>
+            <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Čas doručení</div>
+            <div style="display:flex;gap:7px">
+              <sc-for list="{{ no.timeChips }}" as="c" hint-placeholder-count="5">
+                <button onClick="{{ c.onClick }}" style="flex:1;padding:11px 4px;border-radius:10px;font:600 12.5px 'Geist';cursor:pointer;border-width:1.5px;border-style:solid;background:{{ c.bg }};color:{{ c.fg }};border-color:{{ c.border }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <!-- RIGHT: položky + košík -->
+          <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+            <div style="padding:18px 24px 0;display:flex;gap:2px;background:#F1EDE5;margin:16px 24px 0;border-radius:12px;padding:4px;flex:none;align-self:flex-start">
+              <button onClick="{{ no.tabPizza }}" style="padding:8px 16px;border-radius:9px;border:none;font:600 13px 'Geist';cursor:pointer;background:{{ no.pizzaTabBg }};color:{{ no.pizzaTabFg }}">Pizzy</button>
+              <button onClick="{{ no.tabDrink }}" style="padding:8px 16px;border-radius:9px;border:none;font:600 13px 'Geist';cursor:pointer;background:{{ no.drinkTabBg }};color:{{ no.drinkTabFg }}">Nápoje</button>
+            </div>
+            <sc-if value="{{ no.isPizzaTab }}" hint-placeholder-val="{{ true }}">
+              <div class="no-builder">
+                <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div style="font:800 13.5px 'Geist';color:#211E1A">Pizza na půl</div><div style="font:600 12px 'Geist';color:#8B857A;margin-top:2px">Dražší půlka určí cenu · suroviny +15 Kč</div></div><span class="pill" style="background:#E7F0E7;color:#3B6B48">{{ no.custom.summary }}</span></div>
+                  <div class="no-builder-grid">
+                    <div><div class="field-label">Levá půlka</div><select value="{{ no.custom.leftId }}" onChange="{{ no.custom.setLeft }}"><sc-for list="{{ no.pizzaOptions }}" as="p"><option value="{{ p.id }}">{{ p.label }}</option></sc-for></select></div>
+                    <div><div class="field-label">Pravá půlka</div><select value="{{ no.custom.rightId }}" onChange="{{ no.custom.setRight }}"><sc-for list="{{ no.pizzaOptions }}" as="p"><option value="{{ p.id }}">{{ p.label }}</option></sc-for></select></div>
+                  </div>
+                  <div>
+                    <div class="field-label">Základ</div>
+                    <div style="display:flex;gap:8px">
+                      <button onClick="{{ no.custom.baseTomato }}" style="flex:1;padding:10px;border-radius:11px;border:1.5px solid {{ no.custom.tomatoBorder }};background:{{ no.custom.tomatoBg }};color:{{ no.custom.tomatoFg }};font:800 12.5px 'Geist';cursor:pointer">Rajčatový</button>
+                      <button onClick="{{ no.custom.baseCream }}" style="flex:1;padding:10px;border-radius:11px;border:1.5px solid {{ no.custom.creamBorder }};background:{{ no.custom.creamBg }};color:{{ no.custom.creamFg }};font:800 12.5px 'Geist';cursor:pointer">Smetanový</button>
+                    </div>
+                  </div>
+                  <div><div class="field-label">Suroviny navíc</div><div class="no-extra-list"><sc-for list="{{ no.custom.extras }}" as="ex"><button onClick="{{ ex.toggle }}" class="no-extra-chip {{ ex.className }}">{{ ex.name }}</button></sc-for></div></div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;background:#fff;border:1px solid #EEEAE2;border-radius:14px;padding:14px">
+                  <div><div style="font:800 12px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em">Cena za kus</div><div style="font:900 28px 'Geist Mono';color:#211E1A;margin-top:5px">{{ no.custom.unitText }}</div></div>
+                  <div style="display:flex;align-items:center;gap:8px"><button onClick="{{ no.custom.decQty }}" style="width:34px;height:34px;border-radius:10px;border:1px solid #E5DED2;background:#fff;font:800 18px 'Geist';cursor:pointer">−</button><span style="flex:1;text-align:center;font:900 17px 'Geist Mono';color:#211E1A">{{ no.custom.qty }}</span><button onClick="{{ no.custom.incQty }}" style="width:34px;height:34px;border-radius:10px;border:none;background:#211E1A;color:#fff;font:800 18px 'Geist';cursor:pointer">+</button></div>
+                  <button onClick="{{ no.custom.add }}" style="margin-top:auto;padding:13px;border-radius:12px;border:none;background:{{ no.custom.addBg }};color:{{ no.custom.addFg }};font:800 13.5px 'Geist';cursor:pointer">{{ no.custom.addLabel }}</button>
+                </div>
+              </div>
+            </sc-if>
+            <div style="flex:1;overflow-y:auto;padding:14px 24px;display:flex;flex-direction:column;gap:7px;min-height:0">
+              <sc-for list="{{ no.menuItems }}" as="it">
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:11px;background:{{ it.rowBg }};opacity:{{ it.rowOpacity }}">
+                  <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" style="width:40px;height:40px;border-radius:9px;object-fit:cover;flex:none"></sc-if>
+                  <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div style="width:40px;height:40px;border-radius:9px;background:#EDE8DF;display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" fill="none" stroke="#B0A896" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
+                  <div style="flex:1;min-width:0"><div style="font:600 13.5px 'Geist';color:#211E1A">{{ it.name }}</div><div style="display:flex;align-items:center;gap:7px;margin-top:1px"><span style="font:600 12px 'Geist Mono';color:#8B857A">{{ it.priceText }}</span><sc-if value="{{ it.soldOut }}" hint-placeholder-val=""><span class="pill" style="background:#F6E3E0;color:#B4472B">Vyprodáno</span></sc-if></div></div>
+                  <sc-if value="{{ it.inCart }}" hint-placeholder-val="">
+                    <div style="display:flex;align-items:center;gap:10px"><button onClick="{{ it.dec }}" style="width:30px;height:30px;border-radius:9px;border:1px solid #E7E2D9;background:#fff;font-size:17px;color:#211E1A;cursor:pointer;line-height:1">−</button><span style="font:600 14px 'Geist Mono';color:#211E1A;width:16px;text-align:center">{{ it.qty }}</span><button onClick="{{ it.add }}" style="width:30px;height:30px;border-radius:9px;border:none;background:#211E1A;color:#fff;font-size:17px;cursor:pointer;line-height:1">+</button></div>
+                  </sc-if>
+                  <sc-if value="{{ it.notInCart }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ it.add }}" style="padding:8px 14px;border-radius:9px;border:1px solid #E7E2D9;background:{{ it.addBg }};color:{{ it.addFg }};font:700 12.5px 'Geist';cursor:pointer">{{ it.addLabel }}</button>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <div style="border-top:1px solid #EEEAE2;padding:16px 24px;flex:none">
+              <sc-if value="{{ no.cartEmpty }}" hint-placeholder-val="{{ true }}"><div style="font:500 13px 'Geist';color:#A79F92;text-align:center;padding:6px 0 14px">Košík je prázdný — přidej položky</div></sc-if>
+              <sc-if value="{{ no.hasCartRows }}" hint-placeholder-val="">
+                <div class="no-cart-list">
+                  <sc-for list="{{ no.cartRows }}" as="r" hint-placeholder-count="3">
+                    <div class="no-cart-row">
+                      <div style="min-width:0"><div style="font:800 13px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</div><div style="font:600 11.5px 'Geist';color:#8B857A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.desc }}</div></div>
+                      <span style="font:800 12px 'Geist Mono';color:#6B655C">{{ r.qtyText }}</span>
+                      <span style="font:800 12px 'Geist Mono';color:#211E1A">{{ r.lineText }}</span>
+                      <button onClick="{{ r.remove }}" style="width:28px;height:28px;border-radius:9px;border:none;background:#F1EDE5;color:#7B7469;font:800 14px 'Geist';cursor:pointer">×</button>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="display:flex;align-items:center;gap:14px">
+                <div><div style="font:500 12px 'Geist';color:#8B857A">Celkem</div><div style="font:700 24px 'Geist Mono';color:#211E1A">{{ no.totalText }}</div></div>
+                <button onClick="{{ no.create }}" style="margin-left:auto;padding:15px 28px;border-radius:13px;border:none;color:#fff;font:600 15px 'Geist';cursor:pointer;background:{{ no.createBg }}">Vytvořit objednávku</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    view:'orders',
+    selectedId:null,
+    timeSel:30,
+    menuTab:'pizza',
+    menuEditId:'p1',
+    adrQuery:'',
+    promo:{ active:true, price:179, pizzaIds:['p1','p2','p3'], codeActive:true, code:'POLEDNE20', discount:15, validUntil:'2026-07-31' },
+    newOrder:{ open:false, query:'', customerId:null, nc:{name:'',phone:'',address:'',zone:'Zóna 1'}, cart:{}, customLines:[], custom:{leftId:'p1',rightId:'p1',base:'tomato',extras:[],qty:1}, payment:'cash', time:30, tab:'pizza' },
+    pizzas:[
+      {id:'p1',name:'Margherita',base:'tomato',desc:'rajčatový základ, mozzarella, bazalka',price:206,soldOut:false,img:'assets/pizza/margherita.webp'},
+      {id:'p2',name:'Šunková',base:'tomato',desc:'rajčatový základ, mozzarella, šunka',price:206,soldOut:false,img:'assets/pizza/sunkova.webp'},
+      {id:'p3',name:'Salámová',base:'tomato',desc:'rajčatový základ, mozzarella, salám',price:206,soldOut:false,img:'assets/pizza/salamova.webp'},
+      {id:'p4',name:'Houbová',base:'tomato',desc:'rajčatový základ, mozzarella, žampiony',price:206,soldOut:true,img:'assets/pizza/houbova.webp'},
+      {id:'p5',name:'Vegetariana',base:'tomato',desc:'mozzarella, brokolice, kukuřice',price:206,soldOut:false,img:'assets/pizza/vegetariana.webp'},
+      {id:'p6',name:'Olivová',base:'tomato',desc:'mozzarella, olivy, niva',price:206,soldOut:false,img:'assets/pizza/olivova.webp'},
+      {id:'p7',name:'Slaninová',base:'tomato',desc:'mozzarella, slanina',price:206,soldOut:false,img:'assets/pizza/slaninova.webp'},
+      {id:'p8',name:'Americana',base:'tomato',desc:'mozzarella, šunka, kukuřice',price:218,soldOut:false,img:'assets/pizza/americana.webp'},
+      {id:'p9',name:'Hawai',base:'tomato',desc:'mozzarella, šunka, ananas',price:218,soldOut:false,img:'assets/pizza/hawai.webp'},
+      {id:'p10',name:'Capricciosa',base:'tomato',desc:'mozzarella, šunka, žampiony',price:218,soldOut:false,img:'assets/pizza/capricciosa.webp'},
+      {id:'p11',name:'Špenátová',base:'tomato',desc:'slanina, špenát, česnek',price:218,soldOut:false,img:'assets/pizza/spenatova.webp'},
+      {id:'p12',name:'Kuřecí',base:'tomato',desc:'kuřecí maso, kukuřice, parmazán',price:218,soldOut:false,img:'assets/pizza/kureci.webp'},
+      {id:'p13',name:'Picante',base:'tomato',desc:'pikantní salám, kozí rohy, feferonky',price:218,soldOut:false,img:'assets/pizza/picante.webp'},
+      {id:'p14',name:'Vegetariana extra',base:'tomato',desc:'kukuřice, brokolice, špenát, žampiony',price:218,soldOut:false,img:'assets/pizza/vegetariana-extra.webp'},
+      {id:'p15',name:'Nivová',base:'cream',desc:'smetanový základ, niva',price:218,soldOut:false,img:'assets/pizza/nivova.webp'},
+      {id:'p16',name:'Kari kuřecí',base:'cream',desc:'smetanový základ, kuřecí na kari, pórek',price:218,soldOut:false,img:'assets/pizza/kari-kureci.webp'},
+      {id:'p17',name:'Selská',base:'tomato',desc:'slanina, klobása, zelí',price:230,soldOut:false,img:'assets/pizza/selska.webp'},
+      {id:'p18',name:'Tuňáková',base:'tomato',desc:'tuňák, olivy, cibule',price:230,soldOut:false,img:'assets/pizza/tunakova.webp'},
+      {id:'p19',name:'Quattro formaggi',base:'cream',desc:'smetanový základ, hermelín, niva, parmazán',price:230,soldOut:false,img:'assets/pizza/quattro.webp'},
+      {id:'p20',name:'Bellizzi',base:'tomato',desc:'šunka, salám, slanina, kozí rohy',price:230,soldOut:false,img:'assets/pizza/bellizzi.webp'},
+    ],
+    drinks:[
+      {id:'d1',name:'Mirinda 330ml',desc:'nápoj',price:25,soldOut:false,img:null},
+      {id:'d2',name:'Pepsi 330ml',desc:'nápoj',price:25,soldOut:false,img:null},
+      {id:'d3',name:'Pepsi zero 330ml',desc:'nápoj',price:25,soldOut:false,img:null},
+      {id:'d4',name:'7UP zero 330ml',desc:'nápoj',price:25,soldOut:false,img:null},
+      {id:'d5',name:'Capri-Sun 200ml',desc:'nápoj',price:15,soldOut:false,img:null},
+      {id:'d6',name:'Džus Relax 200ml',desc:'nápoj',price:30,soldOut:false,img:null},
+    ],
+    customers:[
+      {id:'c1',name:'Jana Nováková',phone:'+420 606 214 880',address:'Wagnerovo nám. 12',city:'Beroun',zone:'Zóna 1',orders:12,last:'včera'},
+      {id:'c2',name:'Petr Svoboda',phone:'+420 720 118 244',address:'Tyršova 445',city:'Beroun-Město',zone:'Zóna 1',orders:8,last:'před 3 dny'},
+      {id:'c3',name:'Marie Dvořáková',phone:'+420 777 340 112',address:'Košťálkova 8',city:'Beroun',zone:'Zóna 2',orders:5,last:'minulý týden'},
+      {id:'c4',name:'Lukáš Horák',phone:'+420 605 998 021',address:'Na Parkáně 3',city:'Králův Dvůr',zone:'Zóna 3',orders:3,last:'před 2 týdny'},
+      {id:'c5',name:'Tomáš Marek',phone:'+420 728 441 209',address:'Plzeňská 120',city:'Beroun',zone:'Zóna 1',orders:21,last:'dnes'},
+      {id:'c6',name:'Eva Králová',phone:'+420 603 771 004',address:'Havlíčkova 22',city:'Beroun',zone:'Zóna 2',orders:9,last:'dnes'},
+      {id:'c7',name:'Anna Pokorná',phone:'+420 731 664 890',address:'Bratří Nejedlých 12',city:'Králův Dvůr',zone:'Zóna 3',orders:6,last:'před 4 dny'},
+    ],
+    orders:[
+      { id:248, num:248, status:'new', name:'Jana Nováková', address:'Wagnerovo nám. 12', city:'Beroun', zone:'Zóna 1', phone:'+420 606 214 880', payment:'online', ago:1, placedAt:'14:22', within:null, note:'Zvonek nefunguje, prosím zavolat po příjezdu.',
+        items:[ {qty:2,name:'Margherita',desc:'rajčatový základ, mozzarella, bazalka',price:206,img:'assets/pizza/margherita.webp'}, {qty:1,name:'Pepsi 330ml',desc:'nápoj',price:25,img:null} ] },
+      { id:247, num:247, status:'prep', name:'Petr Svoboda', address:'Tyršova 445', city:'Beroun-Město', zone:'Zóna 1', phone:'+420 720 118 244', payment:'cash', ago:6, placedAt:'14:17', within:30, note:'',
+        items:[ {qty:1,name:'Bellizzi',desc:'šunka, salám, slanina, kozí rohy',price:230,img:'assets/pizza/bellizzi.webp'}, {qty:1,name:'Šunková',desc:'rajčatový základ, mozzarella, šunka',price:206,img:'assets/pizza/sunkova.webp'} ] },
+      { id:246, num:246, status:'route', name:'Marie Dvořáková', address:'Košťálkova 8', city:'Beroun', zone:'Zóna 2', phone:'+420 777 340 112', payment:'online', ago:18, placedAt:'14:05', within:30, note:'Nechat u sousedů, byt č. 4.',
+        items:[ {qty:1,name:'Quattro formaggi',desc:'smetanový základ, hermelín, niva, parmazán',price:230,img:'assets/pizza/quattro.webp'}, {qty:1,name:'Capri-Sun 200ml',desc:'nápoj',price:15,img:null} ] },
+      { id:245, num:245, status:'prep', name:'Lukáš Horák', address:'Na Parkáně 3', city:'Králův Dvůr', zone:'Zóna 3', phone:'+420 605 998 021', payment:'cash', ago:3, placedAt:'14:20', within:45, note:'',
+        items:[ {qty:3,name:'Salámová',desc:'rajčatový základ, mozzarella, salám',price:206,img:'assets/pizza/salamova.webp'} ] },
+      { id:244, num:244, status:'done', name:'Tomáš Marek', address:'Plzeňská 120', city:'Beroun', zone:'Zóna 1', phone:'+420 728 441 209', payment:'cash', ago:41, placedAt:'13:42', within:30, time:'14:02', note:'',
+        items:[ {qty:1,name:'Hawai',desc:'šunka, ananas',price:218,img:'assets/pizza/hawai.webp'}, {qty:1,name:'Picante',desc:'pikantní salám, kozí rohy, feferonky',price:218,img:'assets/pizza/picante.webp'} ] },
+      { id:243, num:243, status:'done', name:'Eva Králová', address:'Havlíčkova 22', city:'Beroun', zone:'Zóna 2', phone:'+420 603 771 004', payment:'online', ago:55, placedAt:'13:28', within:30, time:'13:48', note:'',
+        items:[ {qty:1,name:'Margherita',desc:'rajčatový základ, mozzarella, bazalka',price:206,img:'assets/pizza/margherita.webp'} ] },
+    ],
+  };
+
+  META = { new:{label:'Nová',bg:'#C98A2E'}, prep:{label:'Připravuje se',bg:'#C15F3C'}, route:{label:'Na cestě',bg:'#3E6DA8'}, done:{label:'Doručeno',bg:'#4B8B5C'} };
+  HEADS = { orders:{title:'Objednávky',sub:'Pátek 3. 7. · 14:23'}, menu:{title:'Menu',sub:'Ceny a dostupnost'}, akce:{title:'Akce',sub:'Polední zvýhodněné menu'}, prijmy:{title:'Příjmy',sub:'Přehled tržeb'}, adresy:{title:'Adresy',sub:'Zóny a databáze zákazníků'} };
+  ZONEC = { 'Zóna 1':{fg:'#3B6B48',bg:'#E7F0E7',dot:'#4B8B5C'}, 'Zóna 2':{fg:'#7A6A2E',bg:'#F3EEDC',dot:'#C9A24E'}, 'Zóna 3':{fg:'#3E5B8A',bg:'#E9EFF7',dot:'#3E6DA8'} };
+  EXTRAS = [
+    {id:'x1',name:'Mozzarella'}, {id:'x2',name:'Parmazán'}, {id:'x3',name:'Niva'}, {id:'x4',name:'Hermelín'}, {id:'x5',name:'Šunka'}, {id:'x6',name:'Salám'},
+    {id:'x7',name:'Slanina'}, {id:'x8',name:'Klobása'}, {id:'x9',name:'Kuřecí maso'}, {id:'x10',name:'Tuňák'}, {id:'x11',name:'Žampiony'}, {id:'x12',name:'Olivy'},
+    {id:'x13',name:'Kukuřice'}, {id:'x14',name:'Ananas'}, {id:'x15',name:'Feferonky'}, {id:'x16',name:'Cibule'}, {id:'x17',name:'Česnek'}, {id:'x18',name:'Bazalka'}
+  ];
+  EXTRA_PRICE = 15;
+  BASE_CHANGE_PRICE = 20;
+
+  pay(o){ return o.payment==='online' ? {label:'Online ✓',full:'Zaplaceno online',fg:'#3E6DA8',bg:'#E9EFF7'} : {label:'Hotově',full:'Hotově při převzetí',fg:'#7A6A2E',bg:'#F3EEDC'}; }
+  total(o){ return o.items.reduce((a,i)=>a+i.qty*i.price,0); }
+  initials(n){ return n.split(' ').map(x=>x[0]).slice(0,2).join(''); }
+  pizzaById(id){ return this.state.pizzas.find(p=>p.id===id)||this.state.pizzas[0]; }
+  baseLabel(base){ return base==='cream'?'smetanový základ':'rajčatový základ'; }
+  naturalBase(left,right){ return left.id===right.id?left.base:(left.base===right.base?left.base:'tomato'); }
+  customUnit(c){
+    const left=this.pizzaById(c.leftId), right=this.pizzaById(c.rightId);
+    const baseCharge=c.base!==this.naturalBase(left,right)?this.BASE_CHANGE_PRICE:0;
+    return Math.max(left.price,right.price)+baseCharge+(c.extras.length*this.EXTRA_PRICE);
+  }
+  customLine(c){
+    const left=this.pizzaById(c.leftId), right=this.pizzaById(c.rightId);
+    const half=left.id===right.id?left.name:('1/2 '+left.name+' + 1/2 '+right.name);
+    const extraNames=c.extras.map(id=>this.EXTRAS.find(e=>e.id===id)?.name).filter(Boolean);
+    const desc=this.baseLabel(c.base)+(extraNames.length?' · navíc: '+extraNames.join(', '):'');
+    return { qty:c.qty, name:half, desc, price:this.customUnit(c), img:left.img, custom:true };
+  }
+  patchItem(kind,id,patch){ this.setState(s=>({[kind]:s[kind].map(it=>it.id===id?{...it,...patch}:it)})); }
+  chooseMenuTab(tab){
+    const kind=tab==='pizza'?'pizzas':'drinks';
+    const first=this.state[kind][0];
+    this.setState({menuTab:tab, menuEditId:first?first.id:null});
+  }
+  togglePromoItem(id){
+    this.setState(s=>{ const ids=s.promo.pizzaIds.includes(id)?s.promo.pizzaIds.filter(x=>x!==id):[...s.promo.pizzaIds,id];
+      return {promo:{...s.promo,pizzaIds:ids}}; });
+  }
+
+  cardView(o){
+    const m=this.META[o.status], p=this.pay(o);
+    const isNew=o.status==='new';
+    const isRoute=o.status==='route';
+    const preview=o.items.slice(0,4).map(i=>({ ...i, qtyText:i.qty+'×', lineText:(i.qty*i.price)+' Kč' }));
+    return { ...o, statusLabel:m.label, statusBg:m.bg,
+      agoText:o.ago===0?'právě teď':('před '+o.ago+' min'),
+      addressLine:o.address+' · '+o.city,
+      itemsLine:o.items.map(i=>i.qty+'× '+i.name).join(' · '),
+      priceText:this.total(o)+' Kč', payLabel:p.label, payFg:p.fg, payBg:p.bg,
+      isNew, notNew:o.status!=='new',
+      withinText:o.within?('do '+o.within+' min'):'',
+      cardBg:isNew?'#FFF6E8':'#fff',
+      itemsBg:isNew?'#FFEED8':'#FBFAF7', itemsBorder:isNew?'#F1C78E':'#EEEAE2',
+      timeBg:isNew?'#FFE0BE':'#F1EDE5',
+      borderColor:isNew?'#D68A38':'#E7E2D9', borderWidth:isNew?'1.5px':'1px',
+      glow:isNew?'0 18px 46px rgba(203,119,42,.18), 0 0 0 4px #FFF0D9':'none',
+      hoverGlow:isNew?'0 22px 54px rgba(203,119,42,.22), 0 0 0 4px #FFE7C3':'0 16px 34px rgba(55,40,20,.08)',
+      hasAlert:isNew, alertText:'Čeká na potvrzení',
+      itemsPreview:preview, itemsCountLabel:o.items.length+' pol.', hasMoreItems:o.items.length>4, moreItemsText:'+ '+(o.items.length-4)+' další položky',
+      btnLabel:isRoute?'✓ Označit jako doručeno':'Odeslat na rozvoz →',
+      btnBg:isRoute?'linear-gradient(135deg,#2F7D49,#20663B)':'#211E1A',
+      btnClass:isRoute?'done-btn':'',
+      doneLine:o.address+' · '+o.items.map(i=>i.name).join(', '), time:o.time,
+      open:()=>this.setState({selectedId:o.id, timeSel:o.within||30}),
+      onAdvance:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); this.advance(o.id); },
+      onReject:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); this.reject(o.id); },
+    };
+  }
+
+  detailView(o){
+    const m=this.META[o.status], p=this.pay(o);
+    const labels=['Přijato','Příprava','Na cestě','Doručeno'];
+    const curr={new:-1,prep:1,route:2,done:3}[o.status];
+    const timeline=labels.map((label,i)=>{ const filled=(o.status==='done')||i<curr; const active=i===curr;
+      return { label, barBg:filled?'#2F7D49':(active?m.bg:'#EDE8DF'), labelColor:(filled||active)?'#4A443B':'#B9B2A6' }; });
+    const timeChips=[15,30,45,60,'60+'].map(v=>{ const sel=this.state.timeSel===v;
+      return { label:(v==='60+'?'60+':v)+' min', val:v, bg:sel?'#211E1A':'#fff', fg:sel?'#fff':'#4A443B', border:sel?'#211E1A':'#E7E2D9', onClick:()=>this.setState({timeSel:v}) }; });
+    let pl,pb,pa,sl,sa,fh;
+    if(o.status==='new'){ pl='Potvrdit objednávku →'; pb='#211E1A'; pa=()=>this.advance(o.id); sl='Odmítnout'; sa=()=>this.reject(o.id); fh='Potvrdit s časem doručení'; }
+    else if(o.status==='prep'){ pl='Odeslat na rozvoz →'; pb='#211E1A'; pa=()=>this.advance(o.id); sl='Tisk účtenky'; sa=()=>{}; fh='Doručit do '+o.within+' min'; }
+    else if(o.status==='route'){ pl='✓ Označit jako doručeno'; pb='linear-gradient(135deg,#2F7D49,#20663B)'; pa=()=>this.advance(o.id); sl='Tisk účtenky'; sa=()=>{}; fh='Na cestě · doručit do '+o.within+' min'; }
+    else { pl='Zavřít'; pb='#211E1A'; pa=()=>this.setState({selectedId:null}); sl=null; fh='Doručeno v '+o.time; }
+    return { ...o, statusLabel:m.label, statusBg:m.bg, agoText:o.ago===0?'právě teď':('před '+o.ago+' min'),
+      addressFull:o.address+' · '+o.city+' · '+o.zone, priceText:this.total(o)+' Kč',
+      payFg:p.fg, payBg:p.bg, payFull:p.full,
+      items:o.items.map(i=>({ ...i, hasImg:!!i.img, noImg:!i.img, qtyText:i.qty+'×', lineText:(i.qty*i.price)+' Kč' })),
+      hasNote:!!o.note, note:o.note, timeline, isNew:o.status==='new', timeChips,
+      primaryLabel:pl, primaryBg:pb, primaryAction:pa, hasSecondary:!!sl, secondaryLabel:sl, secondaryAction:sa, footerHint:fh };
+  }
+
+  advance(id){
+    const next={new:'prep',prep:'route',route:'done'};
+    this.setState(s=>{ const orders=s.orders.map(o=>{ if(o.id!==id)return o; const ns=next[o.status]; if(!ns)return o;
+        const upd={...o,status:ns}; if(o.status==='new')upd.within=(s.timeSel==='60+'?60:s.timeSel);
+        if(ns==='done')upd.time=new Date().toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'}); return upd; });
+      const sel=orders.find(o=>o.id===id); return { orders, selectedId:(sel&&sel.status==='done')?null:s.selectedId }; });
+  }
+  reject(id){ this.setState(s=>({ orders:s.orders.filter(o=>o.id!==id), selectedId:null })); }
+
+  // NEW ORDER helpers
+  blankNO(){ return { open:false, query:'', customerId:null, nc:{name:'',phone:'',address:'',zone:'Zóna 1'}, cart:{}, customLines:[], custom:{leftId:'p1',rightId:'p1',base:'tomato',extras:[],qty:1}, payment:'cash', time:30, tab:'pizza' }; }
+  openNew(id){ this.setState(s=>({ newOrder:{...this.blankNO(), open:true, customerId:id||null} })); }
+  patchNO(patch){ this.setState(s=>({ newOrder:{...s.newOrder, ...patch} })); }
+  patchCustom(patch){ this.setState(s=>({ newOrder:{...s.newOrder, custom:{...s.newOrder.custom, ...patch}} })); }
+  toggleCustomExtra(id){ this.setState(s=>{ const ex=s.newOrder.custom.extras.includes(id)?s.newOrder.custom.extras.filter(x=>x!==id):[...s.newOrder.custom.extras,id]; return {newOrder:{...s.newOrder,custom:{...s.newOrder.custom,extras:ex}}}; }); }
+  addCustomPizza(){ this.setState(s=>({ newOrder:{...s.newOrder, customLines:[...s.newOrder.customLines,this.customLine(s.newOrder.custom)]} })); }
+  removeCustomLine(idx){ this.setState(s=>({ newOrder:{...s.newOrder, customLines:s.newOrder.customLines.filter((_,i)=>i!==idx)} })); }
+  removeCartItem(id){ this.setState(s=>{ const c={...s.newOrder.cart}; delete c[id]; return {newOrder:{...s.newOrder,cart:c}}; }); }
+  cartAdd(id){ this.setState(s=>{ const all=[...s.pizzas,...s.drinks]; const it=all.find(x=>x.id===id); if(it&&it.soldOut)return {}; const c={...s.newOrder.cart}; c[id]=(c[id]||0)+1; return {newOrder:{...s.newOrder,cart:c}}; }); }
+  cartDec(id){ this.setState(s=>{ const c={...s.newOrder.cart}; c[id]=(c[id]||0)-1; if(c[id]<=0)delete c[id]; return {newOrder:{...s.newOrder,cart:c}}; }); }
+  createOrder(){
+    const s=this.state, no=s.newOrder;
+    const cust=no.customerId?s.customers.find(c=>c.id===no.customerId):null;
+    const all=[...s.pizzas,...s.drinks];
+    const items=[
+      ...Object.entries(no.cart).filter(([id,q])=>q>0).map(([id,q])=>{ const it=all.find(x=>x.id===id); return {qty:q,name:it.name,desc:it.desc,price:it.price,img:it.img}; }),
+      ...no.customLines
+    ];
+    const name=cust?cust.name:no.nc.name.trim();
+    const address=cust?cust.address:no.nc.address.trim();
+    if(!items.length || !name || !address) return;
+    const num=Math.max(...s.orders.map(o=>o.num))+1;
+    const now=new Date().toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'});
+    const order={ id:num,num,status:'prep',name,address,city:cust?cust.city:'Beroun',zone:cust?cust.zone:no.nc.zone,phone:cust?cust.phone:(no.nc.phone||'—'),payment:no.payment,ago:0,placedAt:now,within:(no.time==='60+'?60:no.time),note:'',items };
+    let customers=s.customers;
+    if(!cust){ customers=[{id:'c'+Date.now(),name,phone:no.nc.phone||'—',address,city:'Beroun',zone:no.nc.zone,orders:1,last:'dnes'},...customers]; }
+    this.setState({ orders:[order,...s.orders], customers, newOrder:this.blankNO(), view:'orders' });
+  }
+
+  renderVals(){
+    const s=this.state;
+    // nav
+    const nav={}; ['orders','menu','akce','prijmy','adresy'].forEach(k=>{ const a=s.view===k; nav[k]={
+      bg:a?'rgba(255,255,255,.09)':'transparent', fg:a?'#fff':'#8E877D', border:'transparent',
+      shadow:'none', iconBg:a?'rgba(255,255,255,.06)':'transparent',
+      iconFg:a?'#fff':'#817A70', labelFg:a?'#fff':'#8E877D', accent:0, accentColor:'transparent'
+    }; });
+    // orders
+    const active=s.orders.filter(o=>o.status!=='done').map(o=>this.cardView(o));
+    const doneO=s.orders.filter(o=>o.status==='done');
+    const done=doneO.map(o=>this.cardView(o));
+    const doneRev=doneO.reduce((a,o)=>a+this.total(o),0);
+    // menu
+    const mk=s.menuTab==='pizza'?'pizzas':'drinks';
+    const menuList=s[mk];
+    const selectedRaw=menuList.find(it=>it.id===s.menuEditId)||menuList[0];
+    const soldOut=menuList.filter(it=>it.soldOut);
+    const menuItems=menuList.map(it=>{ const sel=selectedRaw&&selectedRaw.id===it.id; const inPromo=s.promo.pizzaIds.includes(it.id);
+      return { ...it, hasImg:!!it.img, noImg:!it.img, priceText:it.price+' Kč', inPromo,
+        soldLabel:it.soldOut?'Vyprodáno':'V nabídce', soldBg:it.soldOut?'#F6E3E0':'#E7F0E7', soldFg:it.soldOut?'#B4472B':'#3B6B48',
+        rowOpacity:it.soldOut?0.62:1, cardBg:sel?'#FFFDF7':'#fff', cardBorder:sel?'#C15F3C':(it.soldOut?'#E7B8AE':'#E7E2D9'), cardShadow:sel?'0 16px 34px rgba(193,95,60,.18)':'none',
+        select:()=>this.setState({menuEditId:it.id}) };
+    });
+    const selectedIsPizza=selectedRaw&&selectedRaw.id.indexOf('p')===0;
+    const selectedInPromo=selectedRaw&&s.promo.pizzaIds.includes(selectedRaw.id);
+    const selectedMenu=selectedRaw?{ ...selectedRaw, hasImg:!!selectedRaw.img, noImg:!selectedRaw.img,
+      setName:(e)=>this.patchItem(mk,selectedRaw.id,{name:e.target.value}),
+      setDesc:(e)=>this.patchItem(mk,selectedRaw.id,{desc:e.target.value}),
+      setPrice:(e)=>this.patchItem(mk,selectedRaw.id,{price:parseInt(e.target.value)||0}),
+      toggleSold:()=>this.patchItem(mk,selectedRaw.id,{soldOut:!selectedRaw.soldOut}),
+      togglePromo:()=>{ if(selectedIsPizza)this.togglePromoItem(selectedRaw.id); },
+      soldBtnLabel:selectedRaw.soldOut?'Vrátit do nabídky':'Označit jako vyprodané',
+      soldBtnBg:selectedRaw.soldOut?'#E7F0E7':'#F6E3E0', soldBtnFg:selectedRaw.soldOut?'#3B6B48':'#B4472B',
+      promoBtnLabel:selectedIsPizza?(selectedInPromo?'Odebrat z akce':'Přidat do akce'):'Akce jen pro pizzy',
+      statusText:selectedRaw.soldOut?'Není v nabídce':'Aktivní v nabídce',
+      statusBg:selectedRaw.soldOut?'#FFF1C2':'#E7F0E7', statusFg:selectedRaw.soldOut?'#7B5512':'#3B6B48'
+    }:{};
+    const menu={ items:menuItems, selected:selectedMenu,
+      pizzaCount:s.pizzas.length, drinkCount:s.drinks.length, totalLabel:(s.menuTab==='pizza'?s.pizzas.length+' pizz':s.drinks.length+' nápojů'),
+      sectionTitle:s.menuTab==='pizza'?'Pizzy':'Nápoje', availableLabel:(menuList.length-soldOut.length)+' v nabídce',
+      hasSoldOut:soldOut.length>0, soldOutNames:soldOut.map(it=>it.name).join(', '),
+      soldLabel:soldOut.length?('Vyprodáno · '+soldOut.length):'Vše dostupné', soldPillBg:soldOut.length?'#FFF1C2':'#E7F0E7', soldPillFg:soldOut.length?'#7B5512':'#3B6B48',
+      pizzaTabBg:s.menuTab==='pizza'?'#fff':'transparent', pizzaTabFg:s.menuTab==='pizza'?'#211E1A':'#8B857A',
+      drinkTabBg:s.menuTab==='drink'?'#fff':'transparent', drinkTabFg:s.menuTab==='drink'?'#211E1A':'#8B857A',
+      tabPizza:()=>this.chooseMenuTab('pizza'), tabDrink:()=>this.chooseMenuTab('drink') };
+    // akce
+    const pr=s.promo;
+    const promoItems=pr.pizzaIds.map(id=>s.pizzas.find(x=>x.id===id)).filter(Boolean).map(p=>({
+      name:p.name, img:p.img, origText:p.price+' Kč', remove:()=>this.togglePromoItem(p.id)
+    }));
+    const addItems=s.pizzas.map(p=>{ const chosen=pr.pizzaIds.includes(p.id); const blocked=p.soldOut&&!chosen; return {
+      name:p.name, img:p.img, priceText:p.price+' Kč', bg:chosen?'#F6F3EC':'#fff', opacity:p.soldOut?0.55:1,
+      btnLabel:blocked?'Vyprodáno':(chosen?'Odebrat':'Přidat'), btnBg:blocked?'#F6E3E0':(chosen?'#211E1A':'#E7F0E7'), btnFg:blocked?'#B4472B':(chosen?'#fff':'#3B6B48'), toggle:()=>{ if(!blocked)this.togglePromoItem(p.id); }
+    }; });
+    const validText=pr.validUntil?pr.validUntil.split('-').reverse().join('. '):'bez data';
+    const akce={ items:promoItems, addItems, hasItems:promoItems.length>0, itemCount:promoItems.length, activeSummary:pr.active?'Zveřejněno':'Vypnuto', availableSummary:s.pizzas.length+' položek',
+      price:pr.price, priceText:pr.price+' Kč', setPrice:(e)=>{ const v=parseInt(e.target.value)||0; this.setState(st=>({promo:{...st.promo,price:v}})); },
+      activeLabel:pr.active?'Aktivní':'Vypnuto', activeFg:pr.active?'#3B6B48':'#8B857A',
+      switchBg:pr.active?'#4B8B5C':'#CFC7BA', switchJustify:pr.active?'flex-end':'flex-start',
+      toggleActive:()=>this.setState(st=>({promo:{...st.promo,active:!st.promo.active}})),
+      code:pr.code, discount:pr.discount, validUntil:pr.validUntil,
+      codeStatus:pr.codeActive?('Aktivní do '+validText):'Kód je vypnutý',
+      setCode:(e)=>this.setState(st=>({promo:{...st.promo,code:e.target.value.toUpperCase()}})),
+      setDiscount:(e)=>this.setState(st=>({promo:{...st.promo,discount:parseInt(e.target.value)||0}})),
+      setValidUntil:(e)=>this.setState(st=>({promo:{...st.promo,validUntil:e.target.value}})),
+      toggleCode:()=>this.setState(st=>({promo:{...st.promo,codeActive:!st.promo.codeActive}})),
+      codeBtnLabel:pr.codeActive?'Vypnout kód':'Zapnout kód', codeBtnBg:pr.codeActive?'#F6E3E0':'#E7F0E7', codeBtnFg:pr.codeActive?'#B4472B':'#3B6B48',
+      codePreview:pr.code||'KOD', codePreviewText:(pr.codeActive?'Sleva ':'Neaktivní sleva ')+pr.discount+' % platí do '+validText+'.'
+    };
+    // prijmy
+    const barsRaw=[{day:'Po',v:7200},{day:'Út',v:6800},{day:'St',v:9100},{day:'Čt',v:8450,t:true},{day:'Pá',v:12400},{day:'So',v:14200},{day:'Ne',v:0}];
+    const maxV=14200;
+    const bars=barsRaw.map(b=>({ day:b.day, kLabel:b.v?Math.round(b.v/1000)+'k':'—', h:Math.max(4,Math.round(b.v/maxV*100))+'%', color:b.t?'#C15F3C':'#D9CBB7', dayFg:b.t?'#C15F3C':'#8B857A', shadow:b.t?'0 12px 24px rgba(193,95,60,.2)':'none' }));
+    const metrics=[
+      {label:'Dnes',value:'8 450 Kč',sub:'34 objednávek · průměr 249 Kč',delta:'+12 %',bg:'#211E1A',border:'#211E1A',fg:'#fff',muted:'#BDB5A9',badgeBg:'#E7F0E7',badgeFg:'#3B6B48'},
+      {label:'Týden',value:'58 150 Kč',sub:'214 objednávek · průměr 272 Kč',delta:'+8 %',bg:'#fff',border:'#E5DED2',fg:'#211E1A',muted:'#8B857A',badgeBg:'#E7F0E7',badgeFg:'#3B6B48'},
+      {label:'Měsíc',value:'214 800 Kč',sub:'812 objednávek · průměr 264 Kč',delta:'+5 %',bg:'#fff',border:'#E5DED2',fg:'#211E1A',muted:'#8B857A',badgeBg:'#E9EFF7',badgeFg:'#315F92'},
+      {label:'Rozvoz',value:'27 min',sub:'průměrný čas doručení',delta:'-4 min',bg:'#fff',border:'#E5DED2',fg:'#211E1A',muted:'#8B857A',badgeBg:'#FBF0DB',badgeFg:'#9A5A16'},
+    ];
+    const hours=[
+      {range:'9-11',value:'1,8k',orders:'7 objednávek'},
+      {range:'11-14',value:'3,9k',orders:'16 objednávek'},
+      {range:'14-17',value:'2,1k',orders:'8 objednávek'},
+      {range:'17-19',value:'0,7k',orders:'3 objednávky'},
+    ];
+    const payRows=[
+      {label:'Online',value:'62 %',width:'62%',color:'#3E6DA8'},
+      {label:'Hotově',value:'38 %',width:'38%',color:'#C9A24E'},
+    ];
+    const best=[
+      {rank:'1',name:'Bellizzi',count:'28×'},
+      {rank:'2',name:'Šunková',count:'21×'},
+      {rank:'3',name:'Salámová',count:'17×'},
+      {rank:'4',name:'Margherita',count:'14×'},
+    ];
+    const prijmy={ bars, metrics, hours, payRows, best };
+    // adresy
+    const zones=[
+      {name:'Zóna 1',area:'Beroun-Město, centrum',fee:0,time:'do 30 min'},
+      {name:'Zóna 2',area:'Beroun okolí, Závodí',fee:0,time:'do 40 min'},
+      {name:'Zóna 3',area:'Králův Dvůr a okolí',fee:30,time:'do 50 min'},
+    ].map(z=>({ ...z, feeText:z.fee?z.fee+' Kč':'Zdarma', dot:this.ZONEC[z.name].dot }));
+    const q=s.adrQuery.toLowerCase();
+    const adrCustomers=s.customers.filter(c=>!q||(c.name+' '+c.address+' '+c.phone).toLowerCase().includes(q)).map(c=>({ ...c, initials:this.initials(c.name), zoneFg:this.ZONEC[c.zone].fg, zoneBg:this.ZONEC[c.zone].bg, startOrder:()=>this.openNew(c.id) }));
+    const adresy={ zones, customers:adrCustomers, query:s.adrQuery, setQuery:(e)=>this.setState({adrQuery:e.target.value}) };
+    // new order
+    const no=s.newOrder;
+    const cust=no.customerId?s.customers.find(c=>c.id===no.customerId):null;
+    const nq=no.query.toLowerCase();
+    const results=(no.query && !cust)?s.customers.filter(c=>(c.name+' '+c.address+' '+c.phone).toLowerCase().includes(nq)).slice(0,4).map(c=>({ name:c.name, address:c.address, phone:c.phone, pick:()=>this.patchNO({customerId:c.id}) })):[];
+    const nmk=no.tab==='pizza'?'pizzas':'drinks';
+    const noMenuItems=s[nmk].map(it=>{ const qty=no.cart[it.id]||0; const blocked=!!it.soldOut; return { ...it, hasImg:!!it.img, noImg:!it.img, priceText:it.price+' Kč', qty,
+      inCart:qty>0, notInCart:qty===0, rowBg:qty>0?'#F6F3EC':'transparent', rowOpacity:blocked?0.5:1,
+      addLabel:blocked?'Vyprodáno':'Přidat', addBg:blocked?'#F6E3E0':'#fff', addFg:blocked?'#B4472B':'#211E1A',
+      add:()=>{ if(!blocked)this.cartAdd(it.id); }, dec:()=>this.cartDec(it.id) }; });
+    const all=[...s.pizzas,...s.drinks];
+    const standardRows=Object.entries(no.cart).filter(([id,q])=>q>0).map(([id,q])=>{ const it=all.find(x=>x.id===id); return { name:it.name, desc:it.desc, qtyText:q+'×', total:it.price*q, remove:()=>this.removeCartItem(id) }; });
+    const customRows=no.customLines.map((it,idx)=>({ name:it.name, desc:it.desc, qtyText:it.qty+'×', total:it.price*it.qty, remove:()=>this.removeCustomLine(idx) }));
+    const cartRows=[...standardRows,...customRows].map(r=>({ ...r, lineText:r.total+' Kč' }));
+    const cartTotal=cartRows.reduce((a,r)=>a+r.total,0);
+    const noTimeChips=[15,30,45,60,'60+'].map(v=>{ const sel=no.time===v; return { label:(v==='60+'?'60+':v)+' min', bg:sel?'#211E1A':'#fff', fg:sel?'#fff':'#4A443B', border:sel?'#211E1A':'#E7E2D9', onClick:()=>this.patchNO({time:v}) }; });
+    const ncValid=no.nc.name.trim() && no.nc.address.trim();
+    const canCreate=(cust||ncValid) && cartRows.length>0;
+    const pizzaOptions=s.pizzas.map(p=>({ id:p.id, label:p.name+' · '+p.price+' Kč'+(p.soldOut?' · vyprodáno':'') }));
+    const custom=no.custom, left=this.pizzaById(custom.leftId), right=this.pizzaById(custom.rightId);
+    const customUnit=this.customUnit(custom);
+    const customSummary=left.id===right.id?left.name:'1/2 '+left.name+' + 1/2 '+right.name;
+    const customExtras=this.EXTRAS.map(ex=>({ ...ex, className:custom.extras.includes(ex.id)?'is-on':'', toggle:()=>this.toggleCustomExtra(ex.id) }));
+    const customBlocked=left.soldOut||right.soldOut;
+    const customVals={ leftId:custom.leftId, rightId:custom.rightId, qty:custom.qty, summary:customSummary, unitText:customUnit+' Kč', extras:customExtras,
+      setLeft:(e)=>this.patchCustom({leftId:e.target.value}), setRight:(e)=>this.patchCustom({rightId:e.target.value}),
+      baseTomato:()=>this.patchCustom({base:'tomato'}), baseCream:()=>this.patchCustom({base:'cream'}),
+      tomatoBg:custom.base==='tomato'?'#211E1A':'#fff', tomatoFg:custom.base==='tomato'?'#fff':'#4A443B', tomatoBorder:custom.base==='tomato'?'#211E1A':'#E5DED2',
+      creamBg:custom.base==='cream'?'#211E1A':'#fff', creamFg:custom.base==='cream'?'#fff':'#4A443B', creamBorder:custom.base==='cream'?'#211E1A':'#E5DED2',
+      addLabel:customBlocked?'Vybraná půlka je vyprodaná':'Přidat pizzu na míru', addBg:customBlocked?'#F6E3E0':'#211E1A', addFg:customBlocked?'#B4472B':'#fff',
+      incQty:()=>this.patchCustom({qty:custom.qty+1}), decQty:()=>this.patchCustom({qty:Math.max(1,custom.qty-1)}), add:()=>{ if(!customBlocked)this.addCustomPizza(); } };
+    const noVals={ open:no.open, query:no.query, setQuery:(e)=>this.patchNO({query:e.target.value}),
+      hasCustomer:!!cust, noCustomer:!cust,
+      custName:cust?cust.name:'', custAddress:cust?(cust.address+' · '+cust.city):'', custPhone:cust?cust.phone:'', custZone:cust?cust.zone:'',
+      clearCustomer:()=>this.patchNO({customerId:null}),
+      hasResults:results.length>0, results,
+      ncName:no.nc.name, ncPhone:no.nc.phone, ncAddress:no.nc.address, ncZone:no.nc.zone,
+      setName:(e)=>this.patchNO({nc:{...no.nc,name:e.target.value}}), setPhone:(e)=>this.patchNO({nc:{...no.nc,phone:e.target.value}}),
+      setAddress:(e)=>this.patchNO({nc:{...no.nc,address:e.target.value}}), setZone:(e)=>this.patchNO({nc:{...no.nc,zone:e.target.value}}),
+      payCash:()=>this.patchNO({payment:'cash'}), payOnline:()=>this.patchNO({payment:'online'}),
+      cashBg:no.payment==='cash'?'#211E1A':'#fff', cashFg:no.payment==='cash'?'#fff':'#4A443B', cashBorder:no.payment==='cash'?'#211E1A':'#E7E2D9',
+      onlineBg:no.payment==='online'?'#211E1A':'#fff', onlineFg:no.payment==='online'?'#fff':'#4A443B', onlineBorder:no.payment==='online'?'#211E1A':'#E7E2D9',
+      timeChips:noTimeChips,
+      tabPizza:()=>this.patchNO({tab:'pizza'}), tabDrink:()=>this.patchNO({tab:'drink'}),
+      pizzaTabBg:no.tab==='pizza'?'#fff':'transparent', pizzaTabFg:no.tab==='pizza'?'#211E1A':'#8B857A',
+      drinkTabBg:no.tab==='drink'?'#fff':'transparent', drinkTabFg:no.tab==='drink'?'#211E1A':'#8B857A',
+      isPizzaTab:no.tab==='pizza', pizzaOptions, custom:customVals,
+      menuItems:noMenuItems, cartEmpty:cartRows.length===0, hasCartRows:cartRows.length>0, cartRows, totalText:cartTotal+' Kč',
+      createBg:canCreate?'#211E1A':'#CFC7BA', create:()=>{ if(canCreate)this.createOrder(); },
+      close:()=>this.setState({newOrder:this.blankNO()}) };
+
+    const selRaw=s.orders.find(o=>o.id===s.selectedId);
+    return {
+      nav, head:this.HEADS[s.view],
+      isOrders:s.view==='orders', isMenu:s.view==='menu', isAkce:s.view==='akce', isPrijmy:s.view==='prijmy', isAdresy:s.view==='adresy',
+      goOrders:()=>this.setState({view:'orders'}), goMenu:()=>this.setState({view:'menu'}), goAkce:()=>this.setState({view:'akce'}), goPrijmy:()=>this.setState({view:'prijmy'}), goAdresy:()=>this.setState({view:'adresy'}),
+      openNew:()=>this.openNew(null),
+      active, done, activeCount:active.length, doneSummary:doneO.length+' · '+doneRev.toLocaleString('cs-CZ')+' Kč',
+      menu, akce, prijmy, adresy, no:noVals,
+      modalOpen:!!selRaw, selected:selRaw?this.detailView(selRaw):{},
+      closeModal:()=>this.setState({selectedId:null}), stop:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); },
+    };
+  }
+}
+</script>
+</body>
+</html>
