@@ -23,41 +23,42 @@
   @keyframes growBar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
   button{transition:transform .16s ease,box-shadow .16s ease,background .16s ease,border-color .16s ease}
   button:hover{transform:translateY(-1px)}
-  .nav-rail{width:68px;flex:none;background:#111;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;padding:16px 10px;gap:8px}
+  .nav-rail{width:48px;flex:none;background:#EDE9E1;border-right:1px solid #E2DCD1;display:flex;flex-direction:column;align-items:center;padding:12px 0 12px 6px;gap:5px;position:relative;z-index:2}
   .nav-rail::before{display:none}
-  .brand-card{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:14px;opacity:.96}
-  .brand-card img{width:100%;height:100%;object-fit:cover}
-  .nav-item{width:44px;height:44px;border-radius:12px;border:none;background:var(--navBg);color:var(--navFg);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:none}
-  .nav-item:hover{background:rgba(255,255,255,.08)}
+  .brand-card{width:32px;height:32px;border-radius:10px;background:#211E1A;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:0 6px 6px 0;opacity:1;flex:none}
+  .brand-card img{width:100%;height:100%;object-fit:cover;filter:invert(1)}
+  .nav-item{flex:var(--navFlex);width:100%;min-height:48px;border-radius:var(--navRadius);border:none;background:var(--navBg);color:var(--navFg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;box-shadow:var(--navShadow);position:relative;z-index:var(--navZ);margin-right:var(--navMr);overflow:visible;transition:flex .34s cubic-bezier(.34,1.3,.4,1),background .22s ease,color .22s ease,box-shadow .22s ease}
+  .nav-item:hover{color:#211E1A;background:var(--navHoverBg)}
   .nav-item::before{display:none}
-  .nav-icon{width:44px;height:44px;border-radius:12px;background:transparent;color:var(--navIconFg);display:flex;align-items:center;justify-content:center}
-  .nav-label{display:none}
-  .nav-user{margin-top:auto;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);color:#E7E2D9;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px}
-  .menu-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-  .tab-shell{display:flex;background:#EFE8DC;border-radius:13px;padding:4px;gap:3px}
+  .nav-icon{width:16px;height:16px;color:currentColor;display:flex;align-items:center;justify-content:center;flex:none}
+  .nav-icon svg{width:16px;height:16px}
+  .nav-label{display:block;writing-mode:vertical-rl;transform:rotate(180deg);font:700 11.5px/1 'Geist';letter-spacing:.02em;color:currentColor;text-transform:none;white-space:nowrap}
+  .nav-user{margin:6px 6px 0 0;width:32px;height:32px;border-radius:50%;background:#E1DBD0;color:#6B655C;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex:none}
+  .menu-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .tab-shell{display:flex;background:#F1EDE5;border-radius:12px;padding:4px;gap:2px}
   .menu-warning{display:flex;align-items:center;gap:10px;background:#FFF1C2;border:1px solid #E7C95F;color:#7B5512;border-radius:12px;padding:12px 14px;margin-bottom:16px;font:600 13px 'Geist'}
-  .menu-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(330px,.75fr);gap:18px;align-items:start}
-  .menu-grid{display:grid;grid-template-columns:repeat(2,minmax(250px,1fr));gap:12px}
-  .menu-card{width:100%;min-height:118px;text-align:left;display:flex;gap:12px;align-items:flex-start;border-radius:16px;border:1.5px solid var(--cardBorder);background:var(--cardBg);box-shadow:var(--cardShadow);opacity:var(--cardOpacity);padding:12px;cursor:pointer}
-  .menu-card:hover{border-color:#D6B27C;box-shadow:0 12px 24px rgba(64,44,24,.08)}
-  .menu-thumb{width:58px;height:58px;border-radius:13px;object-fit:cover;flex:none}
-  .menu-placeholder{width:58px;height:58px;border-radius:13px;background:#F0E9DD;display:flex;align-items:center;justify-content:center;flex:none;color:#A79F92}
+  .menu-layout{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(318px,.62fr);gap:16px;align-items:start}
+  .menu-grid{display:grid;grid-template-columns:repeat(2,minmax(230px,1fr));gap:9px}
+  .menu-card{width:100%;min-height:104px;text-align:left;display:flex;gap:13px;align-items:center;border-radius:14px;border:1px solid var(--cardBorder);background:var(--cardBg);box-shadow:var(--cardShadow);opacity:var(--cardOpacity);padding:12px 14px;cursor:pointer}
+  .menu-card:hover{border-color:#D8C5A8;box-shadow:0 10px 22px rgba(55,40,20,.06)}
+  .menu-thumb{width:48px;height:48px;border-radius:11px;object-fit:cover;flex:none}
+  .menu-placeholder{width:48px;height:48px;border-radius:11px;background:#F1EDE5;display:flex;align-items:center;justify-content:center;flex:none;color:#A79F92}
   .pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:4px 8px;font:700 10.5px 'Geist';letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
-  .order-card{background:var(--orderBg);border:1.5px solid var(--orderBorder);border-radius:18px;padding:16px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(220px,.82fr);gap:15px;cursor:pointer;box-shadow:var(--orderShadow)}
+  .order-card{background:var(--orderBg);border:1px solid var(--orderBorder);border-radius:18px;padding:17px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(195px,.64fr);gap:13px;cursor:pointer;box-shadow:var(--orderShadow);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
   .order-card:hover{transform:translateY(-1px);box-shadow:var(--orderHoverShadow)}
-  .order-left{display:flex;flex-direction:column;gap:12px;min-width:0}
-  .order-side{background:var(--orderItemsBg);border:1px solid var(--orderItemsBorder);border-radius:15px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
-  .order-item-line{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;padding:8px;border-radius:11px;background:rgba(255,255,255,.64)}
-  .order-item-qty{min-width:27px;height:27px;border-radius:9px;background:#211E1A;color:#fff;display:flex;align-items:center;justify-content:center;font:800 11.5px 'Geist Mono'}
-  .order-alert{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:12px;background:#FFE9CF;color:#8B421B;border:1px solid #F0BE82;font:800 12px 'Geist'}
+  .order-left{display:flex;flex-direction:column;gap:13px;min-width:0}
+  .order-side{background:var(--orderItemsBg);border:1px solid var(--orderItemsBorder);border-radius:15px;padding:12px;display:flex;flex-direction:column;gap:7px;min-width:0}
+  .order-item-line{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;padding:7px;border-radius:10px;background:rgba(255,255,255,.64)}
+  .order-item-qty{min-width:25px;height:25px;border-radius:8px;background:#211E1A;color:#fff;display:flex;align-items:center;justify-content:center;font:800 11px 'Geist Mono'}
+  .order-alert{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:11px;background:#FBF0DB;color:#9A5A16;border:1px solid #E7B770;font:800 12px 'Geist'}
   .done-btn{box-shadow:0 12px 24px rgba(47,125,73,.18)}
-  .editor-panel{background:#fff;border:1px solid #E5DED2;border-radius:18px;padding:18px;box-shadow:0 18px 42px rgba(55,40,20,.08);position:sticky;top:0}
+  .editor-panel{background:#fff;border:1px solid #E7E2D9;border-radius:18px;padding:18px;box-shadow:none;position:sticky;top:0}
   .field-label{font:700 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
   .input-like{width:100%;border:1px solid #E5DED2;border-radius:12px;background:#FBFAF7;color:#211E1A;outline:none;font:600 14px 'Geist';padding:12px 13px}
   .textarea-like{min-height:78px;resize:vertical;line-height:1.4}
   .price-row{display:flex;align-items:center;gap:8px;border:1.5px solid #E5DED2;border-radius:13px;background:#FBFAF7;padding:9px 12px}
   .promo-grid{width:100%;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr);gap:18px;align-items:start}
-  .promo-panel{background:#fff;border:1px solid #E5DED2;border-radius:18px;padding:20px;box-shadow:0 18px 42px rgba(55,40,20,.07)}
+  .promo-panel{background:#fff;border:1px solid #E7E2D9;border-radius:18px;padding:20px;box-shadow:none}
   .promo-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
   .promo-card{display:flex;gap:12px;align-items:center;border:1px solid #E5DED2;border-radius:15px;background:#FBFAF7;padding:12px}
   .add-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;max-height:360px;overflow:auto;padding-right:4px}
@@ -70,14 +71,14 @@
   .no-cart-list{display:flex;flex-direction:column;gap:6px;max-height:112px;overflow:auto;margin-bottom:12px}
   .no-cart-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:9px;align-items:center;background:#FBFAF7;border:1px solid #EEEAE2;border-radius:11px;padding:8px 10px}
   .income-grid{width:100%;display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:14px}
-  .metric-card{background:#fff;border:1px solid #E5DED2;border-radius:16px;padding:18px;min-height:132px}
+  .metric-card{background:#fff;border:1px solid #E7E2D9;border-radius:18px;padding:22px;min-height:132px}
   .metric-card.primary{background:#211E1A;border-color:#211E1A;color:#fff}
   .income-main{width:100%;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(340px,.65fr);gap:16px;margin-top:16px}
-  .panel{background:#fff;border:1px solid #E5DED2;border-radius:18px;padding:22px}
+  .panel{background:#fff;border:1px solid #E7E2D9;border-radius:18px;padding:22px}
   @media (max-width:1100px){.menu-layout,.promo-grid,.income-main{grid-template-columns:1fr}.editor-panel{position:relative}.income-grid{grid-template-columns:repeat(2,minmax(160px,1fr))}}
   @media (max-width:980px){.order-card{grid-template-columns:1fr}}
   @media (max-width:920px){.no-builder{grid-template-columns:1fr}}
-  @media (max-width:760px){.nav-rail{width:58px;padding-left:7px;padding-right:7px}.nav-item{width:40px;height:40px}.nav-icon{width:40px;height:40px}.menu-grid,.promo-items,.add-list,.income-grid{grid-template-columns:1fr}}
+  @media (max-width:760px){.nav-rail{width:46px;padding-left:5px}.nav-item{min-height:44px}.nav-label{font-size:10.5px}.menu-grid,.promo-items,.add-list,.income-grid{grid-template-columns:1fr}}
 </style>
 </helmet>
 
@@ -85,19 +86,19 @@
   <!-- NAV RAIL -->
   <div class="nav-rail">
     <div class="brand-card"><img src="assets/logo.png" alt=""></div>
-    <div onClick="{{ goOrders }}" class="nav-item" style="--navBg:{{ nav.orders.bg }};--navFg:{{ nav.orders.fg }};--navBorder:{{ nav.orders.border }};--navShadow:{{ nav.orders.shadow }};--navIconBg:{{ nav.orders.iconBg }};--navIconFg:{{ nav.orders.iconFg }};--navLabelFg:{{ nav.orders.labelFg }};--navAccent:{{ nav.orders.accent }};--navAccentColor:{{ nav.orders.accentColor }}">
+    <div onClick="{{ goOrders }}" class="nav-item" style="--navBg:{{ nav.orders.bg }};--navFg:{{ nav.orders.fg }};--navShadow:{{ nav.orders.shadow }};--navHoverBg:{{ nav.orders.hoverBg }};--navFlex:{{ nav.orders.flex }};--navRadius:{{ nav.orders.radius }};--navMr:{{ nav.orders.mr }};--navZ:{{ nav.orders.z }}">
       <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg></div><span class="nav-label">Objednávky</span>
     </div>
-    <div onClick="{{ goMenu }}" class="nav-item" style="--navBg:{{ nav.menu.bg }};--navFg:{{ nav.menu.fg }};--navBorder:{{ nav.menu.border }};--navShadow:{{ nav.menu.shadow }};--navIconBg:{{ nav.menu.iconBg }};--navIconFg:{{ nav.menu.iconFg }};--navLabelFg:{{ nav.menu.labelFg }};--navAccent:{{ nav.menu.accent }};--navAccentColor:{{ nav.menu.accentColor }}">
+    <div onClick="{{ goMenu }}" class="nav-item" style="--navBg:{{ nav.menu.bg }};--navFg:{{ nav.menu.fg }};--navShadow:{{ nav.menu.shadow }};--navHoverBg:{{ nav.menu.hoverBg }};--navFlex:{{ nav.menu.flex }};--navRadius:{{ nav.menu.radius }};--navMr:{{ nav.menu.mr }};--navZ:{{ nav.menu.z }}">
       <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v9l6.5 3.5"/></svg></div><span class="nav-label">Menu</span>
     </div>
-    <div onClick="{{ goAkce }}" class="nav-item" style="--navBg:{{ nav.akce.bg }};--navFg:{{ nav.akce.fg }};--navBorder:{{ nav.akce.border }};--navShadow:{{ nav.akce.shadow }};--navIconBg:{{ nav.akce.iconBg }};--navIconFg:{{ nav.akce.iconFg }};--navLabelFg:{{ nav.akce.labelFg }};--navAccent:{{ nav.akce.accent }};--navAccentColor:{{ nav.akce.accentColor }}">
+    <div onClick="{{ goAkce }}" class="nav-item" style="--navBg:{{ nav.akce.bg }};--navFg:{{ nav.akce.fg }};--navShadow:{{ nav.akce.shadow }};--navHoverBg:{{ nav.akce.hoverBg }};--navFlex:{{ nav.akce.flex }};--navRadius:{{ nav.akce.radius }};--navMr:{{ nav.akce.mr }};--navZ:{{ nav.akce.z }}">
       <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M20.6 13.4 13 5.8V3H5.8L3 5.8V13l7.6 7.6a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-3z"/><circle cx="8" cy="8" r="1.3"/></svg></div><span class="nav-label">Akce</span>
     </div>
-    <div onClick="{{ goPrijmy }}" class="nav-item" style="--navBg:{{ nav.prijmy.bg }};--navFg:{{ nav.prijmy.fg }};--navBorder:{{ nav.prijmy.border }};--navShadow:{{ nav.prijmy.shadow }};--navIconBg:{{ nav.prijmy.iconBg }};--navIconFg:{{ nav.prijmy.iconFg }};--navLabelFg:{{ nav.prijmy.labelFg }};--navAccent:{{ nav.prijmy.accent }};--navAccentColor:{{ nav.prijmy.accentColor }}">
-      <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><span class="nav-label">Příjmy</span>
+    <div onClick="{{ goPrijmy }}" class="nav-item" style="--navBg:{{ nav.prijmy.bg }};--navFg:{{ nav.prijmy.fg }};--navShadow:{{ nav.prijmy.shadow }};--navHoverBg:{{ nav.prijmy.hoverBg }};--navFlex:{{ nav.prijmy.flex }};--navRadius:{{ nav.prijmy.radius }};--navMr:{{ nav.prijmy.mr }};--navZ:{{ nav.prijmy.z }}">
+      <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><span class="nav-label">Tržby</span>
     </div>
-    <div onClick="{{ goAdresy }}" class="nav-item" style="--navBg:{{ nav.adresy.bg }};--navFg:{{ nav.adresy.fg }};--navBorder:{{ nav.adresy.border }};--navShadow:{{ nav.adresy.shadow }};--navIconBg:{{ nav.adresy.iconBg }};--navIconFg:{{ nav.adresy.iconFg }};--navLabelFg:{{ nav.adresy.labelFg }};--navAccent:{{ nav.adresy.accent }};--navAccentColor:{{ nav.adresy.accentColor }}">
+    <div onClick="{{ goAdresy }}" class="nav-item" style="--navBg:{{ nav.adresy.bg }};--navFg:{{ nav.adresy.fg }};--navShadow:{{ nav.adresy.shadow }};--navHoverBg:{{ nav.adresy.hoverBg }};--navFlex:{{ nav.adresy.flex }};--navRadius:{{ nav.adresy.radius }};--navMr:{{ nav.adresy.mr }};--navZ:{{ nav.adresy.z }}">
       <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.6"/></svg></div><span class="nav-label">Adresy</span>
     </div>
     <div class="nav-user">PB</div>
@@ -699,12 +700,12 @@ class Component extends DCLogic {
       priceText:this.total(o)+' Kč', payLabel:p.label, payFg:p.fg, payBg:p.bg,
       isNew, notNew:o.status!=='new',
       withinText:o.within?('do '+o.within+' min'):'',
-      cardBg:isNew?'#FFF6E8':'#fff',
-      itemsBg:isNew?'#FFEED8':'#FBFAF7', itemsBorder:isNew?'#F1C78E':'#EEEAE2',
-      timeBg:isNew?'#FFE0BE':'#F1EDE5',
-      borderColor:isNew?'#D68A38':'#E7E2D9', borderWidth:isNew?'1.5px':'1px',
-      glow:isNew?'0 18px 46px rgba(203,119,42,.18), 0 0 0 4px #FFF0D9':'none',
-      hoverGlow:isNew?'0 22px 54px rgba(203,119,42,.22), 0 0 0 4px #FFE7C3':'0 16px 34px rgba(55,40,20,.08)',
+      cardBg:isNew?'#FFF9EF':'#fff',
+      itemsBg:isNew?'#FFF2DF':'#FBFAF7', itemsBorder:isNew?'#E9C98C':'#EEEAE2',
+      timeBg:isNew?'#FBF0DB':'#F1EDE5',
+      borderColor:isNew?'#E7B770':'#E7E2D9', borderWidth:isNew?'1.5px':'1px',
+      glow:isNew?'0 0 0 4px #FBF1DD':'none',
+      hoverGlow:isNew?'0 12px 30px rgba(203,119,42,.12), 0 0 0 4px #FBF1DD':'0 12px 28px rgba(55,40,20,.07)',
       hasAlert:isNew, alertText:'Čeká na potvrzení',
       itemsPreview:preview, itemsCountLabel:o.items.length+' pol.', hasMoreItems:o.items.length>4, moreItemsText:'+ '+(o.items.length-4)+' další položky',
       btnLabel:isRoute?'✓ Označit jako doručeno':'Odeslat na rozvoz →',
@@ -781,9 +782,13 @@ class Component extends DCLogic {
     const s=this.state;
     // nav
     const nav={}; ['orders','menu','akce','prijmy','adresy'].forEach(k=>{ const a=s.view===k; nav[k]={
-      bg:a?'rgba(255,255,255,.09)':'transparent', fg:a?'#fff':'#8E877D', border:'transparent',
-      shadow:'none', iconBg:a?'rgba(255,255,255,.06)':'transparent',
-      iconFg:a?'#fff':'#817A70', labelFg:a?'#fff':'#8E877D', accent:0, accentColor:'transparent'
+      bg:a?'#FBFAF7':'transparent', fg:a?'#211E1A':'#8B857A',
+      hoverBg:a?'#FBFAF7':'rgba(255,255,255,.48)',
+      flex:a?2.1:1,
+      radius:a?'18px 0 0 18px':'15px',
+      mr:a?'-1px':'6px',
+      z:a?3:1,
+      shadow:a?'0 8px 20px -8px rgba(40,25,10,.30), 0 1px 0 #FBFAF7':'none'
     }; });
     // orders
     const active=s.orders.filter(o=>o.status!=='done').map(o=>this.cardView(o));
@@ -798,7 +803,7 @@ class Component extends DCLogic {
     const menuItems=menuList.map(it=>{ const sel=selectedRaw&&selectedRaw.id===it.id; const inPromo=s.promo.pizzaIds.includes(it.id);
       return { ...it, hasImg:!!it.img, noImg:!it.img, priceText:it.price+' Kč', inPromo,
         soldLabel:it.soldOut?'Vyprodáno':'V nabídce', soldBg:it.soldOut?'#F6E3E0':'#E7F0E7', soldFg:it.soldOut?'#B4472B':'#3B6B48',
-        rowOpacity:it.soldOut?0.62:1, cardBg:sel?'#FFFDF7':'#fff', cardBorder:sel?'#C15F3C':(it.soldOut?'#E7B8AE':'#E7E2D9'), cardShadow:sel?'0 16px 34px rgba(193,95,60,.18)':'none',
+        rowOpacity:it.soldOut?0.62:1, cardBg:sel?'#FFFDF8':'#fff', cardBorder:sel?'#D8C5A8':(it.soldOut?'#E7B8AE':'#E7E2D9'), cardShadow:sel?'0 10px 22px rgba(55,40,20,.06)':'none',
         select:()=>this.setState({menuEditId:it.id}) };
     });
     const selectedIsPizza=selectedRaw&&selectedRaw.id.indexOf('p')===0;
