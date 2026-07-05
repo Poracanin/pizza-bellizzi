@@ -178,6 +178,7 @@
         <div class="tab-shell">
           <button onClick="{{ menu.tabPizza }}" class="tab-btn" style="background:{{ menu.pizzaTabBg }};color:{{ menu.pizzaTabFg }}">Pizzy · {{ menu.pizzaCount }}</button>
           <button onClick="{{ menu.tabDrink }}" class="tab-btn" style="background:{{ menu.drinkTabBg }};color:{{ menu.drinkTabFg }}">Nápoje · {{ menu.drinkCount }}</button>
+          <button onClick="{{ menu.tabExtra }}" class="tab-btn" style="background:{{ menu.extraTabBg }};color:{{ menu.extraTabFg }}">Suroviny · {{ menu.extraCount }}</button>
         </div>
         <div class="menu-pills">
           <span class="pill pill-info">{{ menu.totalLabel }}</span>
@@ -190,6 +191,9 @@
           <span>Pozor, tyto položky nejsou v nabídce: {{ menu.soldOutNames }}</span>
         </div>
       </sc-if>
+
+      <!-- PIZZY / NÁPOJE -->
+      <sc-if value="{{ menu.isItemsTab }}" hint-placeholder-val="{{ true }}">
       <div class="menu-layout">
         <div>
           <div class="menu-sec-head">
@@ -198,13 +202,18 @@
           </div>
           <div class="menu-grid">
             <sc-for list="{{ menu.items }}" as="it">
-              <button onClick="{{ it.select }}" class="menu-card" style="--cardBg:{{ it.cardBg }};--cardBorder:{{ it.cardBorder }};--cardShadow:{{ it.cardShadow }};--cardOpacity:{{ it.rowOpacity }}">
-                <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" class="menu-thumb"></sc-if>
-                <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div class="menu-placeholder"><svg width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
-                <div class="f1min0">
-                  <div class="menu-card-titlerow"><span class="menu-card-name">{{ it.name }}</span><span class="pill" style="background:{{ it.soldBg }};color:{{ it.soldFg }}">{{ it.soldLabel }}</span></div>
-                  <div class="menu-card-desc">{{ it.desc }}</div>
-                  <div class="menu-card-pricerow"><span class="menu-card-price">{{ it.priceText }}</span><sc-if value="{{ it.inPromo }}" hint-placeholder-val=""><span class="pill pill-amber">Akce</span></sc-if></div>
+              <button onClick="{{ it.select }}" class="menu-card {{ it.selClass }}" style="--cardOpacity:{{ it.rowOpacity }}">
+                <div class="menu-card-media">
+                  <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" class="menu-photo" loading="lazy"></sc-if>
+                  <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div class="menu-photo menu-photo--ph"><svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 20l4-9 3 5 3-7 6 11z"/><circle cx="8" cy="7" r="2"/></svg></div></sc-if>
+                  <sc-if value="{{ it.hasBadges }}" hint-placeholder-val=""><div class="menu-card-badges"><sc-for list="{{ it.badges }}" as="b"><span class="menu-badge {{ b.cls }}">{{ b.label }}</span></sc-for></div></sc-if>
+                  <sc-if value="{{ it.soldOut }}" hint-placeholder-val=""><div class="menu-soldout-overlay"><span>Vyprodáno</span></div></sc-if>
+                </div>
+                <div class="menu-card-body">
+                  <div class="menu-card-titlerow"><span class="menu-card-name">{{ it.name }}</span><span class="menu-card-price">{{ it.priceText }}</span></div>
+                  <div class="menu-card-base">{{ it.baseLabel }}</div>
+                  <sc-if value="{{ it.isPizza }}" hint-placeholder-val="{{ true }}"><div class="menu-card-ings">{{ it.desc }}</div></sc-if>
+                  <sc-if value="{{ it.isPizza }}" hint-placeholder-val="{{ true }}"><div class="menu-card-foot"><span class="menu-allerg">Alergeny: {{ it.allergText }}</span><sc-if value="{{ it.inPromo }}" hint-placeholder-val=""><span class="pill pill-amber">V akci</span></sc-if></div></sc-if>
                 </div>
               </button>
             </sc-for>
@@ -213,21 +222,42 @@
         <div class="editor-panel">
           <div class="editor-head">
             <sc-if value="{{ menu.selected.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ menu.selected.img }}" class="editor-thumb"></sc-if>
-            <sc-if value="{{ menu.selected.noImg }}" hint-placeholder-val=""><div class="menu-placeholder menu-placeholder--lg"><svg width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
+            <sc-if value="{{ menu.selected.noImg }}" hint-placeholder-val=""><div class="menu-placeholder menu-placeholder--lg"><svg width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M4 20l4-9 3 5 3-7 6 11z"/><circle cx="8" cy="7" r="2"/></svg></div></sc-if>
             <div class="min0">
-              <div class="editor-eyebrow">Vybraná položka</div>
+              <div class="editor-eyebrow">{{ menu.selected.eyebrow }} · úprava</div>
               <div class="editor-title">{{ menu.selected.name }}</div>
             </div>
           </div>
           <div class="stack14">
             <div><div class="field-label">Název</div><input class="input-like" value="{{ menu.selected.name }}" onInput="{{ menu.selected.setName }}"></div>
-            <div><div class="field-label">Popis</div><textarea class="input-like textarea-like" value="{{ menu.selected.desc }}" onInput="{{ menu.selected.setDesc }}"></textarea></div>
+            <div><div class="field-label">Ingredience</div><textarea class="input-like textarea-like" value="{{ menu.selected.desc }}" onInput="{{ menu.selected.setDesc }}"></textarea></div>
+            <sc-if value="{{ menu.selected.isPizza }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div class="field-label">Základ</div>
+              <div class="seg-toggle">
+                <button onClick="{{ menu.selected.setBaseTomato }}" class="seg-btn {{ menu.selected.baseTomatoClass }}"><span class="seg-dot seg-dot--tomato"></span>Rajčatový</button>
+                <button onClick="{{ menu.selected.setBaseCream }}" class="seg-btn {{ menu.selected.baseCreamClass }}"><span class="seg-dot seg-dot--cream"></span>Smetanový</button>
+              </div>
+            </div>
+            </sc-if>
             <div>
               <div class="field-label">Cena</div>
               <div class="price-row"><input type="number" value="{{ menu.selected.price }}" onInput="{{ menu.selected.setPrice }}" class="price-input"><span class="price-suffix">Kč</span></div>
             </div>
+            <sc-if value="{{ menu.selected.isPizza }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div class="field-label">Štítky</div>
+              <div class="tagtoggle-row"><sc-for list="{{ menu.selected.tagChips }}" as="tg"><button onClick="{{ tg.toggle }}" class="tagtoggle {{ tg.cls }} {{ tg.activeClass }}">{{ tg.label }}</button></sc-for></div>
+            </div>
+            </sc-if>
+            <sc-if value="{{ menu.selected.hasAllerg }}" hint-placeholder-val="">
+            <div>
+              <div class="field-label">Alergeny</div>
+              <div class="allerg-chips"><sc-for list="{{ menu.selected.allergChips }}" as="al"><span class="allerg-chip"><b>{{ al.num }}</b>{{ al.name }}</span></sc-for></div>
+            </div>
+            </sc-if>
             <button onClick="{{ menu.selected.toggleSold }}" class="btn-block" style="background:{{ menu.selected.soldBtnBg }};color:{{ menu.selected.soldBtnFg }}">{{ menu.selected.soldBtnLabel }}</button>
-            <button onClick="{{ menu.selected.togglePromo }}" class="btn-block-outline">{{ menu.selected.promoBtnLabel }}</button>
+            <sc-if value="{{ menu.selected.isPizza }}" hint-placeholder-val="{{ true }}"><button onClick="{{ menu.selected.togglePromo }}" class="btn-block-outline {{ menu.selected.promoActiveClass }}">{{ menu.selected.promoBtnLabel }}</button></sc-if>
             <div class="editor-status-row">
               <span class="editor-status-label">Stav položky</span>
               <span class="pill" style="background:{{ menu.selected.statusBg }};color:{{ menu.selected.statusFg }}">{{ menu.selected.statusText }}</span>
@@ -235,6 +265,40 @@
           </div>
         </div>
       </div>
+      </sc-if>
+
+      <!-- SUROVINY NAVÍC -->
+      <sc-if value="{{ menu.isExtrasTab }}" hint-placeholder-val="">
+      <div class="extras-wrap">
+        <div class="extras-settings">
+          <div class="extras-set-card">
+            <div class="field-label">Cena za surovinu navíc</div>
+            <div class="price-row"><input type="number" value="{{ menu.extraPrice }}" onInput="{{ menu.setExtraPrice }}" class="price-input"><span class="price-suffix">Kč</span></div>
+            <div class="extras-set-hint">Účtuje se za každou přidanou surovinu.</div>
+          </div>
+          <div class="extras-set-card">
+            <div class="field-label">Změna základu</div>
+            <div class="price-row"><input type="number" value="{{ menu.baseChangePrice }}" onInput="{{ menu.setBaseChangePrice }}" class="price-input"><span class="price-suffix">Kč</span></div>
+            <div class="extras-set-hint">Rajčatový ⇄ smetanový základ.</div>
+          </div>
+        </div>
+        <div class="menu-sec-head">
+          <span class="menu-sec-title">Suroviny navíc</span>
+          <span class="menu-sec-avail">{{ menu.extraAvailLabel }}</span>
+        </div>
+        <div class="extras-grid">
+          <sc-for list="{{ menu.extras }}" as="ex">
+            <div class="extra-item {{ ex.availClass }}">
+              <div class="extra-item-main">
+                <span class="extra-item-name">{{ ex.name }}</span>
+                <span class="extra-item-price">{{ ex.priceText }}</span>
+              </div>
+              <button onClick="{{ ex.toggle }}" class="extra-item-toggle {{ ex.availClass }}">{{ ex.availLabel }}</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
     </div>
     </sc-if>
 
@@ -532,10 +596,28 @@
               <button onClick="{{ no.tabPizza }}" class="no-tab-btn" style="background:{{ no.pizzaTabBg }};color:{{ no.pizzaTabFg }}">Pizzy</button>
               <button onClick="{{ no.tabDrink }}" class="no-tab-btn" style="background:{{ no.drinkTabBg }};color:{{ no.drinkTabFg }}">Nápoje</button>
             </div>
+            <div class="no-scroll-area">
             <sc-if value="{{ no.isPizzaTab }}" hint-placeholder-val="{{ true }}">
               <div class="no-builder">
-                <div class="no-build-left">
-                  <div class="no-build-head"><div><div class="no-build-title">Pizza na půl</div><div class="no-build-sub">Dražší půlka určí cenu · suroviny +15 Kč</div></div><span class="pill pill-green">{{ no.custom.summary }}</span></div>
+                <div class="no-cfg-hero">
+                  <div class="no-pizza-viz" style="border-color:{{ no.custom.baseRing }}">
+                    <div class="no-pizza-half no-pizza-half--l" style="background-image:url({{ no.custom.leftImg }})"></div>
+                    <div class="no-pizza-half no-pizza-half--r" style="background-image:url({{ no.custom.rightImg }})"></div>
+                    <sc-if value="{{ no.custom.isHalf }}" hint-placeholder-val=""><div class="no-pizza-split"></div></sc-if>
+                    <sc-if value="{{ no.custom.isHalf }}" hint-placeholder-val=""><span class="no-pizza-badge">½ + ½</span></sc-if>
+                  </div>
+                  <div class="no-cfg-summary">
+                    <div class="no-cfg-eyebrow">Pizza na míru</div>
+                    <div class="no-cfg-name">{{ no.custom.summary }}</div>
+                    <div class="no-cfg-tags">
+                      <span class="no-cfg-tag" style="background:{{ no.custom.baseChipBg }};color:{{ no.custom.baseChipFg }}">{{ no.custom.baseText }}</span>
+                      <sc-if value="{{ no.custom.hasExtras }}" hint-placeholder-val=""><span class="no-cfg-tag is-extra">{{ no.custom.extrasCountText }}</span></sc-if>
+                    </div>
+                    <div class="no-cfg-extras">{{ no.custom.extrasText }}</div>
+                    <div class="no-cfg-price"><span class="no-cfg-price-label">Cena za kus</span><span class="no-cfg-price-val">{{ no.custom.unitText }}</span></div>
+                  </div>
+                </div>
+                <div class="no-cfg-controls">
                   <div class="no-builder-grid">
                     <div><div class="field-label">Levá půlka</div><select value="{{ no.custom.leftId }}" onChange="{{ no.custom.setLeft }}"><sc-for list="{{ no.pizzaOptions }}" as="p"><option value="{{ p.id }}">{{ p.label }}</option></sc-for></select></div>
                     <div><div class="field-label">Pravá půlka</div><select value="{{ no.custom.rightId }}" onChange="{{ no.custom.setRight }}"><sc-for list="{{ no.pizzaOptions }}" as="p"><option value="{{ p.id }}">{{ p.label }}</option></sc-for></select></div>
@@ -543,20 +625,28 @@
                   <div>
                     <div class="field-label">Základ</div>
                     <div class="no-base-row">
-                      <button onClick="{{ no.custom.baseTomato }}" class="no-base-btn" style="border-color:{{ no.custom.tomatoBorder }};background:{{ no.custom.tomatoBg }};color:{{ no.custom.tomatoFg }}">Rajčatový</button>
-                      <button onClick="{{ no.custom.baseCream }}" class="no-base-btn" style="border-color:{{ no.custom.creamBorder }};background:{{ no.custom.creamBg }};color:{{ no.custom.creamFg }}">Smetanový</button>
+                      <button onClick="{{ no.custom.baseTomato }}" class="no-base-btn" style="border-color:{{ no.custom.tomatoBorder }};background:{{ no.custom.tomatoBg }};color:{{ no.custom.tomatoFg }}"><span class="no-base-dot" style="background:#C15F3C"></span>Rajčatový</button>
+                      <button onClick="{{ no.custom.baseCream }}" class="no-base-btn" style="border-color:{{ no.custom.creamBorder }};background:{{ no.custom.creamBg }};color:{{ no.custom.creamFg }}"><span class="no-base-dot" style="background:#E4D3A8"></span>Smetanový <span class="no-base-plus">+{{ no.custom.baseChangeText }}</span></button>
                     </div>
                   </div>
-                  <div><div class="field-label">Suroviny navíc</div><div class="no-extra-list"><sc-for list="{{ no.custom.extras }}" as="ex"><button onClick="{{ ex.toggle }}" class="no-extra-chip {{ ex.className }}">{{ ex.name }}</button></sc-for></div></div>
+                  <div>
+                    <div class="field-label">Suroviny navíc · +{{ no.custom.extraPxText }} / ks</div>
+                    <div class="no-extra-list"><sc-for list="{{ no.custom.extras }}" as="ex"><button onClick="{{ ex.toggle }}" class="no-extra-chip {{ ex.className }}"><span>{{ ex.name }}</span><span class="no-extra-px">+{{ ex.pxText }}</span></button></sc-for></div>
+                  </div>
+                  <div>
+                    <div class="field-label">Poznámka k pizze (nepovinné)</div>
+                    <input value="{{ no.custom.note }}" onInput="{{ no.custom.setNote }}" placeholder="např. bez cibule, dobře propečená" class="no-input no-cfg-note">
+                  </div>
                 </div>
-                <div class="no-build-right">
-                  <div><div class="uplabel">Cena za kus</div><div class="no-unit">{{ no.custom.unitText }}</div></div>
+                <div class="no-cfg-actions">
                   <div class="no-qty-row"><button onClick="{{ no.custom.decQty }}" class="no-qty-dec">−</button><span class="no-qty-val">{{ no.custom.qty }}</span><button onClick="{{ no.custom.incQty }}" class="no-qty-inc">+</button></div>
-                  <button onClick="{{ no.custom.add }}" class="no-add-btn" style="background:{{ no.custom.addBg }};color:{{ no.custom.addFg }}">{{ no.custom.addLabel }}</button>
+                  <sc-if value="{{ no.custom.editing }}" hint-placeholder-val=""><button onClick="{{ no.custom.cancelEdit }}" class="no-cfg-cancel">Zrušit</button></sc-if>
+                  <button onClick="{{ no.custom.add }}" class="no-add-btn no-cfg-add" style="background:{{ no.custom.addBg }};color:{{ no.custom.addFg }}">{{ no.custom.addLabel }}</button>
                 </div>
               </div>
             </sc-if>
             <div class="no-menu-list">
+              <div class="no-menu-caption">Rychlé přidání z nabídky</div>
               <sc-for list="{{ no.menuItems }}" as="it">
                 <div class="no-menu-row" style="background:{{ it.rowBg }};opacity:{{ it.rowOpacity }}">
                   <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" class="no-menu-img"></sc-if>
@@ -571,15 +661,17 @@
                 </div>
               </sc-for>
             </div>
+            </div>
             <div class="no-foot">
               <sc-if value="{{ no.cartEmpty }}" hint-placeholder-val="{{ true }}"><div class="no-cart-empty">Košík je prázdný — přidej položky</div></sc-if>
               <sc-if value="{{ no.hasCartRows }}" hint-placeholder-val="">
                 <div class="no-cart-list">
                   <sc-for list="{{ no.cartRows }}" as="r" hint-placeholder-count="3">
-                    <div class="no-cart-row">
-                      <div class="min0"><div class="no-cart-name">{{ r.name }}</div><div class="no-cart-desc">{{ r.desc }}</div></div>
+                    <div class="no-cart-row {{ r.rowClass }}">
+                      <div class="f1min0"><div class="no-cart-name">{{ r.name }}</div><div class="no-cart-desc">{{ r.desc }}</div></div>
                       <span class="no-cart-qty">{{ r.qtyText }}</span>
                       <span class="no-cart-line">{{ r.lineText }}</span>
+                      <sc-if value="{{ r.isCustom }}" hint-placeholder-val=""><button onClick="{{ r.edit }}" class="no-cart-edit" title="Upravit pizzu">✎</button></sc-if>
                       <button onClick="{{ r.remove }}" class="no-cart-x">×</button>
                     </div>
                   </sc-for>
@@ -611,36 +703,43 @@ class Component extends DCLogic {
     menuEditId:'p1',
     adrQuery:'',
     promo:{ active:true, price:179, pizzaIds:['p1','p2','p3'], codeActive:true, code:'POLEDNE20', discount:15, validUntil:'2026-07-31' },
-    newOrder:{ open:false, query:'', customerId:null, nc:{name:'',phone:'',address:'',zone:'Zóna 1'}, cart:{}, customLines:[], custom:{leftId:'p1',rightId:'p1',base:'tomato',extras:[],qty:1}, payment:'cash', time:30, tab:'pizza' },
+    newOrder:{ open:false, query:'', customerId:null, nc:{name:'',phone:'',address:'',zone:'Zóna 1'}, cart:{}, customLines:[], custom:{leftId:'p1',rightId:'p1',base:'tomato',extras:[],qty:1,note:''}, editIdx:null, payment:'cash', time:30, tab:'pizza' },
+    extraPrice:15,
+    baseChangePrice:20,
+    extras:[
+      {id:'x1',name:'Mozzarella',soldOut:false}, {id:'x2',name:'Parmazán',soldOut:false}, {id:'x3',name:'Niva',soldOut:false}, {id:'x4',name:'Hermelín',soldOut:false}, {id:'x5',name:'Šunka',soldOut:false}, {id:'x6',name:'Salám',soldOut:false},
+      {id:'x7',name:'Slanina',soldOut:false}, {id:'x8',name:'Klobása',soldOut:false}, {id:'x9',name:'Kuřecí maso',soldOut:false}, {id:'x10',name:'Tuňák',soldOut:false}, {id:'x11',name:'Žampiony',soldOut:false}, {id:'x12',name:'Olivy',soldOut:false},
+      {id:'x13',name:'Kukuřice',soldOut:false}, {id:'x14',name:'Ananas',soldOut:false}, {id:'x15',name:'Feferonky',soldOut:false}, {id:'x16',name:'Cibule',soldOut:false}, {id:'x17',name:'Česnek',soldOut:false}, {id:'x18',name:'Bazalka čerstvá',soldOut:false}
+    ],
     pizzas:[
-      {id:'p1',name:'Margherita',base:'tomato',desc:'rajčatový základ, mozzarella, bazalka',price:206,soldOut:false,img:'assets/pizza/margherita.webp'},
-      {id:'p2',name:'Šunková',base:'tomato',desc:'rajčatový základ, mozzarella, šunka',price:206,soldOut:false,img:'assets/pizza/sunkova.webp'},
-      {id:'p3',name:'Salámová',base:'tomato',desc:'rajčatový základ, mozzarella, salám',price:206,soldOut:false,img:'assets/pizza/salamova.webp'},
-      {id:'p4',name:'Houbová',base:'tomato',desc:'rajčatový základ, mozzarella, žampiony',price:206,soldOut:true,img:'assets/pizza/houbova.webp'},
-      {id:'p5',name:'Vegetariana',base:'tomato',desc:'mozzarella, brokolice, kukuřice',price:206,soldOut:false,img:'assets/pizza/vegetariana.webp'},
-      {id:'p6',name:'Olivová',base:'tomato',desc:'mozzarella, olivy, niva',price:206,soldOut:false,img:'assets/pizza/olivova.webp'},
-      {id:'p7',name:'Slaninová',base:'tomato',desc:'mozzarella, slanina',price:206,soldOut:false,img:'assets/pizza/slaninova.webp'},
-      {id:'p8',name:'Americana',base:'tomato',desc:'mozzarella, šunka, kukuřice',price:218,soldOut:false,img:'assets/pizza/americana.webp'},
-      {id:'p9',name:'Hawai',base:'tomato',desc:'mozzarella, šunka, ananas',price:218,soldOut:false,img:'assets/pizza/hawai.webp'},
-      {id:'p10',name:'Capricciosa',base:'tomato',desc:'mozzarella, šunka, žampiony',price:218,soldOut:false,img:'assets/pizza/capricciosa.webp'},
-      {id:'p11',name:'Špenátová',base:'tomato',desc:'slanina, špenát, česnek',price:218,soldOut:false,img:'assets/pizza/spenatova.webp'},
-      {id:'p12',name:'Kuřecí',base:'tomato',desc:'kuřecí maso, kukuřice, parmazán',price:218,soldOut:false,img:'assets/pizza/kureci.webp'},
-      {id:'p13',name:'Picante',base:'tomato',desc:'pikantní salám, kozí rohy, feferonky',price:218,soldOut:false,img:'assets/pizza/picante.webp'},
-      {id:'p14',name:'Vegetariana extra',base:'tomato',desc:'kukuřice, brokolice, špenát, žampiony',price:218,soldOut:false,img:'assets/pizza/vegetariana-extra.webp'},
-      {id:'p15',name:'Nivová',base:'cream',desc:'smetanový základ, niva',price:218,soldOut:false,img:'assets/pizza/nivova.webp'},
-      {id:'p16',name:'Kari kuřecí',base:'cream',desc:'smetanový základ, kuřecí na kari, pórek',price:218,soldOut:false,img:'assets/pizza/kari-kureci.webp'},
-      {id:'p17',name:'Selská',base:'tomato',desc:'slanina, klobása, zelí',price:230,soldOut:false,img:'assets/pizza/selska.webp'},
-      {id:'p18',name:'Tuňáková',base:'tomato',desc:'tuňák, olivy, cibule',price:230,soldOut:false,img:'assets/pizza/tunakova.webp'},
-      {id:'p19',name:'Quattro formaggi',base:'cream',desc:'smetanový základ, hermelín, niva, parmazán',price:230,soldOut:false,img:'assets/pizza/quattro.webp'},
-      {id:'p20',name:'Bellizzi',base:'tomato',desc:'šunka, salám, slanina, kozí rohy',price:230,soldOut:false,img:'assets/pizza/bellizzi.webp'},
+      {id:'p1',name:'Margherita',base:'tomato',desc:'mozzarella, bazalka',price:206,soldOut:false,tags:['veg','classic'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/01-margherita.webp'},
+      {id:'p2',name:'Šunková',base:'tomato',desc:'mozzarella, šunka',price:206,soldOut:false,tags:['classic'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/02-sunkova.webp'},
+      {id:'p3',name:'Salámová',base:'tomato',desc:'mozzarella, salám',price:206,soldOut:false,tags:['classic'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/03-salamova.webp'},
+      {id:'p4',name:'Houbová',base:'tomato',desc:'mozzarella, žampiony',price:206,soldOut:true,tags:['veg'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/04-houbova.webp'},
+      {id:'p5',name:'Vegetariana',base:'tomato',desc:'mozzarella, brokolice, kukuřice',price:206,soldOut:false,tags:['veg'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/05-vegetariana.webp'},
+      {id:'p6',name:'Olivová',base:'tomato',desc:'mozzarella, olivy, niva',price:206,soldOut:false,tags:['veg'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/06-olivova.webp'},
+      {id:'p7',name:'Slaninová',base:'tomato',desc:'mozzarella, slanina',price:206,soldOut:false,tags:['classic'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/07-slaninova.webp'},
+      {id:'p8',name:'Americana',base:'tomato',desc:'mozzarella, šunka, kukuřice',price:218,soldOut:false,tags:['classic'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/08-americana.webp'},
+      {id:'p9',name:'Hawai',base:'tomato',desc:'mozzarella, šunka, ananas',price:218,soldOut:false,tags:['classic'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/09-hawai.webp'},
+      {id:'p10',name:'Capricciosa',base:'tomato',desc:'mozzarella, šunka, žampiony',price:218,soldOut:false,tags:['classic'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/10-capricciosa.webp'},
+      {id:'p11',name:'Špenátová',base:'tomato',desc:'mozzarella, slanina, špenát, česnek',price:218,soldOut:false,tags:['hit'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/11-spenatova.webp'},
+      {id:'p12',name:'Kuřecí',base:'tomato',desc:'mozzarella, kuřecí maso, kukuřice, parmazán',price:218,soldOut:false,tags:['classic'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/12-kureci.webp'},
+      {id:'p13',name:'Picante',base:'tomato',desc:'mozzarella, pikantní salám, kozí rohy, feferonky',price:218,soldOut:false,tags:['spicy'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/13-picante.webp'},
+      {id:'p14',name:'Vegetariana extra',base:'tomato',desc:'mozzarella, kukuřice, brokolice, špenát, žampiony',price:218,soldOut:false,tags:['veg'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/14-vegetariana-extra.webp'},
+      {id:'p15',name:'Nivová',base:'cream',desc:'mozzarella, niva',price:218,soldOut:false,tags:['veg','cream'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/15-nivova.webp'},
+      {id:'p16',name:'Kari kuřecí',base:'cream',desc:'mozzarella, kuřecí na kari, pórek, parmazán',price:218,soldOut:false,tags:['cream','hit'],allergens:[1,7,10],img:'../jidla-pizza-vylepsene-webp/16-kari-kureci.webp'},
+      {id:'p17',name:'Selská',base:'tomato',desc:'mozzarella, slanina, klobása, zelí',price:230,soldOut:false,tags:['classic'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/17-selska.webp'},
+      {id:'p18',name:'Tuňáková',base:'tomato',desc:'mozzarella, tuňák, olivy, cibule',price:230,soldOut:false,tags:[],allergens:[1,4,7],img:'../jidla-pizza-vylepsene-webp/18-tunakova.webp'},
+      {id:'p19',name:'Quattro formaggi',base:'cream',desc:'mozzarella, hermelín, niva, parmazán',price:230,soldOut:false,tags:['veg','cream'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/19-quattro-formaggi.webp'},
+      {id:'p20',name:'Bellizzi',base:'tomato',desc:'mozzarella, šunka, salám, slanina, kozí rohy',price:230,soldOut:false,tags:['hit'],allergens:[1,7],img:'../jidla-pizza-vylepsene-webp/20-bellizzi.webp'},
     ],
     drinks:[
-      {id:'d1',name:'Mirinda 330ml',desc:'nápoj',price:25,soldOut:false,img:null},
-      {id:'d2',name:'Pepsi 330ml',desc:'nápoj',price:25,soldOut:false,img:null},
-      {id:'d3',name:'Pepsi zero 330ml',desc:'nápoj',price:25,soldOut:false,img:null},
-      {id:'d4',name:'7UP zero 330ml',desc:'nápoj',price:25,soldOut:false,img:null},
-      {id:'d5',name:'Capri-Sun 200ml',desc:'nápoj',price:15,soldOut:false,img:null},
-      {id:'d6',name:'Džus Relax 200ml',desc:'nápoj',price:30,soldOut:false,img:null},
+      {id:'d1',name:'Mirinda 330ml',desc:'sycený nápoj',price:25,soldOut:false,img:null},
+      {id:'d2',name:'Pepsi 330ml',desc:'sycený nápoj',price:25,soldOut:false,img:null},
+      {id:'d3',name:'Pepsi zero 330ml',desc:'sycený nápoj bez cukru',price:25,soldOut:false,img:null},
+      {id:'d4',name:'7UP zero 330ml',desc:'sycený nápoj bez cukru',price:25,soldOut:false,img:null},
+      {id:'d5',name:'Capri-Sun 200ml',desc:'ovocný nápoj',price:15,soldOut:false,img:null},
+      {id:'d6',name:'Džus Relax 200ml',desc:'100% ovocná šťáva',price:30,soldOut:false,img:null},
     ],
     customers:[
       {id:'c1',name:'Jana Nováková',phone:'+420 606 214 880',address:'Wagnerovo nám. 12',city:'Beroun',zone:'Zóna 1',orders:12,last:'včera'},
@@ -653,36 +752,35 @@ class Component extends DCLogic {
     ],
     orders:[
       { id:248, num:248, status:'new', name:'Jana Nováková', address:'Wagnerovo nám. 12', city:'Beroun', zone:'Zóna 1', phone:'+420 606 214 880', payment:'online', ago:1, placedAt:'14:22', within:null, note:'Zvonek nefunguje, prosím zavolat po příjezdu.',
-        items:[ {qty:1,name:'½ Margherita + ½ Bellizzi',desc:'rajčatový základ · navíc: Niva, Slanina',price:245,img:'assets/pizza/margherita.webp',half:true,extras:['Niva','Slanina']}, {qty:1,name:'Pepsi 330ml',desc:'nápoj',price:25,img:null} ] },
+        items:[ {qty:1,name:'½ Margherita + ½ Bellizzi',desc:'rajčatový základ · navíc: Niva, Slanina',price:245,img:'../jidla-pizza-vylepsene-webp/01-margherita.webp',half:true,extras:['Niva','Slanina']}, {qty:1,name:'Pepsi 330ml',desc:'nápoj',price:25,img:null} ] },
       { id:247, num:247, status:'prep', name:'Petr Svoboda', address:'Tyršova 445', city:'Beroun-Město', zone:'Zóna 1', phone:'+420 720 118 244', payment:'cash', ago:6, placedAt:'14:17', within:30, note:'',
-        items:[ {qty:1,name:'Bellizzi',desc:'šunka, salám, slanina, kozí rohy · navíc: Feferonky',price:245,img:'assets/pizza/bellizzi.webp',extras:['Feferonky']}, {qty:1,name:'Šunková',desc:'rajčatový základ, mozzarella, šunka',price:206,img:'assets/pizza/sunkova.webp'} ] },
+        items:[ {qty:1,name:'Bellizzi',desc:'šunka, salám, slanina, kozí rohy · navíc: Feferonky',price:245,img:'../jidla-pizza-vylepsene-webp/20-bellizzi.webp',extras:['Feferonky']}, {qty:1,name:'Šunková',desc:'rajčatový základ, mozzarella, šunka',price:206,img:'../jidla-pizza-vylepsene-webp/02-sunkova.webp'} ] },
       { id:246, num:246, status:'route', name:'Marie Dvořáková', address:'Košťálkova 8', city:'Beroun', zone:'Zóna 2', phone:'+420 777 340 112', payment:'online', ago:18, placedAt:'14:05', within:30, note:'Nechat u sousedů, byt č. 4.',
-        items:[ {qty:1,name:'Quattro formaggi',desc:'smetanový základ, hermelín, niva, parmazán',price:230,img:'assets/pizza/quattro.webp'}, {qty:1,name:'Capri-Sun 200ml',desc:'nápoj',price:15,img:null} ] },
+        items:[ {qty:1,name:'Quattro formaggi',desc:'smetanový základ, hermelín, niva, parmazán',price:230,img:'../jidla-pizza-vylepsene-webp/19-quattro-formaggi.webp'}, {qty:1,name:'Capri-Sun 200ml',desc:'nápoj',price:15,img:null} ] },
       { id:245, num:245, status:'prep', name:'Lukáš Horák', address:'Na Parkáně 3', city:'Králův Dvůr', zone:'Zóna 3', phone:'+420 605 998 021', payment:'cash', ago:3, placedAt:'14:20', within:45, note:'',
-        items:[ {qty:3,name:'Salámová',desc:'rajčatový základ, mozzarella, salám',price:206,img:'assets/pizza/salamova.webp'} ] },
+        items:[ {qty:3,name:'Salámová',desc:'rajčatový základ, mozzarella, salám',price:206,img:'../jidla-pizza-vylepsene-webp/03-salamova.webp'} ] },
       { id:242, num:242, status:'new', name:'Anna Pokorná', address:'Bratří Nejedlých 12', city:'Králův Dvůr', zone:'Zóna 3', phone:'+420 731 664 890', payment:'online', ago:2, placedAt:'14:21', within:null, note:'Prosím bez zvonění, malé dítě spí.',
-        items:[ {qty:1,name:'Americana',desc:'mozzarella, šunka, kukuřice',price:218,img:'assets/pizza/americana.webp'}, {qty:1,name:'Pepsi zero 330ml',desc:'nápoj',price:25,img:null} ] },
+        items:[ {qty:1,name:'Americana',desc:'mozzarella, šunka, kukuřice',price:218,img:'../jidla-pizza-vylepsene-webp/08-americana.webp'}, {qty:1,name:'Pepsi zero 330ml',desc:'nápoj',price:25,img:null} ] },
       { id:241, num:241, status:'prep', name:'David Černý', address:'Talichova 14', city:'Beroun', zone:'Zóna 1', phone:'+420 724 330 118', payment:'cash', ago:9, placedAt:'14:14', within:30, note:'',
-        items:[ {qty:2,name:'Picante',desc:'pikantní salám, kozí rohy, feferonky',price:218,img:'assets/pizza/picante.webp'}, {qty:1,name:'Mirinda 330ml',desc:'nápoj',price:25,img:null} ] },
+        items:[ {qty:2,name:'Picante',desc:'pikantní salám, kozí rohy, feferonky',price:218,img:'../jidla-pizza-vylepsene-webp/13-picante.webp'}, {qty:1,name:'Mirinda 330ml',desc:'nápoj',price:25,img:null} ] },
       { id:240, num:240, status:'route', name:'Klára Veselá', address:'Hostim 22', city:'Hostim', zone:'Zóna 3', phone:'+420 775 140 901', payment:'online', ago:24, placedAt:'13:59', within:45, note:'Dovoz k brance.',
-        items:[ {qty:1,name:'Selská',desc:'slanina, klobása, zelí',price:230,img:'assets/pizza/selska.webp'}, {qty:1,name:'Vegetariana extra',desc:'kukuřice, brokolice, špenát, žampiony',price:218,img:'assets/pizza/vegetariana-extra.webp'} ] },
+        items:[ {qty:1,name:'Selská',desc:'slanina, klobása, zelí',price:230,img:'../jidla-pizza-vylepsene-webp/17-selska.webp'}, {qty:1,name:'Vegetariana extra',desc:'kukuřice, brokolice, špenát, žampiony',price:218,img:'../jidla-pizza-vylepsene-webp/14-vegetariana-extra.webp'} ] },
       { id:244, num:244, status:'done', name:'Tomáš Marek', address:'Plzeňská 120', city:'Beroun', zone:'Zóna 1', phone:'+420 728 441 209', payment:'cash', ago:41, placedAt:'13:42', within:30, time:'14:02', note:'',
-        items:[ {qty:1,name:'Hawai',desc:'šunka, ananas',price:218,img:'assets/pizza/hawai.webp'}, {qty:1,name:'Picante',desc:'pikantní salám, kozí rohy, feferonky',price:218,img:'assets/pizza/picante.webp'} ] },
+        items:[ {qty:1,name:'Hawai',desc:'šunka, ananas',price:218,img:'../jidla-pizza-vylepsene-webp/09-hawai.webp'}, {qty:1,name:'Picante',desc:'pikantní salám, kozí rohy, feferonky',price:218,img:'../jidla-pizza-vylepsene-webp/13-picante.webp'} ] },
       { id:243, num:243, status:'done', name:'Eva Králová', address:'Havlíčkova 22', city:'Beroun', zone:'Zóna 2', phone:'+420 603 771 004', payment:'online', ago:55, placedAt:'13:28', within:30, time:'13:48', note:'',
-        items:[ {qty:1,name:'Margherita',desc:'rajčatový základ, mozzarella, bazalka',price:206,img:'assets/pizza/margherita.webp'} ] },
+        items:[ {qty:1,name:'Margherita',desc:'rajčatový základ, mozzarella, bazalka',price:206,img:'../jidla-pizza-vylepsene-webp/01-margherita.webp'} ] },
     ],
   };
 
   META = { new:{label:'Nová',bg:'#C98A2E'}, prep:{label:'Připravuje se',bg:'#C15F3C'}, route:{label:'Na cestě',bg:'#3E6DA8'}, done:{label:'Doručeno',bg:'#4B8B5C'} };
   HEADS = { orders:{title:'Objednávky',sub:'Pátek 3. 7. · 14:23'}, menu:{title:'Menu',sub:'Ceny a dostupnost'}, akce:{title:'Akce',sub:'Polední zvýhodněné menu'}, prijmy:{title:'Příjmy',sub:'Přehled tržeb'}, adresy:{title:'Adresy',sub:'Zóny a databáze zákazníků'} };
   ZONEC = { 'Zóna 1':{fg:'#3B6B48',bg:'#E7F0E7',dot:'#4B8B5C'}, 'Zóna 2':{fg:'#7A6A2E',bg:'#F3EEDC',dot:'#C9A24E'}, 'Zóna 3':{fg:'#3E5B8A',bg:'#E9EFF7',dot:'#3E6DA8'} };
-  EXTRAS = [
-    {id:'x1',name:'Mozzarella'}, {id:'x2',name:'Parmazán'}, {id:'x3',name:'Niva'}, {id:'x4',name:'Hermelín'}, {id:'x5',name:'Šunka'}, {id:'x6',name:'Salám'},
-    {id:'x7',name:'Slanina'}, {id:'x8',name:'Klobása'}, {id:'x9',name:'Kuřecí maso'}, {id:'x10',name:'Tuňák'}, {id:'x11',name:'Žampiony'}, {id:'x12',name:'Olivy'},
-    {id:'x13',name:'Kukuřice'}, {id:'x14',name:'Ananas'}, {id:'x15',name:'Feferonky'}, {id:'x16',name:'Cibule'}, {id:'x17',name:'Česnek'}, {id:'x18',name:'Bazalka'}
+  ALLERGENS = [
+    'Obiloviny obsahující lepek','Korýši','Vejce','Ryby','Arašídy','Sója','Mléko / laktóza','Skořápkové plody',
+    'Celer','Hořčice','Sezam','Oxid siřičitý a siřičitany','Vlčí bob (lupina)','Měkkýši'
   ];
-  EXTRA_PRICE = 15;
-  BASE_CHANGE_PRICE = 20;
+  TAGMETA = { hit:{label:'Tip',cls:'tag-hit'}, spicy:{label:'Pikantní',cls:'tag-spicy'}, veg:{label:'Veg',cls:'tag-veg'}, cream:{label:'Smetanová',cls:'tag-cream'}, classic:{label:'Klasika',cls:'tag-classic'} };
+  TAGORDER = ['hit','spicy','veg','cream','classic'];
 
   pay(o){ return o.payment==='online' ? {label:'Online ✓',full:'Zaplaceno online',fg:'#3E6DA8',bg:'#E9EFF7'} : {label:'Hotově',full:'Hotově při převzetí',fg:'#7A6A2E',bg:'#F3EEDC'}; }
   total(o){ return o.items.reduce((a,i)=>a+i.qty*i.price,0); }
@@ -692,22 +790,33 @@ class Component extends DCLogic {
   naturalBase(left,right){ return left.id===right.id?left.base:(left.base===right.base?left.base:'tomato'); }
   customUnit(c){
     const left=this.pizzaById(c.leftId), right=this.pizzaById(c.rightId);
-    const baseCharge=c.base!==this.naturalBase(left,right)?this.BASE_CHANGE_PRICE:0;
-    return Math.max(left.price,right.price)+baseCharge+(c.extras.length*this.EXTRA_PRICE);
+    const baseCharge=c.base!==this.naturalBase(left,right)?this.state.baseChangePrice:0;
+    return Math.max(left.price,right.price)+baseCharge+(c.extras.length*this.state.extraPrice);
   }
   customLine(c){
     const left=this.pizzaById(c.leftId), right=this.pizzaById(c.rightId);
-    const half=left.id===right.id?left.name:('1/2 '+left.name+' + 1/2 '+right.name);
-    const extraNames=c.extras.map(id=>this.EXTRAS.find(e=>e.id===id)?.name).filter(Boolean);
-    const desc=this.baseLabel(c.base)+(extraNames.length?' · navíc: '+extraNames.join(', '):'');
-    return { qty:c.qty, name:half, desc, price:this.customUnit(c), img:left.img, custom:true };
+    const isHalf=left.id!==right.id;
+    const half=isHalf?('½ '+left.name+' + ½ '+right.name):left.name;
+    const extraNames=c.extras.map(id=>this.state.extras.find(e=>e.id===id)?.name).filter(Boolean);
+    const note=(c.note||'').trim();
+    let desc=this.baseLabel(c.base)+(extraNames.length?' · navíc: '+extraNames.join(', '):'');
+    if(note)desc+=' · '+note;
+    return { qty:c.qty, name:half, desc, price:this.customUnit(c), img:left.img, custom:true, half:isHalf, extras:extraNames, note, cfg:{...c} };
   }
   patchItem(kind,id,patch){ this.setState(s=>({[kind]:s[kind].map(it=>it.id===id?{...it,...patch}:it)})); }
   chooseMenuTab(tab){
+    if(tab==='extra'){ this.setState({menuTab:tab}); return; }
     const kind=tab==='pizza'?'pizzas':'drinks';
     const first=this.state[kind][0];
     this.setState({menuTab:tab, menuEditId:first?first.id:null});
   }
+  setItemBase(kind,id,base){ this.patchItem(kind,id,{base}); }
+  toggleItemTag(kind,id,tag){
+    this.setState(s=>({[kind]:s[kind].map(it=>{ if(it.id!==id)return it; const cur=it.tags||[]; const tags=cur.includes(tag)?cur.filter(t=>t!==tag):[...cur,tag]; return {...it,tags}; })}));
+  }
+  toggleExtraSold(id){ this.setState(s=>({extras:s.extras.map(e=>e.id===id?{...e,soldOut:!e.soldOut}:e)})); }
+  setExtraPrice(v){ this.setState({extraPrice:Math.max(0,parseInt(v)||0)}); }
+  setBaseChangePrice(v){ this.setState({baseChangePrice:Math.max(0,parseInt(v)||0)}); }
   togglePromoItem(id){
     this.setState(s=>{ const ids=s.promo.pizzaIds.includes(id)?s.promo.pizzaIds.filter(x=>x!==id):[...s.promo.pizzaIds,id];
       return {promo:{...s.promo,pizzaIds:ids}}; });
@@ -828,13 +937,16 @@ class Component extends DCLogic {
   reject(id){ this.setState(s=>({ orders:s.orders.filter(o=>o.id!==id), selectedId:null })); }
 
   // NEW ORDER helpers
-  blankNO(){ return { open:false, query:'', customerId:null, nc:{name:'',phone:'',address:'',zone:'Zóna 1'}, cart:{}, customLines:[], custom:{leftId:'p1',rightId:'p1',base:'tomato',extras:[],qty:1}, payment:'cash', time:30, tab:'pizza' }; }
+  blankCustom(){ return {leftId:'p1',rightId:'p1',base:'tomato',extras:[],qty:1,note:''}; }
+  blankNO(){ return { open:false, query:'', customerId:null, nc:{name:'',phone:'',address:'',zone:'Zóna 1'}, cart:{}, customLines:[], custom:this.blankCustom(), editIdx:null, payment:'cash', time:30, tab:'pizza' }; }
   openNew(id){ this.setState(s=>({ newOrder:{...this.blankNO(), open:true, customerId:id||null} })); }
   patchNO(patch){ this.setState(s=>({ newOrder:{...s.newOrder, ...patch} })); }
   patchCustom(patch){ this.setState(s=>({ newOrder:{...s.newOrder, custom:{...s.newOrder.custom, ...patch}} })); }
   toggleCustomExtra(id){ this.setState(s=>{ const ex=s.newOrder.custom.extras.includes(id)?s.newOrder.custom.extras.filter(x=>x!==id):[...s.newOrder.custom.extras,id]; return {newOrder:{...s.newOrder,custom:{...s.newOrder.custom,extras:ex}}}; }); }
-  addCustomPizza(){ this.setState(s=>({ newOrder:{...s.newOrder, customLines:[...s.newOrder.customLines,this.customLine(s.newOrder.custom)]} })); }
-  removeCustomLine(idx){ this.setState(s=>({ newOrder:{...s.newOrder, customLines:s.newOrder.customLines.filter((_,i)=>i!==idx)} })); }
+  addCustomPizza(){ this.setState(s=>{ const no=s.newOrder; const line=this.customLine(no.custom); const lines=no.editIdx!=null?no.customLines.map((l,i)=>i===no.editIdx?line:l):[...no.customLines,line]; return { newOrder:{...no, customLines:lines, editIdx:null, custom:this.blankCustom()} }; }); }
+  editCustomLine(idx){ this.setState(s=>{ const line=s.newOrder.customLines[idx]; if(!line||!line.cfg)return {}; return { newOrder:{...s.newOrder, custom:{...this.blankCustom(),...line.cfg}, editIdx:idx, tab:'pizza'} }; }); }
+  cancelCustomEdit(){ this.setState(s=>({ newOrder:{...s.newOrder, custom:this.blankCustom(), editIdx:null} })); }
+  removeCustomLine(idx){ this.setState(s=>({ newOrder:{...s.newOrder, customLines:s.newOrder.customLines.filter((_,i)=>i!==idx), editIdx:(s.newOrder.editIdx===idx?null:s.newOrder.editIdx)} })); }
   removeCartItem(id){ this.setState(s=>{ const c={...s.newOrder.cart}; delete c[id]; return {newOrder:{...s.newOrder,cart:c}}; }); }
   cartAdd(id){ this.setState(s=>{ const all=[...s.pizzas,...s.drinks]; const it=all.find(x=>x.id===id); if(it&&it.soldOut)return {}; const c={...s.newOrder.cart}; c[id]=(c[id]||0)+1; return {newOrder:{...s.newOrder,cart:c}}; }); }
   cartDec(id){ this.setState(s=>{ const c={...s.newOrder.cart}; c[id]=(c[id]||0)-1; if(c[id]<=0)delete c[id]; return {newOrder:{...s.newOrder,cart:c}}; }); }
@@ -889,38 +1001,61 @@ class Component extends DCLogic {
       listBg:cardsActive?'transparent':'#211E1A', listFg:cardsActive?'#6B655C':'#fff', listShadow:cardsActive?'none':'0 1px 2px rgba(17,17,17,.12)'
     };
     // menu
-    const mk=s.menuTab==='pizza'?'pizzas':'drinks';
+    const isExtraTab=s.menuTab==='extra';
+    const isPizzaTab=s.menuTab==='pizza';
+    const mk=s.menuTab==='drink'?'drinks':'pizzas';
     const menuList=s[mk];
-    const selectedRaw=menuList.find(it=>it.id===s.menuEditId)||menuList[0];
+    const selectedRaw=isExtraTab?null:(menuList.find(it=>it.id===s.menuEditId)||menuList[0]);
     const soldOut=menuList.filter(it=>it.soldOut);
-    const menuItems=menuList.map(it=>{ const sel=selectedRaw&&selectedRaw.id===it.id; const inPromo=s.promo.pizzaIds.includes(it.id);
-      return { ...it, hasImg:!!it.img, noImg:!it.img, priceText:it.price+' Kč', inPromo,
-        soldLabel:it.soldOut?'Vyprodáno':'V nabídce', soldBg:it.soldOut?'#F6E3E0':'#E7F0E7', soldFg:it.soldOut?'#B4472B':'#3B6B48',
-        rowOpacity:it.soldOut?0.62:1, cardBg:sel?'#FFFDF8':'#fff', cardBorder:sel?'#D8C5A8':(it.soldOut?'#E7B8AE':'#E7E2D9'), cardShadow:sel?'0 10px 22px rgba(55,40,20,.06)':'none',
+    const badgesFor=(it)=>(it.tags||[]).filter(t=>this.TAGMETA[t]&&t!=='classic').sort((a,b)=>this.TAGORDER.indexOf(a)-this.TAGORDER.indexOf(b)).map(t=>({label:this.TAGMETA[t].label,cls:this.TAGMETA[t].cls}));
+    const menuItems=menuList.map(it=>{ const sel=selectedRaw&&selectedRaw.id===it.id; const inPromo=s.promo.pizzaIds.includes(it.id); const isP=it.id.indexOf('p')===0; const bdg=badgesFor(it);
+      return { ...it, isPizza:isP, drinkItem:!isP, hasImg:!!it.img, noImg:!it.img, priceText:it.price+' Kč', inPromo,
+        baseLabel:isP?(it.base==='cream'?'Smetanový základ':'Rajčatový základ'):(it.desc||'Nápoj'),
+        badges:bdg, hasBadges:bdg.length>0,
+        allergText:(it.allergens&&it.allergens.length)?it.allergens.join(', '):'—', hasAllerg:isP,
+        soldOut:!!it.soldOut, rowOpacity:it.soldOut?0.72:1, selClass:sel?'is-selected':'',
         select:()=>this.setState({menuEditId:it.id}) };
     });
     const selectedIsPizza=selectedRaw&&selectedRaw.id.indexOf('p')===0;
     const selectedInPromo=selectedRaw&&s.promo.pizzaIds.includes(selectedRaw.id);
-    const selectedMenu=selectedRaw?{ ...selectedRaw, hasImg:!!selectedRaw.img, noImg:!selectedRaw.img,
+    const tagChips=selectedRaw?this.TAGORDER.map(t=>{ const on=(selectedRaw.tags||[]).includes(t); return {label:this.TAGMETA[t].label, cls:this.TAGMETA[t].cls, activeClass:on?'is-active':'', toggle:()=>this.toggleItemTag(mk,selectedRaw.id,t)}; }):[];
+    const allergChips=(selectedRaw&&selectedRaw.allergens)?selectedRaw.allergens.map(n=>({num:n, name:this.ALLERGENS[n-1]||('Alergen '+n)})):[];
+    const selectedMenu=selectedRaw?{ ...selectedRaw, isPizza:selectedIsPizza, isDrink:!selectedIsPizza, hasImg:!!selectedRaw.img, noImg:!selectedRaw.img,
+      eyebrow:selectedIsPizza?'Pizza':'Nápoj',
       setName:(e)=>this.patchItem(mk,selectedRaw.id,{name:e.target.value}),
       setDesc:(e)=>this.patchItem(mk,selectedRaw.id,{desc:e.target.value}),
       setPrice:(e)=>this.patchItem(mk,selectedRaw.id,{price:parseInt(e.target.value)||0}),
       toggleSold:()=>this.patchItem(mk,selectedRaw.id,{soldOut:!selectedRaw.soldOut}),
       togglePromo:()=>{ if(selectedIsPizza)this.togglePromoItem(selectedRaw.id); },
+      baseTomatoClass:selectedRaw.base==='tomato'?'is-active':'', baseCreamClass:selectedRaw.base==='cream'?'is-active':'',
+      setBaseTomato:()=>this.setItemBase(mk,selectedRaw.id,'tomato'), setBaseCream:()=>this.setItemBase(mk,selectedRaw.id,'cream'),
+      tagChips, allergChips, hasAllerg:allergChips.length>0,
       soldBtnLabel:selectedRaw.soldOut?'Vrátit do nabídky':'Označit jako vyprodané',
       soldBtnBg:selectedRaw.soldOut?'#E7F0E7':'#F6E3E0', soldBtnFg:selectedRaw.soldOut?'#3B6B48':'#B4472B',
       promoBtnLabel:selectedIsPizza?(selectedInPromo?'Odebrat z akce':'Přidat do akce'):'Akce jen pro pizzy',
+      promoActiveClass:selectedInPromo?'is-active':'',
       statusText:selectedRaw.soldOut?'Není v nabídce':'Aktivní v nabídce',
       statusBg:selectedRaw.soldOut?'#FFF1C2':'#E7F0E7', statusFg:selectedRaw.soldOut?'#7B5512':'#3B6B48'
     }:{};
-    const menu={ items:menuItems, selected:selectedMenu,
-      pizzaCount:s.pizzas.length, drinkCount:s.drinks.length, totalLabel:(s.menuTab==='pizza'?s.pizzas.length+' pizz':s.drinks.length+' nápojů'),
-      sectionTitle:s.menuTab==='pizza'?'Pizzy':'Nápoje', availableLabel:(menuList.length-soldOut.length)+' v nabídce',
-      hasSoldOut:soldOut.length>0, soldOutNames:soldOut.map(it=>it.name).join(', '),
-      soldLabel:soldOut.length?('Vyprodáno · '+soldOut.length):'Vše dostupné', soldPillBg:soldOut.length?'#FFF1C2':'#E7F0E7', soldPillFg:soldOut.length?'#7B5512':'#3B6B48',
-      pizzaTabBg:s.menuTab==='pizza'?'#fff':'transparent', pizzaTabFg:s.menuTab==='pizza'?'#211E1A':'#8B857A',
+    const extraSold=s.extras.filter(e=>e.soldOut);
+    const menuExtras=s.extras.map(e=>({ ...e, priceText:'+'+s.extraPrice+' Kč', available:!e.soldOut,
+      availClass:e.soldOut?'is-off':'', availLabel:e.soldOut?'Vyprodáno':'V nabídce', toggle:()=>this.toggleExtraSold(e.id) }));
+    const menuSoldCount=isExtraTab?extraSold.length:soldOut.length;
+    const menu={ items:menuItems, selected:selectedMenu, hasSelected:!!selectedRaw,
+      isItemsTab:!isExtraTab, isExtrasTab:isExtraTab,
+      pizzaCount:s.pizzas.length, drinkCount:s.drinks.length, extraCount:s.extras.length,
+      totalLabel:isExtraTab?(s.extras.length+' surovin'):(isPizzaTab?s.pizzas.length+' pizz':s.drinks.length+' nápojů'),
+      sectionTitle:isExtraTab?'Suroviny navíc':(isPizzaTab?'Pizzy':'Nápoje'),
+      availableLabel:isExtraTab?((s.extras.length-extraSold.length)+' v nabídce'):((menuList.length-soldOut.length)+' v nabídce'),
+      hasSoldOut:menuSoldCount>0, soldOutNames:(isExtraTab?extraSold:soldOut).map(it=>it.name).join(', '),
+      soldLabel:menuSoldCount?('Vyprodáno · '+menuSoldCount):'Vše dostupné', soldPillBg:menuSoldCount?'#FFF1C2':'#E7F0E7', soldPillFg:menuSoldCount?'#7B5512':'#3B6B48',
+      pizzaTabBg:isPizzaTab?'#fff':'transparent', pizzaTabFg:isPizzaTab?'#211E1A':'#8B857A',
       drinkTabBg:s.menuTab==='drink'?'#fff':'transparent', drinkTabFg:s.menuTab==='drink'?'#211E1A':'#8B857A',
-      tabPizza:()=>this.chooseMenuTab('pizza'), tabDrink:()=>this.chooseMenuTab('drink') };
+      extraTabBg:isExtraTab?'#fff':'transparent', extraTabFg:isExtraTab?'#211E1A':'#8B857A',
+      tabPizza:()=>this.chooseMenuTab('pizza'), tabDrink:()=>this.chooseMenuTab('drink'), tabExtra:()=>this.chooseMenuTab('extra'),
+      extras:menuExtras, extraPrice:s.extraPrice, baseChangePrice:s.baseChangePrice,
+      extraSoldCount:extraSold.length, extraAvailLabel:(s.extras.length-extraSold.length)+' dostupných',
+      setExtraPrice:(e)=>this.setExtraPrice(e.target.value), setBaseChangePrice:(e)=>this.setBaseChangePrice(e.target.value) };
     // akce
     const pr=s.promo;
     const promoItems=pr.pizzaIds.map(id=>s.pizzas.find(x=>x.id===id)).filter(Boolean).map(p=>({
@@ -992,9 +1127,9 @@ class Component extends DCLogic {
       addLabel:blocked?'Vyprodáno':'Přidat', addBg:blocked?'#F6E3E0':'#fff', addFg:blocked?'#B4472B':'#211E1A',
       add:()=>{ if(!blocked)this.cartAdd(it.id); }, dec:()=>this.cartDec(it.id) }; });
     const all=[...s.pizzas,...s.drinks];
-    const standardRows=Object.entries(no.cart).filter(([id,q])=>q>0).map(([id,q])=>{ const it=all.find(x=>x.id===id); return { name:it.name, desc:it.desc, qtyText:q+'×', total:it.price*q, remove:()=>this.removeCartItem(id) }; });
-    const customRows=no.customLines.map((it,idx)=>({ name:it.name, desc:it.desc, qtyText:it.qty+'×', total:it.price*it.qty, remove:()=>this.removeCustomLine(idx) }));
-    const cartRows=[...standardRows,...customRows].map(r=>({ ...r, lineText:r.total+' Kč' }));
+    const standardRows=Object.entries(no.cart).filter(([id,q])=>q>0).map(([id,q])=>{ const it=all.find(x=>x.id===id); return { name:it.name, desc:it.desc, qtyText:q+'×', total:it.price*q, isCustom:false, remove:()=>this.removeCartItem(id) }; });
+    const customRows=no.customLines.map((it,idx)=>({ name:it.name, desc:it.desc, qtyText:it.qty+'×', total:it.price*it.qty, isCustom:true, editing:no.editIdx===idx, edit:()=>this.editCustomLine(idx), remove:()=>this.removeCustomLine(idx) }));
+    const cartRows=[...standardRows,...customRows].map(r=>({ ...r, lineText:r.total+' Kč', rowClass:r.editing?'is-editing':'' }));
     const cartTotal=cartRows.reduce((a,r)=>a+r.total,0);
     const noTimeChips=[15,30,45,60,'60+'].map(v=>{ const sel=no.time===v; return { label:(v==='60+'?'60+':v)+' min', bg:sel?'#211E1A':'#fff', fg:sel?'#fff':'#4A443B', border:sel?'#211E1A':'#E7E2D9', onClick:()=>this.patchNO({time:v}) }; });
     const ncValid=no.nc.name.trim() && no.nc.address.trim();
@@ -1002,15 +1137,28 @@ class Component extends DCLogic {
     const pizzaOptions=s.pizzas.map(p=>({ id:p.id, label:p.name+' · '+p.price+' Kč'+(p.soldOut?' · vyprodáno':'') }));
     const custom=no.custom, left=this.pizzaById(custom.leftId), right=this.pizzaById(custom.rightId);
     const customUnit=this.customUnit(custom);
-    const customSummary=left.id===right.id?left.name:'1/2 '+left.name+' + 1/2 '+right.name;
-    const customExtras=this.EXTRAS.map(ex=>({ ...ex, className:custom.extras.includes(ex.id)?'is-on':'', toggle:()=>this.toggleCustomExtra(ex.id) }));
+    const isHalf=left.id!==right.id;
+    const customSummary=isHalf?('½ '+left.name+' + ½ '+right.name):left.name;
+    const selExtraNames=custom.extras.map(id=>s.extras.find(e=>e.id===id)?.name).filter(Boolean);
+    const nEx=selExtraNames.length;
+    const exWord=nEx===1?'surovina':(nEx>=2&&nEx<=4?'suroviny':'surovin');
+    const customExtras=s.extras.filter(ex=>!ex.soldOut).map(ex=>({ ...ex, className:custom.extras.includes(ex.id)?'is-on':'', pxText:s.extraPrice, toggle:()=>this.toggleCustomExtra(ex.id) }));
     const customBlocked=left.soldOut||right.soldOut;
+    const isEditing=no.editIdx!=null;
     const customVals={ leftId:custom.leftId, rightId:custom.rightId, qty:custom.qty, summary:customSummary, unitText:customUnit+' Kč', extras:customExtras,
+      leftImg:left.img, rightImg:right.img, isHalf,
+      baseText:custom.base==='cream'?'Smetanový základ':'Rajčatový základ',
+      baseChipBg:custom.base==='cream'?'#EEF3F9':'#F8ECE6', baseChipFg:custom.base==='cream'?'#3E5B8A':'#B4472B',
+      baseRing:custom.base==='cream'?'#D8C79E':'#C88A5F',
+      hasExtras:nEx>0, extrasCountText:'+ '+nEx+' '+exWord, extrasText:nEx?selExtraNames.join(', '):'Bez surovin navíc',
+      extraPxText:s.extraPrice+' Kč', baseChangeText:s.baseChangePrice+' Kč',
+      note:custom.note||'', setNote:(e)=>this.patchCustom({note:e.target.value}),
+      editing:isEditing, cancelEdit:()=>this.cancelCustomEdit(),
       setLeft:(e)=>this.patchCustom({leftId:e.target.value}), setRight:(e)=>this.patchCustom({rightId:e.target.value}),
       baseTomato:()=>this.patchCustom({base:'tomato'}), baseCream:()=>this.patchCustom({base:'cream'}),
       tomatoBg:custom.base==='tomato'?'#211E1A':'#fff', tomatoFg:custom.base==='tomato'?'#fff':'#4A443B', tomatoBorder:custom.base==='tomato'?'#211E1A':'#E5DED2',
       creamBg:custom.base==='cream'?'#211E1A':'#fff', creamFg:custom.base==='cream'?'#fff':'#4A443B', creamBorder:custom.base==='cream'?'#211E1A':'#E5DED2',
-      addLabel:customBlocked?'Vybraná půlka je vyprodaná':'Přidat pizzu na míru', addBg:customBlocked?'#F6E3E0':'#211E1A', addFg:customBlocked?'#B4472B':'#fff',
+      addLabel:customBlocked?'Vybraná půlka je vyprodaná':(isEditing?'Uložit úpravu':'Přidat do košíku'), addBg:customBlocked?'#F6E3E0':'#211E1A', addFg:customBlocked?'#B4472B':'#fff',
       incQty:()=>this.patchCustom({qty:custom.qty+1}), decQty:()=>this.patchCustom({qty:Math.max(1,custom.qty-1)}), add:()=>{ if(!customBlocked)this.addCustomPizza(); } };
     const noVals={ open:no.open, query:no.query, setQuery:(e)=>this.patchNO({query:e.target.value}),
       hasCustomer:!!cust, noCustomer:!cust,
