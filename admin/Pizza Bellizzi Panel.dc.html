@@ -592,75 +592,38 @@
           </div>
           <!-- RIGHT: položky + košík -->
           <div class="no-right">
-            <div class="no-tabs">
-              <button onClick="{{ no.tabPizza }}" class="no-tab-btn" style="background:{{ no.pizzaTabBg }};color:{{ no.pizzaTabFg }}">Pizzy</button>
-              <button onClick="{{ no.tabDrink }}" class="no-tab-btn" style="background:{{ no.drinkTabBg }};color:{{ no.drinkTabFg }}">Nápoje</button>
+            <div class="no-tabs-row">
+              <div class="no-tabs">
+                <button onClick="{{ no.tabPizza }}" class="no-tab-btn" style="background:{{ no.pizzaTabBg }};color:{{ no.pizzaTabFg }}">Pizzy</button>
+                <button onClick="{{ no.tabDrink }}" class="no-tab-btn" style="background:{{ no.drinkTabBg }};color:{{ no.drinkTabFg }}">Nápoje</button>
+              </div>
+              <button onClick="{{ no.openBuilder }}" class="no-custom-btn"><span class="no-custom-ic">½</span>Pizza na míru / na půl</button>
             </div>
             <div class="no-scroll-area">
-            <sc-if value="{{ no.isPizzaTab }}" hint-placeholder-val="{{ true }}">
-              <div class="no-builder">
-                <div class="no-cfg-hero">
-                  <div class="no-pizza-viz" style="border-color:{{ no.custom.baseRing }}">
-                    <div class="no-pizza-half no-pizza-half--l" style="background-image:url({{ no.custom.leftImg }})"></div>
-                    <div class="no-pizza-half no-pizza-half--r" style="background-image:url({{ no.custom.rightImg }})"></div>
-                    <sc-if value="{{ no.custom.isHalf }}" hint-placeholder-val=""><div class="no-pizza-split"></div></sc-if>
-                    <sc-if value="{{ no.custom.isHalf }}" hint-placeholder-val=""><span class="no-pizza-badge">½ + ½</span></sc-if>
-                  </div>
-                  <div class="no-cfg-summary">
-                    <div class="no-cfg-eyebrow">Pizza na míru</div>
-                    <div class="no-cfg-name">{{ no.custom.summary }}</div>
-                    <div class="no-cfg-tags">
-                      <span class="no-cfg-tag" style="background:{{ no.custom.baseChipBg }};color:{{ no.custom.baseChipFg }}">{{ no.custom.baseText }}</span>
-                      <sc-if value="{{ no.custom.hasExtras }}" hint-placeholder-val=""><span class="no-cfg-tag is-extra">{{ no.custom.extrasCountText }}</span></sc-if>
+              <div class="no-tile-grid">
+                <sc-for list="{{ no.menuItems }}" as="it">
+                  <div class="no-tile" style="opacity:{{ it.rowOpacity }}">
+                    <div class="no-tile-media">
+                      <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" class="no-tile-img" loading="lazy"></sc-if>
+                      <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div class="no-tile-ph"><svg width="26" height="26" fill="none" stroke="#B0A896" stroke-width="1.5" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
+                      <sc-if value="{{ it.soldOut }}" hint-placeholder-val=""><div class="no-tile-sold"><span>Vyprodáno</span></div></sc-if>
                     </div>
-                    <div class="no-cfg-extras">{{ no.custom.extrasText }}</div>
-                    <div class="no-cfg-price"><span class="no-cfg-price-label">Cena za kus</span><span class="no-cfg-price-val">{{ no.custom.unitText }}</span></div>
-                  </div>
-                </div>
-                <div class="no-cfg-controls">
-                  <div class="no-builder-grid">
-                    <div><div class="field-label">Levá půlka</div><select value="{{ no.custom.leftId }}" onChange="{{ no.custom.setLeft }}"><sc-for list="{{ no.pizzaOptions }}" as="p"><option value="{{ p.id }}">{{ p.label }}</option></sc-for></select></div>
-                    <div><div class="field-label">Pravá půlka</div><select value="{{ no.custom.rightId }}" onChange="{{ no.custom.setRight }}"><sc-for list="{{ no.pizzaOptions }}" as="p"><option value="{{ p.id }}">{{ p.label }}</option></sc-for></select></div>
-                  </div>
-                  <div>
-                    <div class="field-label">Základ</div>
-                    <div class="no-base-row">
-                      <button onClick="{{ no.custom.baseTomato }}" class="no-base-btn" style="border-color:{{ no.custom.tomatoBorder }};background:{{ no.custom.tomatoBg }};color:{{ no.custom.tomatoFg }}"><span class="no-base-dot" style="background:#C15F3C"></span>Rajčatový</button>
-                      <button onClick="{{ no.custom.baseCream }}" class="no-base-btn" style="border-color:{{ no.custom.creamBorder }};background:{{ no.custom.creamBg }};color:{{ no.custom.creamFg }}"><span class="no-base-dot" style="background:#E4D3A8"></span>Smetanový <span class="no-base-plus">+{{ no.custom.baseChangeText }}</span></button>
+                    <div class="no-tile-body">
+                      <div class="no-tile-titlerow"><span class="no-tile-name">{{ it.name }}</span><span class="no-tile-price">{{ it.priceText }}</span></div>
+                      <sc-if value="{{ it.isPizzaItem }}" hint-placeholder-val="{{ true }}"><div class="no-tile-ings">{{ it.desc }}</div></sc-if>
+                      <div class="no-tile-foot">
+                        <sc-if value="{{ it.inCart }}" hint-placeholder-val="">
+                          <div class="no-menu-qty"><button onClick="{{ it.dec }}" class="no-menu-dec">−</button><span class="no-menu-qtyval">{{ it.qty }}</span><button onClick="{{ it.add }}" class="no-menu-inc">+</button></div>
+                        </sc-if>
+                        <sc-if value="{{ it.notInCart }}" hint-placeholder-val="{{ true }}">
+                          <button onClick="{{ it.add }}" class="no-tile-add" style="background:{{ it.addBg }};color:{{ it.addFg }}">{{ it.addLabel }}</button>
+                        </sc-if>
+                        <sc-if value="{{ it.canCustomize }}" hint-placeholder-val=""><button onClick="{{ it.customize }}" class="no-tile-cfg" title="Upravit / na míru"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button></sc-if>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <div class="field-label">Suroviny navíc · +{{ no.custom.extraPxText }} / ks</div>
-                    <div class="no-extra-list"><sc-for list="{{ no.custom.extras }}" as="ex"><button onClick="{{ ex.toggle }}" class="no-extra-chip {{ ex.className }}"><span>{{ ex.name }}</span><span class="no-extra-px">+{{ ex.pxText }}</span></button></sc-for></div>
-                  </div>
-                  <div>
-                    <div class="field-label">Poznámka k pizze (nepovinné)</div>
-                    <input value="{{ no.custom.note }}" onInput="{{ no.custom.setNote }}" placeholder="např. bez cibule, dobře propečená" class="no-input no-cfg-note">
-                  </div>
-                </div>
-                <div class="no-cfg-actions">
-                  <div class="no-qty-row"><button onClick="{{ no.custom.decQty }}" class="no-qty-dec">−</button><span class="no-qty-val">{{ no.custom.qty }}</span><button onClick="{{ no.custom.incQty }}" class="no-qty-inc">+</button></div>
-                  <sc-if value="{{ no.custom.editing }}" hint-placeholder-val=""><button onClick="{{ no.custom.cancelEdit }}" class="no-cfg-cancel">Zrušit</button></sc-if>
-                  <button onClick="{{ no.custom.add }}" class="no-add-btn no-cfg-add" style="background:{{ no.custom.addBg }};color:{{ no.custom.addFg }}">{{ no.custom.addLabel }}</button>
-                </div>
+                </sc-for>
               </div>
-            </sc-if>
-            <div class="no-menu-list">
-              <div class="no-menu-caption">Rychlé přidání z nabídky</div>
-              <sc-for list="{{ no.menuItems }}" as="it">
-                <div class="no-menu-row" style="background:{{ it.rowBg }};opacity:{{ it.rowOpacity }}">
-                  <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" class="no-menu-img"></sc-if>
-                  <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div class="no-menu-ph"><svg width="18" height="18" fill="none" stroke="#B0A896" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
-                  <div class="f1min0"><div class="no-menu-name">{{ it.name }}</div><div class="no-menu-meta"><span class="no-menu-price">{{ it.priceText }}</span><sc-if value="{{ it.soldOut }}" hint-placeholder-val=""><span class="pill pill-red">Vyprodáno</span></sc-if></div></div>
-                  <sc-if value="{{ it.inCart }}" hint-placeholder-val="">
-                    <div class="no-menu-qty"><button onClick="{{ it.dec }}" class="no-menu-dec">−</button><span class="no-menu-qtyval">{{ it.qty }}</span><button onClick="{{ it.add }}" class="no-menu-inc">+</button></div>
-                  </sc-if>
-                  <sc-if value="{{ it.notInCart }}" hint-placeholder-val="{{ true }}">
-                    <button onClick="{{ it.add }}" class="no-menu-add" style="background:{{ it.addBg }};color:{{ it.addFg }}">{{ it.addLabel }}</button>
-                  </sc-if>
-                </div>
-              </sc-for>
-            </div>
             </div>
             <div class="no-foot">
               <sc-if value="{{ no.cartEmpty }}" hint-placeholder-val="{{ true }}"><div class="no-cart-empty">Košík je prázdný — přidej položky</div></sc-if>
@@ -686,6 +649,63 @@
         </div>
       </div>
     </div>
+    <!-- ---- KONFIGURÁTOR PIZZY NA MÍRU (vnořený modal) ---- -->
+    <sc-if value="{{ no.builderOpen }}" hint-placeholder-val="">
+      <div onClick="{{ no.closeBuilder }}" class="cfg-overlay">
+        <div onClick="{{ stop }}" class="cfg-dialog">
+          <div class="cfg-head">
+            <div><div class="cfg-eyebrow">Konfigurátor</div><div class="cfg-title">Pizza na míru / na půl</div></div>
+            <button onClick="{{ no.closeBuilder }}" class="no-close"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+          <div class="cfg-scroll">
+            <div class="no-cfg-hero">
+              <div class="no-pizza-viz" style="border-color:{{ no.custom.baseRing }}">
+                <div class="no-pizza-half no-pizza-half--l" style="background-image:url({{ no.custom.leftImg }})"></div>
+                <div class="no-pizza-half no-pizza-half--r" style="background-image:url({{ no.custom.rightImg }})"></div>
+                <sc-if value="{{ no.custom.isHalf }}" hint-placeholder-val=""><div class="no-pizza-split"></div></sc-if>
+                <sc-if value="{{ no.custom.isHalf }}" hint-placeholder-val=""><span class="no-pizza-badge">½ + ½</span></sc-if>
+              </div>
+              <div class="no-cfg-summary">
+                <div class="no-cfg-eyebrow">Pizza na míru</div>
+                <div class="no-cfg-name">{{ no.custom.summary }}</div>
+                <div class="no-cfg-tags">
+                  <span class="no-cfg-tag" style="background:{{ no.custom.baseChipBg }};color:{{ no.custom.baseChipFg }}">{{ no.custom.baseText }}</span>
+                  <sc-if value="{{ no.custom.hasExtras }}" hint-placeholder-val=""><span class="no-cfg-tag is-extra">{{ no.custom.extrasCountText }}</span></sc-if>
+                </div>
+                <div class="no-cfg-extras">{{ no.custom.extrasText }}</div>
+                <div class="no-cfg-price"><span class="no-cfg-price-label">Cena za kus</span><span class="no-cfg-price-val">{{ no.custom.unitText }}</span></div>
+              </div>
+            </div>
+            <div class="no-cfg-controls">
+              <div class="no-builder-grid">
+                <div><div class="field-label">Levá půlka</div><select value="{{ no.custom.leftId }}" onChange="{{ no.custom.setLeft }}"><sc-for list="{{ no.pizzaOptions }}" as="p"><option value="{{ p.id }}">{{ p.label }}</option></sc-for></select></div>
+                <div><div class="field-label">Pravá půlka</div><select value="{{ no.custom.rightId }}" onChange="{{ no.custom.setRight }}"><sc-for list="{{ no.pizzaOptions }}" as="p"><option value="{{ p.id }}">{{ p.label }}</option></sc-for></select></div>
+              </div>
+              <div>
+                <div class="field-label">Základ</div>
+                <div class="no-base-row">
+                  <button onClick="{{ no.custom.baseTomato }}" class="no-base-btn" style="border-color:{{ no.custom.tomatoBorder }};background:{{ no.custom.tomatoBg }};color:{{ no.custom.tomatoFg }}"><span class="no-base-dot" style="background:#C15F3C"></span>Rajčatový</button>
+                  <button onClick="{{ no.custom.baseCream }}" class="no-base-btn" style="border-color:{{ no.custom.creamBorder }};background:{{ no.custom.creamBg }};color:{{ no.custom.creamFg }}"><span class="no-base-dot" style="background:#E4D3A8"></span>Smetanový <span class="no-base-plus">+{{ no.custom.baseChangeText }}</span></button>
+                </div>
+              </div>
+              <div>
+                <div class="field-label">Suroviny navíc · +{{ no.custom.extraPxText }} / ks</div>
+                <div class="no-extra-list"><sc-for list="{{ no.custom.extras }}" as="ex"><button onClick="{{ ex.toggle }}" class="no-extra-chip {{ ex.className }}"><span>{{ ex.name }}</span><span class="no-extra-px">+{{ ex.pxText }}</span></button></sc-for></div>
+              </div>
+              <div>
+                <div class="field-label">Poznámka k pizze (nepovinné)</div>
+                <input value="{{ no.custom.note }}" onInput="{{ no.custom.setNote }}" placeholder="např. bez cibule, dobře propečená" class="no-input no-cfg-note">
+              </div>
+            </div>
+          </div>
+          <div class="cfg-foot">
+            <div class="no-qty-row"><button onClick="{{ no.custom.decQty }}" class="no-qty-dec">−</button><span class="no-qty-val">{{ no.custom.qty }}</span><button onClick="{{ no.custom.incQty }}" class="no-qty-inc">+</button></div>
+            <sc-if value="{{ no.custom.editing }}" hint-placeholder-val=""><button onClick="{{ no.custom.cancelEdit }}" class="no-cfg-cancel">Zrušit</button></sc-if>
+            <button onClick="{{ no.custom.add }}" class="no-add-btn no-cfg-add" style="background:{{ no.custom.addBg }};color:{{ no.custom.addFg }}">{{ no.custom.addLabel }}</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
   </sc-if>
 </div>
 
@@ -703,7 +723,7 @@ class Component extends DCLogic {
     menuEditId:'p1',
     adrQuery:'',
     promo:{ active:true, price:179, pizzaIds:['p1','p2','p3'], codeActive:true, code:'POLEDNE20', discount:15, validUntil:'2026-07-31' },
-    newOrder:{ open:false, query:'', customerId:null, nc:{name:'',phone:'',address:'',zone:'Zóna 1'}, cart:{}, customLines:[], custom:{leftId:'p1',rightId:'p1',base:'tomato',extras:[],qty:1,note:''}, editIdx:null, payment:'cash', time:30, tab:'pizza' },
+    newOrder:{ open:false, query:'', customerId:null, nc:{name:'',phone:'',address:'',zone:'Zóna 1'}, cart:{}, customLines:[], custom:{leftId:'p1',rightId:'p1',base:'tomato',extras:[],qty:1,note:''}, editIdx:null, builderOpen:false, payment:'cash', time:30, tab:'pizza' },
     extraPrice:15,
     baseChangePrice:20,
     extras:[
@@ -938,14 +958,17 @@ class Component extends DCLogic {
 
   // NEW ORDER helpers
   blankCustom(){ return {leftId:'p1',rightId:'p1',base:'tomato',extras:[],qty:1,note:''}; }
-  blankNO(){ return { open:false, query:'', customerId:null, nc:{name:'',phone:'',address:'',zone:'Zóna 1'}, cart:{}, customLines:[], custom:this.blankCustom(), editIdx:null, payment:'cash', time:30, tab:'pizza' }; }
+  blankNO(){ return { open:false, query:'', customerId:null, nc:{name:'',phone:'',address:'',zone:'Zóna 1'}, cart:{}, customLines:[], custom:this.blankCustom(), editIdx:null, builderOpen:false, payment:'cash', time:30, tab:'pizza' }; }
   openNew(id){ this.setState(s=>({ newOrder:{...this.blankNO(), open:true, customerId:id||null} })); }
   patchNO(patch){ this.setState(s=>({ newOrder:{...s.newOrder, ...patch} })); }
   patchCustom(patch){ this.setState(s=>({ newOrder:{...s.newOrder, custom:{...s.newOrder.custom, ...patch}} })); }
   toggleCustomExtra(id){ this.setState(s=>{ const ex=s.newOrder.custom.extras.includes(id)?s.newOrder.custom.extras.filter(x=>x!==id):[...s.newOrder.custom.extras,id]; return {newOrder:{...s.newOrder,custom:{...s.newOrder.custom,extras:ex}}}; }); }
-  addCustomPizza(){ this.setState(s=>{ const no=s.newOrder; const line=this.customLine(no.custom); const lines=no.editIdx!=null?no.customLines.map((l,i)=>i===no.editIdx?line:l):[...no.customLines,line]; return { newOrder:{...no, customLines:lines, editIdx:null, custom:this.blankCustom()} }; }); }
-  editCustomLine(idx){ this.setState(s=>{ const line=s.newOrder.customLines[idx]; if(!line||!line.cfg)return {}; return { newOrder:{...s.newOrder, custom:{...this.blankCustom(),...line.cfg}, editIdx:idx, tab:'pizza'} }; }); }
-  cancelCustomEdit(){ this.setState(s=>({ newOrder:{...s.newOrder, custom:this.blankCustom(), editIdx:null} })); }
+  openBuilder(){ this.setState(s=>({ newOrder:{...s.newOrder, custom:this.blankCustom(), editIdx:null, builderOpen:true} })); }
+  openBuilderFor(id){ this.setState(s=>{ const p=this.pizzaById(id); return { newOrder:{...s.newOrder, custom:{...this.blankCustom(), leftId:id, rightId:id, base:p.base}, editIdx:null, builderOpen:true} }; }); }
+  closeBuilder(){ this.setState(s=>({ newOrder:{...s.newOrder, builderOpen:false, editIdx:null, custom:this.blankCustom()} })); }
+  addCustomPizza(){ this.setState(s=>{ const no=s.newOrder; const line=this.customLine(no.custom); const lines=no.editIdx!=null?no.customLines.map((l,i)=>i===no.editIdx?line:l):[...no.customLines,line]; return { newOrder:{...no, customLines:lines, editIdx:null, builderOpen:false, custom:this.blankCustom()} }; }); }
+  editCustomLine(idx){ this.setState(s=>{ const line=s.newOrder.customLines[idx]; if(!line||!line.cfg)return {}; return { newOrder:{...s.newOrder, custom:{...this.blankCustom(),...line.cfg}, editIdx:idx, builderOpen:true, tab:'pizza'} }; }); }
+  cancelCustomEdit(){ this.setState(s=>({ newOrder:{...s.newOrder, custom:this.blankCustom(), editIdx:null, builderOpen:false} })); }
   removeCustomLine(idx){ this.setState(s=>({ newOrder:{...s.newOrder, customLines:s.newOrder.customLines.filter((_,i)=>i!==idx), editIdx:(s.newOrder.editIdx===idx?null:s.newOrder.editIdx)} })); }
   removeCartItem(id){ this.setState(s=>{ const c={...s.newOrder.cart}; delete c[id]; return {newOrder:{...s.newOrder,cart:c}}; }); }
   cartAdd(id){ this.setState(s=>{ const all=[...s.pizzas,...s.drinks]; const it=all.find(x=>x.id===id); if(it&&it.soldOut)return {}; const c={...s.newOrder.cart}; c[id]=(c[id]||0)+1; return {newOrder:{...s.newOrder,cart:c}}; }); }
@@ -1122,9 +1145,11 @@ class Component extends DCLogic {
     const nq=no.query.toLowerCase();
     const results=(no.query && !cust)?s.customers.filter(c=>(c.name+' '+c.address+' '+c.phone).toLowerCase().includes(nq)).slice(0,4).map(c=>({ name:c.name, address:c.address, phone:c.phone, pick:()=>this.patchNO({customerId:c.id}) })):[];
     const nmk=no.tab==='pizza'?'pizzas':'drinks';
-    const noMenuItems=s[nmk].map(it=>{ const qty=no.cart[it.id]||0; const blocked=!!it.soldOut; return { ...it, hasImg:!!it.img, noImg:!it.img, priceText:it.price+' Kč', qty,
+    const isPizzaMenu=nmk==='pizzas';
+    const noMenuItems=s[nmk].map(it=>{ const qty=no.cart[it.id]||0; const blocked=!!it.soldOut; return { ...it, hasImg:!!it.img, noImg:!it.img, priceText:it.price+' Kč', qty, isPizzaItem:isPizzaMenu,
       inCart:qty>0, notInCart:qty===0, rowBg:qty>0?'#F6F3EC':'transparent', rowOpacity:blocked?0.5:1,
-      addLabel:blocked?'Vyprodáno':'Přidat', addBg:blocked?'#F6E3E0':'#fff', addFg:blocked?'#B4472B':'#211E1A',
+      addLabel:blocked?'Vyprodáno':'Přidat', addBg:blocked?'#F6E3E0':'#211E1A', addFg:blocked?'#B4472B':'#fff',
+      canCustomize:isPizzaMenu&&!blocked, customize:()=>{ if(isPizzaMenu&&!blocked)this.openBuilderFor(it.id); },
       add:()=>{ if(!blocked)this.cartAdd(it.id); }, dec:()=>this.cartDec(it.id) }; });
     const all=[...s.pizzas,...s.drinks];
     const standardRows=Object.entries(no.cart).filter(([id,q])=>q>0).map(([id,q])=>{ const it=all.find(x=>x.id===id); return { name:it.name, desc:it.desc, qtyText:q+'×', total:it.price*q, isCustom:false, remove:()=>this.removeCartItem(id) }; });
@@ -1176,6 +1201,7 @@ class Component extends DCLogic {
       pizzaTabBg:no.tab==='pizza'?'#fff':'transparent', pizzaTabFg:no.tab==='pizza'?'#211E1A':'#8B857A',
       drinkTabBg:no.tab==='drink'?'#fff':'transparent', drinkTabFg:no.tab==='drink'?'#211E1A':'#8B857A',
       isPizzaTab:no.tab==='pizza', pizzaOptions, custom:customVals,
+      builderOpen:no.builderOpen, openBuilder:()=>this.openBuilder(), closeBuilder:()=>this.closeBuilder(),
       menuItems:noMenuItems, cartEmpty:cartRows.length===0, hasCartRows:cartRows.length>0, cartRows, totalText:cartTotal+' Kč',
       createBg:canCreate?'#211E1A':'#CFC7BA', create:()=>{ if(canCreate)this.createOrder(); },
       close:()=>this.setState({newOrder:this.blankNO()}) };
