@@ -10,7 +10,7 @@
 <helmet data-dc-atomics>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   body{margin:0;background:#FBFAF7;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
   *{box-sizing:border-box}
@@ -25,15 +25,39 @@
   button:hover{transform:translateY(-1px)}
   .nav-rail{width:48px;flex:none;background:#EDE9E1;border-right:1px solid #E2DCD1;display:flex;flex-direction:column;align-items:center;padding:12px 0 12px 6px;gap:5px;position:relative;z-index:2}
   .nav-rail::before{display:none}
-  .brand-card{width:32px;height:32px;border-radius:10px;background:#211E1A;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:0 6px 6px 0;opacity:1;flex:none}
-  .brand-card img{width:100%;height:100%;object-fit:cover;filter:invert(1)}
+  .brand-card{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid #DDD7CC;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:0 6px 6px 0;opacity:1;flex:none;box-shadow:0 1px 3px rgba(17,17,17,.08)}
+  .brand-card img{width:100%;height:100%;object-fit:cover}
   .nav-item{flex:var(--navFlex);width:100%;min-height:48px;border-radius:var(--navRadius);border:none;background:var(--navBg);color:var(--navFg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;box-shadow:var(--navShadow);position:relative;z-index:var(--navZ);margin-right:var(--navMr);overflow:visible;transition:flex .34s cubic-bezier(.34,1.3,.4,1),background .22s ease,color .22s ease,box-shadow .22s ease}
   .nav-item:hover{color:#211E1A;background:var(--navHoverBg)}
-  .nav-item::before{display:none}
+  .nav-item::before{content:"";position:absolute;right:3px;top:18px;bottom:18px;width:3px;border-radius:999px;background:linear-gradient(180deg,#E1232B 0 33.33%,#0A8A3E 33.33% 66.66%,#111 66.66%);opacity:var(--navStripeOpacity);box-shadow:0 0 0 1px rgba(255,255,255,.55)}
   .nav-icon{width:16px;height:16px;color:currentColor;display:flex;align-items:center;justify-content:center;flex:none}
   .nav-icon svg{width:16px;height:16px}
   .nav-label{display:block;writing-mode:vertical-rl;transform:rotate(180deg);font:700 11.5px/1 'Geist';letter-spacing:.02em;color:currentColor;text-transform:none;white-space:nowrap}
   .nav-user{margin:6px 6px 0 0;width:32px;height:32px;border-radius:50%;background:#E1DBD0;color:#6B655C;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex:none}
+  .admin-header{position:relative;display:flex;align-items:center;gap:18px;padding:18px 30px 17px;border-bottom:1px solid #EEEAE2;background:rgba(251,250,247,.96);backdrop-filter:blur(10px)}
+  .admin-brand{display:flex;align-items:center;gap:13px;min-width:245px}
+  .admin-brand-mark{width:48px;height:48px;border-radius:50%;border:1px solid #E7E2D9;background:#fff;padding:5px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(17,17,17,.06);flex:none}
+  .admin-brand-mark img{width:100%;height:100%;object-fit:contain}
+  .admin-brand-word{font-family:'Pacifico','Geist',system-ui,sans-serif;font-size:25px;line-height:1;display:flex;gap:7px;white-space:nowrap}
+  .admin-brand-word span:first-child{color:#0A8A3E}
+  .admin-brand-word span:last-child{color:#E1232B}
+  .admin-brand-sub{display:block;margin-top:4px;font:800 10.5px/1 'Geist';letter-spacing:.18em;text-transform:uppercase;color:#8B857A;white-space:nowrap}
+  .mega-order-btn{position:relative;isolation:isolate;display:flex;align-items:center;gap:10px;padding:13px 18px;border-radius:15px;border:1px solid rgba(10,138,62,.18);background:#0A8A3E;color:#fff;font:900 13.5px 'Geist';cursor:pointer;box-shadow:0 14px 28px rgba(10,138,62,.20),0 6px 16px rgba(10,110,52,.16);overflow:hidden}
+  .mega-order-btn::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#13A653 0%,#0A8A3E 48%,#075D2E 100%);z-index:-2}
+  .mega-order-btn::after{content:"";position:absolute;inset:2px;border-radius:13px;background:linear-gradient(135deg,rgba(255,255,255,.24),rgba(255,255,255,0) 44%),linear-gradient(135deg,rgba(255,255,255,.08),rgba(0,0,0,.08));z-index:-1}
+  .mega-order-btn span{position:relative;z-index:1}
+  .mega-order-btn svg{position:relative;z-index:1}
+  .mega-order-btn .mega-plus{width:25px;height:25px;border-radius:9px;background:rgba(255,255,255,.20);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.24)}
+  .orders-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .orders-view-toggle{margin-left:auto;display:flex;gap:2px;background:#F1EDE5;border:1px solid #E7E2D9;border-radius:12px;padding:4px}
+  .view-toggle-btn{min-width:74px;padding:8px 12px;border-radius:9px;border:none;background:var(--viewBg);color:var(--viewFg);font:800 12px 'Geist';cursor:pointer;white-space:nowrap;box-shadow:var(--viewShadow)}
+  .orders-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .orders-list{display:flex;flex-direction:column;gap:9px}
+  .order-list-row{display:grid;grid-template-columns:78px minmax(150px,1.05fr) minmax(220px,1.2fr) 86px 78px 92px;gap:13px;align-items:center;background:var(--orderBg);border:1px solid var(--orderBorder);border-radius:15px;padding:13px 15px;box-shadow:var(--orderShadow);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+  .order-list-row:hover{transform:translateY(-1px);box-shadow:var(--orderHoverShadow)}
+  .order-list-status{display:inline-flex;align-items:center;justify-content:center;min-width:74px;padding:6px 9px;border-radius:999px;background:var(--statusBg);color:#fff;font:800 10.5px 'Geist';letter-spacing:.035em;text-transform:uppercase;white-space:nowrap}
+  .order-list-items{min-width:0;font:700 12.5px 'Geist';color:#6B655C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .order-list-sub{font:700 11.5px 'Geist';color:#8B857A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .menu-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
   .tab-shell{display:flex;background:#F1EDE5;border-radius:12px;padding:4px;gap:2px}
   .menu-warning{display:flex;align-items:center;gap:10px;background:#FFF1C2;border:1px solid #E7C95F;color:#7B5512;border-radius:12px;padding:12px 14px;margin-bottom:16px;font:600 13px 'Geist'}
@@ -75,10 +99,10 @@
   .metric-card.primary{background:#211E1A;border-color:#211E1A;color:#fff}
   .income-main{width:100%;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(340px,.65fr);gap:16px;margin-top:16px}
   .panel{background:#fff;border:1px solid #E7E2D9;border-radius:18px;padding:22px}
-  @media (max-width:1100px){.menu-layout,.promo-grid,.income-main{grid-template-columns:1fr}.editor-panel{position:relative}.income-grid{grid-template-columns:repeat(2,minmax(160px,1fr))}}
-  @media (max-width:980px){.order-card{grid-template-columns:1fr}}
+  @media (max-width:1100px){.admin-header{align-items:flex-start;flex-wrap:wrap}.menu-layout,.promo-grid,.income-main{grid-template-columns:1fr}.editor-panel{position:relative}.income-grid{grid-template-columns:repeat(2,minmax(160px,1fr))}}
+  @media (max-width:980px){.order-card{grid-template-columns:1fr}.orders-card-grid{grid-template-columns:1fr}.order-list-row{grid-template-columns:1fr;align-items:flex-start}.orders-head{align-items:flex-start;flex-wrap:wrap}.orders-view-toggle{margin-left:0}}
   @media (max-width:920px){.no-builder{grid-template-columns:1fr}}
-  @media (max-width:760px){.nav-rail{width:46px;padding-left:5px}.nav-item{min-height:44px}.nav-label{font-size:10.5px}.menu-grid,.promo-items,.add-list,.income-grid{grid-template-columns:1fr}}
+  @media (max-width:760px){.nav-rail{width:46px;padding-left:5px}.nav-item{min-height:44px}.nav-label{font-size:10.5px}.admin-header{padding:15px 18px 14px;gap:12px}.admin-brand{min-width:0}.admin-brand-mark{width:40px;height:40px}.admin-brand-word{font-size:22px}.admin-brand-sub{font-size:9.5px;letter-spacing:.13em}.mega-order-btn{padding:12px 14px}.menu-grid,.promo-items,.add-list,.income-grid{grid-template-columns:1fr}}
 </style>
 </helmet>
 
@@ -86,19 +110,19 @@
   <!-- NAV RAIL -->
   <div class="nav-rail">
     <div class="brand-card"><img src="assets/logo.png" alt=""></div>
-    <div onClick="{{ goOrders }}" class="nav-item" style="--navBg:{{ nav.orders.bg }};--navFg:{{ nav.orders.fg }};--navShadow:{{ nav.orders.shadow }};--navHoverBg:{{ nav.orders.hoverBg }};--navFlex:{{ nav.orders.flex }};--navRadius:{{ nav.orders.radius }};--navMr:{{ nav.orders.mr }};--navZ:{{ nav.orders.z }}">
+    <div onClick="{{ goOrders }}" class="nav-item" style="--navBg:{{ nav.orders.bg }};--navFg:{{ nav.orders.fg }};--navShadow:{{ nav.orders.shadow }};--navHoverBg:{{ nav.orders.hoverBg }};--navFlex:{{ nav.orders.flex }};--navRadius:{{ nav.orders.radius }};--navMr:{{ nav.orders.mr }};--navZ:{{ nav.orders.z }};--navStripeOpacity:{{ nav.orders.stripeOpacity }}">
       <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg></div><span class="nav-label">Objednávky</span>
     </div>
-    <div onClick="{{ goMenu }}" class="nav-item" style="--navBg:{{ nav.menu.bg }};--navFg:{{ nav.menu.fg }};--navShadow:{{ nav.menu.shadow }};--navHoverBg:{{ nav.menu.hoverBg }};--navFlex:{{ nav.menu.flex }};--navRadius:{{ nav.menu.radius }};--navMr:{{ nav.menu.mr }};--navZ:{{ nav.menu.z }}">
+    <div onClick="{{ goMenu }}" class="nav-item" style="--navBg:{{ nav.menu.bg }};--navFg:{{ nav.menu.fg }};--navShadow:{{ nav.menu.shadow }};--navHoverBg:{{ nav.menu.hoverBg }};--navFlex:{{ nav.menu.flex }};--navRadius:{{ nav.menu.radius }};--navMr:{{ nav.menu.mr }};--navZ:{{ nav.menu.z }};--navStripeOpacity:{{ nav.menu.stripeOpacity }}">
       <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v9l6.5 3.5"/></svg></div><span class="nav-label">Menu</span>
     </div>
-    <div onClick="{{ goAkce }}" class="nav-item" style="--navBg:{{ nav.akce.bg }};--navFg:{{ nav.akce.fg }};--navShadow:{{ nav.akce.shadow }};--navHoverBg:{{ nav.akce.hoverBg }};--navFlex:{{ nav.akce.flex }};--navRadius:{{ nav.akce.radius }};--navMr:{{ nav.akce.mr }};--navZ:{{ nav.akce.z }}">
+    <div onClick="{{ goAkce }}" class="nav-item" style="--navBg:{{ nav.akce.bg }};--navFg:{{ nav.akce.fg }};--navShadow:{{ nav.akce.shadow }};--navHoverBg:{{ nav.akce.hoverBg }};--navFlex:{{ nav.akce.flex }};--navRadius:{{ nav.akce.radius }};--navMr:{{ nav.akce.mr }};--navZ:{{ nav.akce.z }};--navStripeOpacity:{{ nav.akce.stripeOpacity }}">
       <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M20.6 13.4 13 5.8V3H5.8L3 5.8V13l7.6 7.6a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-3z"/><circle cx="8" cy="8" r="1.3"/></svg></div><span class="nav-label">Akce</span>
     </div>
-    <div onClick="{{ goPrijmy }}" class="nav-item" style="--navBg:{{ nav.prijmy.bg }};--navFg:{{ nav.prijmy.fg }};--navShadow:{{ nav.prijmy.shadow }};--navHoverBg:{{ nav.prijmy.hoverBg }};--navFlex:{{ nav.prijmy.flex }};--navRadius:{{ nav.prijmy.radius }};--navMr:{{ nav.prijmy.mr }};--navZ:{{ nav.prijmy.z }}">
+    <div onClick="{{ goPrijmy }}" class="nav-item" style="--navBg:{{ nav.prijmy.bg }};--navFg:{{ nav.prijmy.fg }};--navShadow:{{ nav.prijmy.shadow }};--navHoverBg:{{ nav.prijmy.hoverBg }};--navFlex:{{ nav.prijmy.flex }};--navRadius:{{ nav.prijmy.radius }};--navMr:{{ nav.prijmy.mr }};--navZ:{{ nav.prijmy.z }};--navStripeOpacity:{{ nav.prijmy.stripeOpacity }}">
       <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><span class="nav-label">Tržby</span>
     </div>
-    <div onClick="{{ goAdresy }}" class="nav-item" style="--navBg:{{ nav.adresy.bg }};--navFg:{{ nav.adresy.fg }};--navShadow:{{ nav.adresy.shadow }};--navHoverBg:{{ nav.adresy.hoverBg }};--navFlex:{{ nav.adresy.flex }};--navRadius:{{ nav.adresy.radius }};--navMr:{{ nav.adresy.mr }};--navZ:{{ nav.adresy.z }}">
+    <div onClick="{{ goAdresy }}" class="nav-item" style="--navBg:{{ nav.adresy.bg }};--navFg:{{ nav.adresy.fg }};--navShadow:{{ nav.adresy.shadow }};--navHoverBg:{{ nav.adresy.hoverBg }};--navFlex:{{ nav.adresy.flex }};--navRadius:{{ nav.adresy.radius }};--navMr:{{ nav.adresy.mr }};--navZ:{{ nav.adresy.z }};--navStripeOpacity:{{ nav.adresy.stripeOpacity }}">
       <div class="nav-icon"><svg width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.6"/></svg></div><span class="nav-label">Adresy</span>
     </div>
     <div class="nav-user">PB</div>
@@ -107,20 +131,34 @@
   <!-- MAIN -->
   <div style="flex:1;display:flex;flex-direction:column;background:#FBFAF7;min-width:0">
     <!-- HEADER -->
-    <div style="display:flex;align-items:center;gap:16px;padding:20px 30px;border-bottom:1px solid #EEEAE2">
-      <div><div style="font:600 22px/1.1 'Geist';color:#211E1A;letter-spacing:-.01em">{{ head.title }}</div><div style="font:500 12.5px/1 'Geist';color:#8B857A;margin-top:5px">{{ head.sub }}</div></div>
+    <div class="admin-header">
+      <div class="admin-brand">
+        <span class="admin-brand-mark"><img src="assets/logo.png" alt=""></span>
+        <span>
+          <span class="admin-brand-word"><span>Pizza</span><span>Bellizzi</span></span>
+          <span class="admin-brand-sub">Admin panel · {{ head.title }}</span>
+        </span>
+      </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
         <div style="display:flex;align-items:center;gap:7px;padding:8px 13px;background:#EAF2EA;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:#4B8B5C;animation:pulseDot 2s infinite"></span><span style="font:600 12.5px 'Geist';color:#3B6B48">Otevřeno do 19:00</span></div>
         <button style="position:relative;width:42px;height:42px;border-radius:12px;border:1px solid #E7E2D9;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="20" height="20" fill="none" stroke="#4A443B" stroke-width="1.6" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span style="position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:#C15F3C;border:2px solid #fff"></span></button>
-        <button onClick="{{ openNew }}" style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:12px;border:none;background:#211E1A;color:#fff;font:600 13.5px 'Geist';cursor:pointer"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Objednávka</button>
+        <button onClick="{{ openNew }}" class="mega-order-btn"><span class="mega-plus"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span>Nová objednávka</span></button>
       </div>
     </div>
 
     <!-- ========== VIEW: OBJEDNÁVKY ========== -->
     <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ true }}">
     <div style="flex:1;overflow-y:auto;padding:22px 30px 40px">
-      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px"><span style="font:600 13px 'Geist';color:#211E1A;text-transform:uppercase;letter-spacing:.06em">Aktivní</span><span style="font:600 12px 'Geist Mono';color:#8B857A">{{ activeCount }}</span></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="orders-head">
+        <span style="font:600 13px 'Geist';color:#211E1A;text-transform:uppercase;letter-spacing:.06em">Aktivní</span>
+        <span style="font:600 12px 'Geist Mono';color:#8B857A">{{ activeCount }}</span>
+        <div class="orders-view-toggle">
+          <button onClick="{{ ordersViewCards }}" class="view-toggle-btn" style="--viewBg:{{ ordersToggle.cardsBg }};--viewFg:{{ ordersToggle.cardsFg }};--viewShadow:{{ ordersToggle.cardsShadow }}">Karty</button>
+          <button onClick="{{ ordersViewList }}" class="view-toggle-btn" style="--viewBg:{{ ordersToggle.listBg }};--viewFg:{{ ordersToggle.listFg }};--viewShadow:{{ ordersToggle.listShadow }}">Seznam</button>
+        </div>
+      </div>
+      <sc-if value="{{ ordersIsCards }}" hint-placeholder-val="{{ true }}">
+      <div class="orders-card-grid">
         <sc-for list="{{ active }}" as="o" hint-placeholder-count="4">
           <div onClick="{{ o.open }}" class="order-card" style="--orderBg:{{ o.cardBg }};--orderBorder:{{ o.borderColor }};--orderShadow:{{ o.glow }};--orderHoverShadow:{{ o.hoverGlow }};--orderItemsBg:{{ o.itemsBg }};--orderItemsBorder:{{ o.itemsBorder }}">
             <div class="order-left">
@@ -160,6 +198,27 @@
           </div>
         </sc-for>
       </div>
+      </sc-if>
+      <sc-if value="{{ ordersIsList }}" hint-placeholder-val="">
+      <div class="orders-list">
+        <sc-for list="{{ active }}" as="o" hint-placeholder-count="7">
+          <div onClick="{{ o.open }}" class="order-list-row" style="--orderBg:{{ o.cardBg }};--orderBorder:{{ o.borderColor }};--orderShadow:{{ o.glow }};--orderHoverShadow:{{ o.hoverGlow }}">
+            <span class="order-list-status" style="--statusBg:{{ o.statusBg }}">{{ o.statusLabel }}</span>
+            <div style="min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;min-width:0">
+                <span style="font:900 12.5px 'Geist Mono';color:#B9B2A6;flex:none">#{{ o.num }}</span>
+                <span style="font:800 14px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.name }}</span>
+              </div>
+              <div class="order-list-sub">{{ o.addressLine }}</div>
+            </div>
+            <div class="order-list-items">{{ o.itemsLine }}</div>
+            <span style="font:900 13px 'Geist Mono';color:#211E1A;text-align:right;white-space:nowrap">{{ o.priceText }}</span>
+            <span style="justify-self:start;font:800 11px 'Geist';padding:4px 8px;border-radius:7px;color:{{ o.payFg }};background:{{ o.payBg }};white-space:nowrap">{{ o.payLabel }}</span>
+            <span style="font:800 11.5px 'Geist Mono';color:#8B857A;text-align:right;white-space:nowrap">{{ o.agoText }}</span>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
       <div style="display:flex;align-items:baseline;gap:10px;margin:24px 0 12px"><span style="font:600 13px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em">Dokončeno dnes</span><span style="font:600 12px 'Geist Mono';color:#B9B2A6">{{ doneSummary }}</span></div>
       <div style="display:flex;flex-direction:column;gap:8px">
         <sc-for list="{{ done }}" as="o" hint-placeholder-count="2">
@@ -586,6 +645,7 @@
 class Component extends DCLogic {
   state = {
     view:'orders',
+    ordersView:'cards',
     selectedId:null,
     timeSel:30,
     menuTab:'pizza',
@@ -641,6 +701,12 @@ class Component extends DCLogic {
         items:[ {qty:1,name:'Quattro formaggi',desc:'smetanový základ, hermelín, niva, parmazán',price:230,img:'assets/pizza/quattro.webp'}, {qty:1,name:'Capri-Sun 200ml',desc:'nápoj',price:15,img:null} ] },
       { id:245, num:245, status:'prep', name:'Lukáš Horák', address:'Na Parkáně 3', city:'Králův Dvůr', zone:'Zóna 3', phone:'+420 605 998 021', payment:'cash', ago:3, placedAt:'14:20', within:45, note:'',
         items:[ {qty:3,name:'Salámová',desc:'rajčatový základ, mozzarella, salám',price:206,img:'assets/pizza/salamova.webp'} ] },
+      { id:242, num:242, status:'new', name:'Anna Pokorná', address:'Bratří Nejedlých 12', city:'Králův Dvůr', zone:'Zóna 3', phone:'+420 731 664 890', payment:'online', ago:2, placedAt:'14:21', within:null, note:'Prosím bez zvonění, malé dítě spí.',
+        items:[ {qty:1,name:'Americana',desc:'mozzarella, šunka, kukuřice',price:218,img:'assets/pizza/americana.webp'}, {qty:1,name:'Pepsi zero 330ml',desc:'nápoj',price:25,img:null} ] },
+      { id:241, num:241, status:'prep', name:'David Černý', address:'Talichova 14', city:'Beroun', zone:'Zóna 1', phone:'+420 724 330 118', payment:'cash', ago:9, placedAt:'14:14', within:30, note:'',
+        items:[ {qty:2,name:'Picante',desc:'pikantní salám, kozí rohy, feferonky',price:218,img:'assets/pizza/picante.webp'}, {qty:1,name:'Mirinda 330ml',desc:'nápoj',price:25,img:null} ] },
+      { id:240, num:240, status:'route', name:'Klára Veselá', address:'Hostim 22', city:'Hostim', zone:'Zóna 3', phone:'+420 775 140 901', payment:'online', ago:24, placedAt:'13:59', within:45, note:'Dovoz k brance.',
+        items:[ {qty:1,name:'Selská',desc:'slanina, klobása, zelí',price:230,img:'assets/pizza/selska.webp'}, {qty:1,name:'Vegetariana extra',desc:'kukuřice, brokolice, špenát, žampiony',price:218,img:'assets/pizza/vegetariana-extra.webp'} ] },
       { id:244, num:244, status:'done', name:'Tomáš Marek', address:'Plzeňská 120', city:'Beroun', zone:'Zóna 1', phone:'+420 728 441 209', payment:'cash', ago:41, placedAt:'13:42', within:30, time:'14:02', note:'',
         items:[ {qty:1,name:'Hawai',desc:'šunka, ananas',price:218,img:'assets/pizza/hawai.webp'}, {qty:1,name:'Picante',desc:'pikantní salám, kozí rohy, feferonky',price:218,img:'assets/pizza/picante.webp'} ] },
       { id:243, num:243, status:'done', name:'Eva Králová', address:'Havlíčkova 22', city:'Beroun', zone:'Zóna 2', phone:'+420 603 771 004', payment:'online', ago:55, placedAt:'13:28', within:30, time:'13:48', note:'',
@@ -788,13 +854,19 @@ class Component extends DCLogic {
       radius:a?'18px 0 0 18px':'15px',
       mr:a?'-1px':'6px',
       z:a?3:1,
-      shadow:a?'0 8px 20px -8px rgba(40,25,10,.30), 0 1px 0 #FBFAF7':'none'
+      shadow:a?'0 8px 20px -8px rgba(40,25,10,.30), 0 1px 0 #FBFAF7':'none',
+      stripeOpacity:a?1:0
     }; });
     // orders
     const active=s.orders.filter(o=>o.status!=='done').map(o=>this.cardView(o));
     const doneO=s.orders.filter(o=>o.status==='done');
     const done=doneO.map(o=>this.cardView(o));
     const doneRev=doneO.reduce((a,o)=>a+this.total(o),0);
+    const cardsActive=s.ordersView!=='list';
+    const ordersToggle={
+      cardsBg:cardsActive?'#211E1A':'transparent', cardsFg:cardsActive?'#fff':'#6B655C', cardsShadow:cardsActive?'0 1px 2px rgba(17,17,17,.12)':'none',
+      listBg:cardsActive?'transparent':'#211E1A', listFg:cardsActive?'#6B655C':'#fff', listShadow:cardsActive?'none':'0 1px 2px rgba(17,17,17,.12)'
+    };
     // menu
     const mk=s.menuTab==='pizza'?'pizzas':'drinks';
     const menuList=s[mk];
@@ -945,6 +1017,8 @@ class Component extends DCLogic {
       isOrders:s.view==='orders', isMenu:s.view==='menu', isAkce:s.view==='akce', isPrijmy:s.view==='prijmy', isAdresy:s.view==='adresy',
       goOrders:()=>this.setState({view:'orders'}), goMenu:()=>this.setState({view:'menu'}), goAkce:()=>this.setState({view:'akce'}), goPrijmy:()=>this.setState({view:'prijmy'}), goAdresy:()=>this.setState({view:'adresy'}),
       openNew:()=>this.openNew(null),
+      ordersIsCards:cardsActive, ordersIsList:!cardsActive, ordersToggle,
+      ordersViewCards:()=>this.setState({ordersView:'cards'}), ordersViewList:()=>this.setState({ordersView:'list'}),
       active, done, activeCount:active.length, doneSummary:doneO.length+' · '+doneRev.toLocaleString('cs-CZ')+' Kč',
       menu, akce, prijmy, adresy, no:noVals,
       modalOpen:!!selRaw, selected:selRaw?this.detailView(selRaw):{},
