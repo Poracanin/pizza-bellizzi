@@ -11,102 +11,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  body{margin:0;background:#FBFAF7;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-  *{box-sizing:border-box}
-  input,select,button{font-family:'Geist',system-ui,sans-serif}
-  ::-webkit-scrollbar{width:10px;height:10px}
-  ::-webkit-scrollbar-thumb{background:#E0DACF;border-radius:8px;border:3px solid #FBFAF7}
-  @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
-  @keyframes modalIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  @keyframes growBar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-  button{transition:transform .16s ease,box-shadow .16s ease,background .16s ease,border-color .16s ease}
-  button:hover{transform:translateY(-1px)}
-  .nav-rail{width:48px;flex:none;background:#EDE9E1;border-right:1px solid #E2DCD1;display:flex;flex-direction:column;align-items:center;padding:12px 0 12px 6px;gap:5px;position:relative;z-index:2}
-  .nav-rail::before{display:none}
-  .brand-card{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid #DDD7CC;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:0 6px 6px 0;opacity:1;flex:none;box-shadow:0 1px 3px rgba(17,17,17,.08)}
-  .brand-card img{width:100%;height:100%;object-fit:cover}
-  .nav-item{flex:var(--navFlex);width:100%;min-height:48px;border-radius:var(--navRadius);border:none;background:var(--navBg);color:var(--navFg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;box-shadow:var(--navShadow);position:relative;z-index:var(--navZ);margin-right:var(--navMr);overflow:visible;transition:flex .34s cubic-bezier(.34,1.3,.4,1),background .22s ease,color .22s ease,box-shadow .22s ease}
-  .nav-item:hover{color:#211E1A;background:var(--navHoverBg)}
-  .nav-item::before{content:"";position:absolute;right:3px;top:18px;bottom:18px;width:3px;border-radius:999px;background:linear-gradient(180deg,#E1232B 0 33.33%,#0A8A3E 33.33% 66.66%,#111 66.66%);opacity:var(--navStripeOpacity);box-shadow:0 0 0 1px rgba(255,255,255,.55)}
-  .nav-icon{width:16px;height:16px;color:currentColor;display:flex;align-items:center;justify-content:center;flex:none}
-  .nav-icon svg{width:16px;height:16px}
-  .nav-label{display:block;writing-mode:vertical-rl;transform:rotate(180deg);font:700 11.5px/1 'Geist';letter-spacing:.02em;color:currentColor;text-transform:none;white-space:nowrap}
-  .nav-user{margin:6px 6px 0 0;width:32px;height:32px;border-radius:50%;background:#E1DBD0;color:#6B655C;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex:none}
-  .admin-header{position:relative;display:flex;align-items:center;gap:18px;padding:18px 30px 17px;border-bottom:1px solid #EEEAE2;background:rgba(251,250,247,.96);backdrop-filter:blur(10px)}
-  .admin-brand{display:flex;align-items:center;gap:13px;min-width:245px}
-  .admin-brand-mark{width:48px;height:48px;border-radius:50%;border:1px solid #E7E2D9;background:#fff;padding:5px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(17,17,17,.06);flex:none}
-  .admin-brand-mark img{width:100%;height:100%;object-fit:contain}
-  .admin-brand-word{font-family:'Pacifico','Geist',system-ui,sans-serif;font-size:25px;line-height:1;display:flex;gap:7px;white-space:nowrap}
-  .admin-brand-word span:first-child{color:#0A8A3E}
-  .admin-brand-word span:last-child{color:#E1232B}
-  .admin-brand-sub{display:block;margin-top:4px;font:800 10.5px/1 'Geist';letter-spacing:.18em;text-transform:uppercase;color:#8B857A;white-space:nowrap}
-  .mega-order-btn{position:relative;isolation:isolate;display:flex;align-items:center;gap:10px;padding:13px 18px;border-radius:15px;border:1px solid rgba(10,138,62,.18);background:#0A8A3E;color:#fff;font:900 13.5px 'Geist';cursor:pointer;box-shadow:0 14px 28px rgba(10,138,62,.20),0 6px 16px rgba(10,110,52,.16);overflow:hidden}
-  .mega-order-btn::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#13A653 0%,#0A8A3E 48%,#075D2E 100%);z-index:-2}
-  .mega-order-btn::after{content:"";position:absolute;inset:2px;border-radius:13px;background:linear-gradient(135deg,rgba(255,255,255,.24),rgba(255,255,255,0) 44%),linear-gradient(135deg,rgba(255,255,255,.08),rgba(0,0,0,.08));z-index:-1}
-  .mega-order-btn span{position:relative;z-index:1}
-  .mega-order-btn svg{position:relative;z-index:1}
-  .mega-order-btn .mega-plus{width:25px;height:25px;border-radius:9px;background:rgba(255,255,255,.20);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.24)}
-  .orders-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-  .orders-view-toggle{margin-left:auto;display:flex;gap:2px;background:#F1EDE5;border:1px solid #E7E2D9;border-radius:12px;padding:4px}
-  .view-toggle-btn{min-width:74px;padding:8px 12px;border-radius:9px;border:none;background:var(--viewBg);color:var(--viewFg);font:800 12px 'Geist';cursor:pointer;white-space:nowrap;box-shadow:var(--viewShadow)}
-  .orders-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .orders-list{display:flex;flex-direction:column;gap:9px}
-  .order-list-row{display:grid;grid-template-columns:78px minmax(150px,1.05fr) minmax(220px,1.2fr) 86px 78px 92px;gap:13px;align-items:center;background:var(--orderBg);border:1px solid var(--orderBorder);border-radius:15px;padding:13px 15px;box-shadow:var(--orderShadow);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
-  .order-list-row:hover{transform:translateY(-1px);box-shadow:var(--orderHoverShadow)}
-  .order-list-status{display:inline-flex;align-items:center;justify-content:center;min-width:74px;padding:6px 9px;border-radius:999px;background:var(--statusBg);color:#fff;font:800 10.5px 'Geist';letter-spacing:.035em;text-transform:uppercase;white-space:nowrap}
-  .order-list-items{min-width:0;font:700 12.5px 'Geist';color:#6B655C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .order-list-sub{font:700 11.5px 'Geist';color:#8B857A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .menu-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-  .tab-shell{display:flex;background:#F1EDE5;border-radius:12px;padding:4px;gap:2px}
-  .menu-warning{display:flex;align-items:center;gap:10px;background:#FFF1C2;border:1px solid #E7C95F;color:#7B5512;border-radius:12px;padding:12px 14px;margin-bottom:16px;font:600 13px 'Geist'}
-  .menu-layout{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(318px,.62fr);gap:16px;align-items:start}
-  .menu-grid{display:grid;grid-template-columns:repeat(2,minmax(230px,1fr));gap:9px}
-  .menu-card{width:100%;min-height:104px;text-align:left;display:flex;gap:13px;align-items:center;border-radius:14px;border:1px solid var(--cardBorder);background:var(--cardBg);box-shadow:var(--cardShadow);opacity:var(--cardOpacity);padding:12px 14px;cursor:pointer}
-  .menu-card:hover{border-color:#D8C5A8;box-shadow:0 10px 22px rgba(55,40,20,.06)}
-  .menu-thumb{width:48px;height:48px;border-radius:11px;object-fit:cover;flex:none}
-  .menu-placeholder{width:48px;height:48px;border-radius:11px;background:#F1EDE5;display:flex;align-items:center;justify-content:center;flex:none;color:#A79F92}
-  .pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:4px 8px;font:700 10.5px 'Geist';letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
-  .order-card{background:var(--orderBg);border:1px solid var(--orderBorder);border-radius:18px;padding:17px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(195px,.64fr);gap:13px;cursor:pointer;box-shadow:var(--orderShadow);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
-  .order-card:hover{transform:translateY(-1px);box-shadow:var(--orderHoverShadow)}
-  .order-left{display:flex;flex-direction:column;gap:13px;min-width:0}
-  .order-side{background:var(--orderItemsBg);border:1px solid var(--orderItemsBorder);border-radius:15px;padding:12px;display:flex;flex-direction:column;gap:7px;min-width:0}
-  .order-item-line{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;padding:7px;border-radius:10px;background:rgba(255,255,255,.64)}
-  .order-item-qty{min-width:25px;height:25px;border-radius:8px;background:#211E1A;color:#fff;display:flex;align-items:center;justify-content:center;font:800 11px 'Geist Mono'}
-  .order-alert{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:11px;background:#FBF0DB;color:#9A5A16;border:1px solid #E7B770;font:800 12px 'Geist'}
-  .done-btn{box-shadow:0 12px 24px rgba(47,125,73,.18)}
-  .editor-panel{background:#fff;border:1px solid #E7E2D9;border-radius:18px;padding:18px;box-shadow:none;position:sticky;top:0}
-  .field-label{font:700 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
-  .input-like{width:100%;border:1px solid #E5DED2;border-radius:12px;background:#FBFAF7;color:#211E1A;outline:none;font:600 14px 'Geist';padding:12px 13px}
-  .textarea-like{min-height:78px;resize:vertical;line-height:1.4}
-  .price-row{display:flex;align-items:center;gap:8px;border:1.5px solid #E5DED2;border-radius:13px;background:#FBFAF7;padding:9px 12px}
-  .promo-grid{width:100%;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr);gap:18px;align-items:start}
-  .promo-panel{background:#fff;border:1px solid #E7E2D9;border-radius:18px;padding:20px;box-shadow:none}
-  .promo-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-  .promo-card{display:flex;gap:12px;align-items:center;border:1px solid #E5DED2;border-radius:15px;background:#FBFAF7;padding:12px}
-  .add-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;max-height:360px;overflow:auto;padding-right:4px}
-  .no-builder{margin:14px 24px 0;padding:14px;border:1px solid #E5DED2;border-radius:16px;background:#FFFDF8;display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.62fr);gap:14px;flex:none}
-  .no-builder select{width:100%;border:1px solid #E5DED2;border-radius:10px;background:#fff;color:#211E1A;font:700 12.5px 'Geist';padding:9px 10px;outline:none}
-  .no-builder-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-  .no-extra-list{display:flex;flex-wrap:wrap;gap:7px;max-height:84px;overflow:auto;padding-right:2px}
-  .no-extra-chip{border:1px solid #E2D8CA;border-radius:999px;background:#fff;color:#5E574E;font:800 11.5px 'Geist';padding:7px 9px;cursor:pointer}
-  .no-extra-chip.is-on{background:#E7F0E7;color:#2F6F45;border-color:#B8D2BE}
-  .no-cart-list{display:flex;flex-direction:column;gap:6px;max-height:112px;overflow:auto;margin-bottom:12px}
-  .no-cart-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:9px;align-items:center;background:#FBFAF7;border:1px solid #EEEAE2;border-radius:11px;padding:8px 10px}
-  .income-grid{width:100%;display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:14px}
-  .metric-card{background:#fff;border:1px solid #E7E2D9;border-radius:18px;padding:22px;min-height:132px}
-  .metric-card.primary{background:#211E1A;border-color:#211E1A;color:#fff}
-  .income-main{width:100%;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(340px,.65fr);gap:16px;margin-top:16px}
-  .panel{background:#fff;border:1px solid #E7E2D9;border-radius:18px;padding:22px}
-  @media (max-width:1100px){.admin-header{align-items:flex-start;flex-wrap:wrap}.menu-layout,.promo-grid,.income-main{grid-template-columns:1fr}.editor-panel{position:relative}.income-grid{grid-template-columns:repeat(2,minmax(160px,1fr))}}
-  @media (max-width:980px){.order-card{grid-template-columns:1fr}.orders-card-grid{grid-template-columns:1fr}.order-list-row{grid-template-columns:1fr;align-items:flex-start}.orders-head{align-items:flex-start;flex-wrap:wrap}.orders-view-toggle{margin-left:0}}
-  @media (max-width:920px){.no-builder{grid-template-columns:1fr}}
-  @media (max-width:760px){.nav-rail{width:46px;padding-left:5px}.nav-item{min-height:44px}.nav-label{font-size:10.5px}.admin-header{padding:15px 18px 14px;gap:12px}.admin-brand{min-width:0}.admin-brand-mark{width:40px;height:40px}.admin-brand-word{font-size:22px}.admin-brand-sub{font-size:9.5px;letter-spacing:.13em}.mega-order-btn{padding:12px 14px}.menu-grid,.promo-items,.add-list,.income-grid{grid-template-columns:1fr}}
-</style>
+<link rel="stylesheet" href="./styles.css">
 </helmet>
 
-<div style="display:flex;height:100vh;overflow:hidden">
+<div class="app-shell">
   <!-- NAV RAIL -->
   <div class="nav-rail">
     <div class="brand-card"><img src="assets/logo.png" alt=""></div>
@@ -129,7 +37,7 @@
   </div>
 
   <!-- MAIN -->
-  <div style="flex:1;display:flex;flex-direction:column;background:#FBFAF7;min-width:0">
+  <div class="main-col">
     <!-- HEADER -->
     <div class="admin-header">
       <div class="admin-brand">
@@ -139,161 +47,189 @@
           <span class="admin-brand-sub">Admin panel · {{ head.title }}</span>
         </span>
       </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
-        <div style="display:flex;align-items:center;gap:7px;padding:8px 13px;background:#EAF2EA;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:#4B8B5C;animation:pulseDot 2s infinite"></span><span style="font:600 12.5px 'Geist';color:#3B6B48">Otevřeno do 19:00</span></div>
-        <button style="position:relative;width:42px;height:42px;border-radius:12px;border:1px solid #E7E2D9;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="20" height="20" fill="none" stroke="#4A443B" stroke-width="1.6" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span style="position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:#C15F3C;border:2px solid #fff"></span></button>
+      <div class="header-actions">
+        <div class="header-open"><span class="header-open-dot"></span><span class="header-open-text">Otevřeno do 19:00</span></div>
+        <button class="icon-btn"><svg width="20" height="20" fill="none" stroke="#4A443B" stroke-width="1.6" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="icon-btn-dot"></span></button>
         <button onClick="{{ openNew }}" class="mega-order-btn"><span class="mega-plus"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span>Nová objednávka</span></button>
       </div>
     </div>
 
     <!-- ========== VIEW: OBJEDNÁVKY ========== -->
     <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ true }}">
-    <div style="flex:1;overflow-y:auto;padding:22px 30px 40px">
+    <div class="view-scroll">
       <div class="orders-head">
-        <span style="font:600 13px 'Geist';color:#211E1A;text-transform:uppercase;letter-spacing:.06em">Aktivní</span>
-        <span style="font:600 12px 'Geist Mono';color:#8B857A">{{ activeCount }}</span>
+        <span class="eyebrow-dark">Aktivní objednávky</span>
+        <span class="mono-muted">{{ activeCount }}</span>
         <div class="orders-view-toggle">
-          <button onClick="{{ ordersViewCards }}" class="view-toggle-btn" style="--viewBg:{{ ordersToggle.cardsBg }};--viewFg:{{ ordersToggle.cardsFg }};--viewShadow:{{ ordersToggle.cardsShadow }}">Karty</button>
+          <button onClick="{{ ordersViewCards }}" class="view-toggle-btn" style="--viewBg:{{ ordersToggle.cardsBg }};--viewFg:{{ ordersToggle.cardsFg }};--viewShadow:{{ ordersToggle.cardsShadow }}">Nástěnka</button>
           <button onClick="{{ ordersViewList }}" class="view-toggle-btn" style="--viewBg:{{ ordersToggle.listBg }};--viewFg:{{ ordersToggle.listFg }};--viewShadow:{{ ordersToggle.listShadow }}">Seznam</button>
         </div>
       </div>
+
+      <!-- ---- NÁSTĚNKA (sloupce podle stavu) ---- -->
       <sc-if value="{{ ordersIsCards }}" hint-placeholder-val="{{ true }}">
-      <div class="orders-card-grid">
-        <sc-for list="{{ active }}" as="o" hint-placeholder-count="4">
-          <div onClick="{{ o.open }}" class="order-card" style="--orderBg:{{ o.cardBg }};--orderBorder:{{ o.borderColor }};--orderShadow:{{ o.glow }};--orderHoverShadow:{{ o.hoverGlow }};--orderItemsBg:{{ o.itemsBg }};--orderItemsBorder:{{ o.itemsBorder }}">
-            <div class="order-left">
-              <div style="display:flex;align-items:center;gap:9px">
-                <span style="font:800 11px 'Geist';color:#fff;padding:6px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;background:{{ o.statusBg }}">{{ o.statusLabel }}</span>
-                <span style="font:700 12px 'Geist Mono';color:#8B857A;background:{{ o.timeBg }};padding:5px 9px;border-radius:999px">{{ o.agoText }}</span>
-                <span style="margin-left:auto;font:800 13px 'Geist Mono';color:#B9B2A6">#{{ o.num }}</span>
-              </div>
-              <sc-if value="{{ o.hasAlert }}" hint-placeholder-val="">
-                <div class="order-alert"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v5M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>{{ o.alertText }}</div>
-              </sc-if>
-              <div><div style="font:800 18px/1.2 'Geist';color:#211E1A">{{ o.name }}</div><div style="font:600 13px 'Geist';color:#8B857A;margin-top:4px">{{ o.addressLine }}</div></div>
-              <div style="display:flex;align-items:center;gap:8px;margin-top:auto"><span style="font:900 18px 'Geist Mono';color:#211E1A">{{ o.priceText }}</span><span style="font:700 11.5px 'Geist';padding:4px 9px;border-radius:7px;color:{{ o.payFg }};background:{{ o.payBg }}">{{ o.payLabel }}</span><span style="margin-left:auto;font:700 12px 'Geist';color:#8B857A">{{ o.withinText }}</span></div>
-              <sc-if value="{{ o.isNew }}" hint-placeholder-val="{{ true }}">
-                <div style="display:flex;gap:9px;margin-top:2px">
-                  <button onClick="{{ o.onReject }}" style="flex:1;padding:13px;border-radius:12px;border:1px solid #E4CFC7;background:#fff;color:#B4472B;font:800 14px 'Geist';cursor:pointer">Odmítnout</button>
-                  <button onClick="{{ o.open }}" style="flex:1.8;padding:13px;border-radius:12px;border:none;background:#211E1A;color:#fff;font:800 14px 'Geist';cursor:pointer">Potvrdit →</button>
-                </div>
-              </sc-if>
-              <sc-if value="{{ o.notNew }}" hint-placeholder-val="{{ true }}">
-                <button onClick="{{ o.onAdvance }}" class="{{ o.btnClass }}" style="padding:13px;border-radius:12px;border:none;color:#fff;font:800 14px 'Geist';cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;background:{{ o.btnBg }}">{{ o.btnLabel }}</button>
-              </sc-if>
+      <div class="orders-board">
+        <sc-for list="{{ columns }}" as="col" hint-placeholder-count="3">
+          <div class="orders-col" style="--colAccent:{{ col.accent }};--colSoft:{{ col.soft }}">
+            <div class="orders-col-head">
+              <span class="orders-col-dot"></span>
+              <span class="orders-col-title">{{ col.title }}</span>
+              <span class="orders-col-count">{{ col.count }}</span>
             </div>
-            <div class="order-side">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font:800 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em">Objednáno</span><span style="font:800 11px 'Geist Mono';color:#B9B2A6">{{ o.itemsCountLabel }}</span></div>
-              <sc-for list="{{ o.itemsPreview }}" as="li" hint-placeholder-count="2">
-                <div class="order-item-line">
-                  <span class="order-item-qty">{{ li.qtyText }}</span>
-                  <div style="min-width:0"><div style="font:800 13.5px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ li.name }}</div><div style="font:600 11.5px 'Geist';color:#8B857A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ li.desc }}</div></div>
-                  <span style="font:800 12px 'Geist Mono';color:#4A443B">{{ li.lineText }}</span>
+            <div class="orders-col-body">
+              <sc-for list="{{ col.orders }}" as="o" hint-placeholder-count="2">
+                <div class="order-swipe">
+                  <sc-if value="{{ o.canSwipe }}" hint-placeholder-val="">
+                    <div class="order-swipe-track" style="background:{{ o.nextColor }};opacity:{{ o.swipeActionOpacity }}">
+                      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                      <span class="order-swipe-label">{{ o.nextLabel }}</span>
+                    </div>
+                  </sc-if>
+                  <div onClick="{{ o.open }}" onPointerDown="{{ o.onDragStart }}" onPointerMove="{{ o.onDragMove }}" onPointerUp="{{ o.onDragEnd }}" onPointerCancel="{{ o.onDragEnd }}" class="order-card {{ o.specialClass }}" style="--orderBg:{{ o.cardBg }};--orderBorder:{{ o.borderColor }};--orderShadow:{{ o.glow }};--orderHoverShadow:{{ o.hoverGlow }};transform:translateX({{ o.dragPx }});transition:{{ o.dragTransition }}">
+                    <div class="order-card-top">
+                      <span class="order-status-pill" style="background:{{ o.statusBg }}">{{ o.statusLabel }}</span>
+                      <span class="order-time-pill" style="background:{{ o.timeBg }}">{{ o.agoText }}</span>
+                      <span class="order-num">#{{ o.num }}</span>
+                    </div>
+                    <sc-if value="{{ o.hasAlert }}" hint-placeholder-val="">
+                      <div class="order-alert"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v5M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>{{ o.alertText }}</div>
+                    </sc-if>
+                    <div><div class="order-name">{{ o.name }}</div><div class="order-addr">{{ o.addressLine }}</div></div>
+                    <sc-if value="{{ o.isSpecial }}" hint-placeholder-val="">
+                      <div class="order-special"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20.6 13.4 13 5.8V3H5.8L3 5.8V13l7.6 7.6a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-3z"/><circle cx="8" cy="8" r="1.3"/></svg><span>{{ o.specialText }}</span></div>
+                    </sc-if>
+                    <div class="order-items-mini">{{ o.itemsLine }}</div>
+                    <div class="order-price-row"><span class="order-price">{{ o.priceText }}</span><span class="order-pay" style="color:{{ o.payFg }};background:{{ o.payBg }}">{{ o.payLabel }}</span><sc-if value="{{ o.hasWithin }}" hint-placeholder-val=""><span class="order-within">{{ o.withinText }}</span></sc-if></div>
+                    <sc-if value="{{ o.isNew }}" hint-placeholder-val="{{ true }}">
+                      <div class="order-actions">
+                        <button onClick="{{ o.onReject }}" class="btn-reject">Odmítnout</button>
+                        <button onClick="{{ o.open }}" class="btn-confirm">Potvrdit →</button>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ o.notNew }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ o.onAdvance }}" class="btn-advance {{ o.btnClass }}" style="background:{{ o.btnBg }}">{{ o.btnLabel }}</button>
+                    </sc-if>
+                    <sc-if value="{{ o.canSwipe }}" hint-placeholder-val="">
+                      <div class="order-swipe-hint"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>{{ o.swipeHint }}</div>
+                    </sc-if>
+                  </div>
                 </div>
               </sc-for>
-              <sc-if value="{{ o.hasMoreItems }}" hint-placeholder-val="">
-                <div style="font:800 12px 'Geist';color:#8B857A;text-align:center;padding:3px 0">{{ o.moreItemsText }}</div>
+              <sc-if value="{{ col.isEmpty }}" hint-placeholder-val="">
+                <div class="orders-col-empty">{{ col.emptyText }}</div>
               </sc-if>
             </div>
           </div>
         </sc-for>
       </div>
       </sc-if>
+
+      <!-- ---- SEZNAM ---- -->
       <sc-if value="{{ ordersIsList }}" hint-placeholder-val="">
       <div class="orders-list">
         <sc-for list="{{ active }}" as="o" hint-placeholder-count="7">
           <div onClick="{{ o.open }}" class="order-list-row" style="--orderBg:{{ o.cardBg }};--orderBorder:{{ o.borderColor }};--orderShadow:{{ o.glow }};--orderHoverShadow:{{ o.hoverGlow }}">
             <span class="order-list-status" style="--statusBg:{{ o.statusBg }}">{{ o.statusLabel }}</span>
-            <div style="min-width:0">
-              <div style="display:flex;align-items:center;gap:8px;min-width:0">
-                <span style="font:900 12.5px 'Geist Mono';color:#B9B2A6;flex:none">#{{ o.num }}</span>
-                <span style="font:800 14px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.name }}</span>
+            <div class="min0">
+              <div class="olist-namewrap">
+                <span class="olist-num">#{{ o.num }}</span>
+                <span class="olist-name">{{ o.name }}</span>
+                <sc-if value="{{ o.isSpecial }}" hint-placeholder-val=""><span class="olist-special" title="Speciální úprava"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path d="M20.6 13.4 13 5.8V3H5.8L3 5.8V13l7.6 7.6a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-3z"/><circle cx="8" cy="8" r="1.3"/></svg></span></sc-if>
               </div>
               <div class="order-list-sub">{{ o.addressLine }}</div>
             </div>
             <div class="order-list-items">{{ o.itemsLine }}</div>
-            <span style="font:900 13px 'Geist Mono';color:#211E1A;text-align:right;white-space:nowrap">{{ o.priceText }}</span>
-            <span style="justify-self:start;font:800 11px 'Geist';padding:4px 8px;border-radius:7px;color:{{ o.payFg }};background:{{ o.payBg }};white-space:nowrap">{{ o.payLabel }}</span>
-            <span style="font:800 11.5px 'Geist Mono';color:#8B857A;text-align:right;white-space:nowrap">{{ o.agoText }}</span>
+            <span class="olist-price">{{ o.priceText }}</span>
+            <span class="olist-pay" style="color:{{ o.payFg }};background:{{ o.payBg }}">{{ o.payLabel }}</span>
+            <span class="olist-ago">{{ o.agoText }}</span>
           </div>
         </sc-for>
       </div>
       </sc-if>
-      <div style="display:flex;align-items:baseline;gap:10px;margin:24px 0 12px"><span style="font:600 13px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em">Dokončeno dnes</span><span style="font:600 12px 'Geist Mono';color:#B9B2A6">{{ doneSummary }}</span></div>
-      <div style="display:flex;flex-direction:column;gap:8px">
+
+      <!-- ---- DORUČENO (úplně dole) ---- -->
+      <div class="done-head"><span class="eyebrow-muted">Doručeno dnes</span><span class="mono-faint">{{ doneSummary }}</span></div>
+      <div class="done-list">
         <sc-for list="{{ done }}" as="o" hint-placeholder-count="2">
-          <div onClick="{{ o.open }}" style="display:flex;align-items:center;gap:14px;padding:12px 18px;background:#F5F2EC;border-radius:12px;cursor:pointer;opacity:.9">
-            <span style="width:8px;height:8px;border-radius:50%;background:#4B8B5C"></span>
-            <span style="font:600 14px 'Geist';color:#4A443B;width:160px">{{ o.name }}</span>
-            <span style="font:500 13px 'Geist';color:#8B857A;flex:1">{{ o.doneLine }}</span>
-            <span style="font:600 11.5px 'Geist';padding:3px 8px;border-radius:6px;color:{{ o.payFg }};background:{{ o.payBg }}">{{ o.payLabel }}</span>
-            <span style="font:600 14px 'Geist Mono';color:#211E1A;width:70px;text-align:right">{{ o.priceText }}</span>
-            <span style="font:500 12px 'Geist Mono';color:#B9B2A6;width:48px;text-align:right">{{ o.time }}</span>
+          <div class="done-row">
+            <span class="done-dot"></span>
+            <div onClick="{{ o.open }}" class="done-main">
+              <span class="done-name">{{ o.name }}</span>
+              <span class="done-line">{{ o.doneLine }}</span>
+              <sc-if value="{{ o.isSpecial }}" hint-placeholder-val=""><span class="done-special" title="Speciální úprava"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path d="M20.6 13.4 13 5.8V3H5.8L3 5.8V13l7.6 7.6a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-3z"/><circle cx="8" cy="8" r="1.3"/></svg></span></sc-if>
+            </div>
+            <span class="done-pay" style="color:{{ o.payFg }};background:{{ o.payBg }}">{{ o.payLabel }}</span>
+            <span class="done-price">{{ o.priceText }}</span>
+            <span class="done-time">{{ o.time }}</span>
+            <button onClick="{{ o.onUndo }}" class="done-undo" title="Vrátit zpět na cestu"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-1"/></svg></button>
           </div>
         </sc-for>
+        <sc-if value="{{ doneEmpty }}" hint-placeholder-val="">
+          <div class="done-empty">Zatím žádné doručené objednávky.</div>
+        </sc-if>
       </div>
     </div>
     </sc-if>
 
     <!-- ========== VIEW: MENU ========== -->
     <sc-if value="{{ isMenu }}" hint-placeholder-val="">
-    <div style="flex:1;overflow-y:auto;padding:22px 30px 40px">
+    <div class="view-scroll">
       <div class="menu-toolbar">
         <div class="tab-shell">
-          <button onClick="{{ menu.tabPizza }}" style="padding:10px 18px;border-radius:10px;border:none;font:700 13.5px 'Geist';cursor:pointer;background:{{ menu.pizzaTabBg }};color:{{ menu.pizzaTabFg }}">Pizzy · {{ menu.pizzaCount }}</button>
-          <button onClick="{{ menu.tabDrink }}" style="padding:10px 18px;border-radius:10px;border:none;font:700 13.5px 'Geist';cursor:pointer;background:{{ menu.drinkTabBg }};color:{{ menu.drinkTabFg }}">Nápoje · {{ menu.drinkCount }}</button>
+          <button onClick="{{ menu.tabPizza }}" class="tab-btn" style="background:{{ menu.pizzaTabBg }};color:{{ menu.pizzaTabFg }}">Pizzy · {{ menu.pizzaCount }}</button>
+          <button onClick="{{ menu.tabDrink }}" class="tab-btn" style="background:{{ menu.drinkTabBg }};color:{{ menu.drinkTabFg }}">Nápoje · {{ menu.drinkCount }}</button>
         </div>
-        <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
-          <span class="pill" style="background:#E9EFF7;color:#315F92">{{ menu.totalLabel }}</span>
+        <div class="menu-pills">
+          <span class="pill pill-info">{{ menu.totalLabel }}</span>
           <span class="pill" style="background:{{ menu.soldPillBg }};color:{{ menu.soldPillFg }}">{{ menu.soldLabel }}</span>
         </div>
       </div>
       <sc-if value="{{ menu.hasSoldOut }}" hint-placeholder-val="">
         <div class="menu-warning">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" style="flex:none"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" class="svg-noshrink"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
           <span>Pozor, tyto položky nejsou v nabídce: {{ menu.soldOutNames }}</span>
         </div>
       </sc-if>
       <div class="menu-layout">
         <div>
-          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px">
-            <span style="font:700 12px 'Geist';color:#211E1A;text-transform:uppercase;letter-spacing:.07em">{{ menu.sectionTitle }}</span>
-            <span style="font:600 12px 'Geist Mono';color:#A79F92">{{ menu.availableLabel }}</span>
+          <div class="menu-sec-head">
+            <span class="menu-sec-title">{{ menu.sectionTitle }}</span>
+            <span class="menu-sec-avail">{{ menu.availableLabel }}</span>
           </div>
           <div class="menu-grid">
             <sc-for list="{{ menu.items }}" as="it">
               <button onClick="{{ it.select }}" class="menu-card" style="--cardBg:{{ it.cardBg }};--cardBorder:{{ it.cardBorder }};--cardShadow:{{ it.cardShadow }};--cardOpacity:{{ it.rowOpacity }}">
                 <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" class="menu-thumb"></sc-if>
                 <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div class="menu-placeholder"><svg width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
-                <div style="flex:1;min-width:0">
-                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px"><span style="font:700 15px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.name }}</span><span class="pill" style="background:{{ it.soldBg }};color:{{ it.soldFg }}">{{ it.soldLabel }}</span></div>
-                  <div style="font:500 12.5px/1.35 'Geist';color:#7B7469;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ it.desc }}</div>
-                  <div style="display:flex;align-items:center;gap:8px;margin-top:12px"><span style="font:800 17px 'Geist Mono';color:#211E1A">{{ it.priceText }}</span><sc-if value="{{ it.inPromo }}" hint-placeholder-val=""><span class="pill" style="background:#FBF0DB;color:#9A5A16">Akce</span></sc-if></div>
+                <div class="f1min0">
+                  <div class="menu-card-titlerow"><span class="menu-card-name">{{ it.name }}</span><span class="pill" style="background:{{ it.soldBg }};color:{{ it.soldFg }}">{{ it.soldLabel }}</span></div>
+                  <div class="menu-card-desc">{{ it.desc }}</div>
+                  <div class="menu-card-pricerow"><span class="menu-card-price">{{ it.priceText }}</span><sc-if value="{{ it.inPromo }}" hint-placeholder-val=""><span class="pill pill-amber">Akce</span></sc-if></div>
                 </div>
               </button>
             </sc-for>
           </div>
         </div>
         <div class="editor-panel">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-            <sc-if value="{{ menu.selected.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ menu.selected.img }}" style="width:66px;height:66px;border-radius:16px;object-fit:cover;flex:none"></sc-if>
-            <sc-if value="{{ menu.selected.noImg }}" hint-placeholder-val=""><div class="menu-placeholder" style="width:66px;height:66px"><svg width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
-            <div style="min-width:0">
-              <div style="font:700 12px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.07em">Vybraná položka</div>
-              <div style="font:800 19px/1.15 'Geist';color:#211E1A;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ menu.selected.name }}</div>
+          <div class="editor-head">
+            <sc-if value="{{ menu.selected.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ menu.selected.img }}" class="editor-thumb"></sc-if>
+            <sc-if value="{{ menu.selected.noImg }}" hint-placeholder-val=""><div class="menu-placeholder menu-placeholder--lg"><svg width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
+            <div class="min0">
+              <div class="editor-eyebrow">Vybraná položka</div>
+              <div class="editor-title">{{ menu.selected.name }}</div>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="stack14">
             <div><div class="field-label">Název</div><input class="input-like" value="{{ menu.selected.name }}" onInput="{{ menu.selected.setName }}"></div>
             <div><div class="field-label">Popis</div><textarea class="input-like textarea-like" value="{{ menu.selected.desc }}" onInput="{{ menu.selected.setDesc }}"></textarea></div>
             <div>
               <div class="field-label">Cena</div>
-              <div class="price-row"><input type="number" value="{{ menu.selected.price }}" onInput="{{ menu.selected.setPrice }}" style="width:100%;border:none;background:transparent;font:800 24px 'Geist Mono';color:#211E1A;outline:none;text-align:right"><span style="font:700 14px 'Geist';color:#8B857A">Kč</span></div>
+              <div class="price-row"><input type="number" value="{{ menu.selected.price }}" onInput="{{ menu.selected.setPrice }}" class="price-input"><span class="price-suffix">Kč</span></div>
             </div>
-            <button onClick="{{ menu.selected.toggleSold }}" style="width:100%;padding:13px 14px;border-radius:13px;border:none;background:{{ menu.selected.soldBtnBg }};color:{{ menu.selected.soldBtnFg }};font:800 13.5px 'Geist';cursor:pointer">{{ menu.selected.soldBtnLabel }}</button>
-            <button onClick="{{ menu.selected.togglePromo }}" style="width:100%;padding:13px 14px;border-radius:13px;border:1px solid #E5DED2;background:#FBFAF7;color:#211E1A;font:800 13.5px 'Geist';cursor:pointer">{{ menu.selected.promoBtnLabel }}</button>
-            <div style="border-top:1px solid #EEEAE2;padding-top:14px;display:flex;align-items:center;justify-content:space-between">
-              <span style="font:600 12px 'Geist';color:#8B857A">Stav položky</span>
+            <button onClick="{{ menu.selected.toggleSold }}" class="btn-block" style="background:{{ menu.selected.soldBtnBg }};color:{{ menu.selected.soldBtnFg }}">{{ menu.selected.soldBtnLabel }}</button>
+            <button onClick="{{ menu.selected.togglePromo }}" class="btn-block-outline">{{ menu.selected.promoBtnLabel }}</button>
+            <div class="editor-status-row">
+              <span class="editor-status-label">Stav položky</span>
               <span class="pill" style="background:{{ menu.selected.statusBg }};color:{{ menu.selected.statusFg }}">{{ menu.selected.statusText }}</span>
             </div>
           </div>
@@ -304,54 +240,54 @@
 
     <!-- ========== VIEW: AKCE ========== -->
     <sc-if value="{{ isAkce }}" hint-placeholder-val="">
-    <div style="flex:1;overflow-y:auto;padding:24px 30px 40px">
+    <div class="view-scroll2">
       <div class="promo-grid">
         <div class="promo-panel">
-          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-            <div style="width:52px;height:52px;border-radius:16px;background:#211E1A;color:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M20.6 13.4 13 5.8V3H5.8L3 5.8V13l7.6 7.6a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-3z"/><circle cx="8" cy="8" r="1.3"/></svg></div>
-            <div style="flex:1"><div style="font:800 22px 'Geist';color:#211E1A;letter-spacing:-.01em">Polední akce</div><div style="font:600 13px 'Geist';color:#8B857A;margin-top:4px">Pondělí-Pátek · 9:30-14:00</div></div>
-            <div onClick="{{ akce.toggleActive }}" style="display:flex;align-items:center;gap:9px;cursor:pointer"><span style="font:800 12.5px 'Geist';color:{{ akce.activeFg }}">{{ akce.activeLabel }}</span><div style="width:48px;height:28px;border-radius:999px;padding:3px;background:{{ akce.switchBg }};display:flex;justify-content:{{ akce.switchJustify }}"><div style="width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.18)"></div></div></div>
+          <div class="akce-head">
+            <div class="akce-icon"><svg width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M20.6 13.4 13 5.8V3H5.8L3 5.8V13l7.6 7.6a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-3z"/><circle cx="8" cy="8" r="1.3"/></svg></div>
+            <div class="f1"><div class="akce-title">Polední akce</div><div class="akce-sub">Pondělí-Pátek · 9:30-14:00</div></div>
+            <div onClick="{{ akce.toggleActive }}" class="akce-toggle"><span class="akce-toggle-label" style="color:{{ akce.activeFg }}">{{ akce.activeLabel }}</span><div class="switch" style="background:{{ akce.switchBg }};justify-content:{{ akce.switchJustify }}"><div class="switch-knob"></div></div></div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 170px;gap:14px;margin-bottom:22px">
-            <div style="background:#FBFAF7;border:1px solid #E5DED2;border-radius:15px;padding:15px"><div class="field-label">Akční položky</div><div style="font:800 25px 'Geist Mono';color:#211E1A">{{ akce.itemCount }}</div><div style="font:600 12px 'Geist';color:#8B857A;margin-top:3px">aktivní výběr</div></div>
-            <div style="background:#FBF0DB;border:1px solid #E9C98C;border-radius:15px;padding:15px"><div class="field-label" style="color:#9A5A16">Cena v akci</div><div style="display:flex;align-items:center;gap:6px"><input type="number" value="{{ akce.price }}" onInput="{{ akce.setPrice }}" style="width:88px;border:none;background:transparent;font:800 24px 'Geist Mono';color:#211E1A;text-align:right;outline:none"><span style="font:800 14px 'Geist';color:#9A5A16">Kč</span></div></div>
+          <div class="akce-stats">
+            <div class="akce-stat"><div class="field-label">Akční položky</div><div class="akce-stat-val">{{ akce.itemCount }}</div><div class="akce-stat-sub">aktivní výběr</div></div>
+            <div class="akce-price-card"><div class="field-label field-label--amber">Cena v akci</div><div class="akce-price-inline"><input type="number" value="{{ akce.price }}" onInput="{{ akce.setPrice }}" class="akce-price-input"><span class="akce-price-unit">Kč</span></div></div>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div class="field-label" style="margin:0">Položky v akci</div><span class="pill" style="background:#E7F0E7;color:#3B6B48">{{ akce.activeSummary }}</span></div>
+          <div class="row-between12"><div class="field-label field-label--m0">Položky v akci</div><span class="pill pill-green">{{ akce.activeSummary }}</span></div>
           <div class="promo-items">
             <sc-for list="{{ akce.items }}" as="it">
               <div class="promo-card">
-                <img src="{{ it.img }}" style="width:54px;height:54px;border-radius:13px;object-fit:cover;flex:none">
-                <div style="flex:1;min-width:0"><div style="font:800 14.5px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.name }}</div><div style="font:600 12px 'Geist';color:#8B857A;margin-top:3px"><s>{{ it.origText }}</s> <span style="color:#C15F3C">{{ akce.priceText }}</span></div></div>
-                <button onClick="{{ it.remove }}" style="width:32px;height:32px;border-radius:10px;border:none;background:#F1EDE5;color:#7B7469;font:800 16px 'Geist';cursor:pointer;line-height:1">×</button>
+                <img src="{{ it.img }}" class="promo-img">
+                <div class="f1min0"><div class="promo-name">{{ it.name }}</div><div class="promo-sub"><s>{{ it.origText }}</s> <span class="promo-newprice">{{ akce.priceText }}</span></div></div>
+                <button onClick="{{ it.remove }}" class="chip-x">×</button>
               </div>
             </sc-for>
           </div>
-          <div style="height:1px;background:#EEEAE2;margin:20px 0"></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div class="field-label" style="margin:0">Přidat do akce</div><span style="font:600 12px 'Geist';color:#8B857A">{{ akce.availableSummary }}</span></div>
+          <div class="divider"></div>
+          <div class="row-between12"><div class="field-label field-label--m0">Přidat do akce</div><span class="text-muted12">{{ akce.availableSummary }}</span></div>
           <div class="add-list">
             <sc-for list="{{ akce.addItems }}" as="it">
               <div class="promo-card" style="background:{{ it.bg }};opacity:{{ it.opacity }}">
-                <img src="{{ it.img }}" style="width:46px;height:46px;border-radius:12px;object-fit:cover;flex:none">
-                <div style="flex:1;min-width:0"><div style="font:700 13.5px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.name }}</div><div style="font:600 12px 'Geist Mono';color:#8B857A;margin-top:2px">{{ it.priceText }}</div></div>
-                <button onClick="{{ it.toggle }}" style="padding:9px 11px;border-radius:10px;border:none;background:{{ it.btnBg }};color:{{ it.btnFg }};font:800 12px 'Geist';cursor:pointer">{{ it.btnLabel }}</button>
+                <img src="{{ it.img }}" class="promo-img-sm">
+                <div class="f1min0"><div class="add-name">{{ it.name }}</div><div class="add-price">{{ it.priceText }}</div></div>
+                <button onClick="{{ it.toggle }}" class="add-btn" style="background:{{ it.btnBg }};color:{{ it.btnFg }}">{{ it.btnLabel }}</button>
               </div>
             </sc-for>
           </div>
         </div>
         <div class="promo-panel">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
-            <div style="width:46px;height:46px;border-radius:14px;background:#E9EFF7;color:#315F92;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 7h16v10H4z"/><path d="M8 7v10M16 7v10"/></svg></div>
-            <div><div style="font:800 19px 'Geist';color:#211E1A">Slevový kód</div><div style="font:600 12.5px 'Geist';color:#8B857A;margin-top:3px">{{ akce.codeStatus }}</div></div>
+          <div class="akce-code-head">
+            <div class="akce-code-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 7h16v10H4z"/><path d="M8 7v10M16 7v10"/></svg></div>
+            <div><div class="akce-code-title">Slevový kód</div><div class="akce-code-sub">{{ akce.codeStatus }}</div></div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:14px">
-            <div><div class="field-label">Kód</div><input class="input-like" value="{{ akce.code }}" onInput="{{ akce.setCode }}" style="text-transform:uppercase;font:800 16px 'Geist Mono'"></div>
-            <div><div class="field-label">Sleva</div><div class="price-row"><input type="number" value="{{ akce.discount }}" onInput="{{ akce.setDiscount }}" style="width:100%;border:none;background:transparent;font:800 23px 'Geist Mono';color:#211E1A;outline:none;text-align:right"><span style="font:800 14px 'Geist';color:#8B857A">%</span></div></div>
+          <div class="stack14">
+            <div><div class="field-label">Kód</div><input class="input-like input-code" value="{{ akce.code }}" onInput="{{ akce.setCode }}"></div>
+            <div><div class="field-label">Sleva</div><div class="price-row"><input type="number" value="{{ akce.discount }}" onInput="{{ akce.setDiscount }}" class="disc-input"><span class="disc-unit">%</span></div></div>
             <div><div class="field-label">Platí do</div><input class="input-like" type="date" value="{{ akce.validUntil }}" onInput="{{ akce.setValidUntil }}"></div>
-            <button onClick="{{ akce.toggleCode }}" style="width:100%;padding:13px 14px;border-radius:13px;border:none;background:{{ akce.codeBtnBg }};color:{{ akce.codeBtnFg }};font:800 13.5px 'Geist';cursor:pointer">{{ akce.codeBtnLabel }}</button>
-            <div style="background:#FBFAF7;border:1px solid #EEEAE2;border-radius:14px;padding:15px">
+            <button onClick="{{ akce.toggleCode }}" class="btn-block" style="background:{{ akce.codeBtnBg }};color:{{ akce.codeBtnFg }}">{{ akce.codeBtnLabel }}</button>
+            <div class="akce-preview">
               <div class="field-label">Náhled</div>
-              <div style="font:800 20px 'Geist Mono';color:#211E1A">{{ akce.codePreview }}</div>
-              <div style="font:600 13px/1.45 'Geist';color:#7B7469;margin-top:8px">{{ akce.codePreviewText }}</div>
+              <div class="akce-preview-code">{{ akce.codePreview }}</div>
+              <div class="akce-preview-text">{{ akce.codePreviewText }}</div>
             </div>
           </div>
         </div>
@@ -361,55 +297,55 @@
 
     <!-- ========== VIEW: PŘÍJMY ========== -->
     <sc-if value="{{ isPrijmy }}" hint-placeholder-val="">
-    <div style="flex:1;overflow-y:auto;padding:24px 30px 40px">
+    <div class="view-scroll2">
       <div class="income-grid">
         <sc-for list="{{ prijmy.metrics }}" as="m" hint-placeholder-count="4">
           <div class="metric-card" style="background:{{ m.bg }};border-color:{{ m.border }}">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><span style="font:800 11px 'Geist';color:{{ m.muted }};text-transform:uppercase;letter-spacing:.07em">{{ m.label }}</span><span class="pill" style="background:{{ m.badgeBg }};color:{{ m.badgeFg }}">{{ m.delta }}</span></div>
-            <div style="font:900 27px 'Geist Mono';color:{{ m.fg }};margin-top:16px;white-space:nowrap">{{ m.value }}</div>
-            <div style="font:600 13px 'Geist';color:{{ m.muted }};margin-top:7px">{{ m.sub }}</div>
+            <div class="metric-top"><span class="metric-label" style="color:{{ m.muted }}">{{ m.label }}</span><span class="pill" style="background:{{ m.badgeBg }};color:{{ m.badgeFg }}">{{ m.delta }}</span></div>
+            <div class="metric-value" style="color:{{ m.fg }}">{{ m.value }}</div>
+            <div class="metric-sub" style="color:{{ m.muted }}">{{ m.sub }}</div>
           </div>
         </sc-for>
       </div>
       <div class="income-main">
         <div class="panel">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-            <div><div style="font:800 16px 'Geist';color:#211E1A">Tržby za posledních 7 dní</div><div style="font:600 12.5px 'Geist';color:#8B857A;margin-top:4px">Srovnání denních obratů a aktuálního dne</div></div>
-            <span class="pill" style="background:#F6E3E0;color:#B4472B">Dnes 8,45k</span>
+          <div class="panel-head">
+            <div><div class="panel-title">Tržby za posledních 7 dní</div><div class="panel-sub">Srovnání denních obratů a aktuálního dne</div></div>
+            <span class="pill pill-red">Dnes 8,45k</span>
           </div>
-          <div style="display:flex;align-items:flex-end;gap:14px;height:220px">
+          <div class="bars">
             <sc-for list="{{ prijmy.bars }}" as="b" hint-placeholder-count="7">
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;height:100%;justify-content:flex-end;min-width:0">
-                <span style="font:800 10.5px 'Geist Mono';color:#8B857A">{{ b.kLabel }}</span>
-                <div style="width:100%;min-width:28px;border-radius:10px 10px 5px 5px;background:{{ b.color }};height:{{ b.h }};transform-origin:bottom;animation:growBar .5s ease;box-shadow:{{ b.shadow }}"></div>
-                <span style="font:800 11.5px 'Geist';color:{{ b.dayFg }}">{{ b.day }}</span>
+              <div class="bar-col">
+                <span class="bar-k">{{ b.kLabel }}</span>
+                <div class="bar" style="background:{{ b.color }};height:{{ b.h }};box-shadow:{{ b.shadow }}"></div>
+                <span class="bar-day" style="color:{{ b.dayFg }}">{{ b.day }}</span>
               </div>
             </sc-for>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px">
+          <div class="hours-grid">
             <sc-for list="{{ prijmy.hours }}" as="h" hint-placeholder-count="4">
-              <div style="border:1px solid #EEEAE2;border-radius:13px;padding:12px;background:#FBFAF7"><div style="font:800 12px 'Geist';color:#211E1A">{{ h.range }}</div><div style="font:800 16px 'Geist Mono';color:#C15F3C;margin-top:7px">{{ h.value }}</div><div style="font:600 11.5px 'Geist';color:#8B857A;margin-top:3px">{{ h.orders }}</div></div>
+              <div class="hour-card"><div class="hour-range">{{ h.range }}</div><div class="hour-val">{{ h.value }}</div><div class="hour-orders">{{ h.orders }}</div></div>
             </sc-for>
           </div>
         </div>
         <div class="panel">
-          <div style="font:800 16px 'Geist';color:#211E1A;margin-bottom:18px">Platby dnes</div>
-          <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="panel-title-mb">Platby dnes</div>
+          <div class="pay-rows">
             <sc-for list="{{ prijmy.payRows }}" as="p" hint-placeholder-count="2">
               <div>
-                <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font:800 13px 'Geist';color:{{ p.color }}">{{ p.label }}</span><span style="font:800 13px 'Geist Mono';color:#211E1A">{{ p.value }}</span></div>
-                <div style="height:10px;border-radius:7px;background:#EEEAE2;overflow:hidden"><div style="height:100%;width:{{ p.width }};border-radius:7px;background:{{ p.color }}"></div></div>
+                <div class="pay-row-head"><span class="pay-label" style="color:{{ p.color }}">{{ p.label }}</span><span class="pay-value">{{ p.value }}</span></div>
+                <div class="pay-track"><div class="pay-fill" style="width:{{ p.width }};background:{{ p.color }}"></div></div>
               </div>
             </sc-for>
           </div>
-          <div style="height:1px;background:#EEEAE2;margin:20px 0"></div>
-          <div style="font:800 12px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Nejprodávanější</div>
-          <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="divider"></div>
+          <div class="eyebrow-muted-sm">Nejprodávanější</div>
+          <div class="best-list">
             <sc-for list="{{ prijmy.best }}" as="b" hint-placeholder-count="4">
-              <div style="display:flex;align-items:center;gap:10px">
-                <span style="width:28px;height:28px;border-radius:9px;background:#F1EDE5;color:#6B655C;display:flex;align-items:center;justify-content:center;font:800 12px 'Geist Mono'">{{ b.rank }}</span>
-                <span style="font:700 13.5px 'Geist';color:#4A443B;flex:1">{{ b.name }}</span>
-                <span style="font:800 12.5px 'Geist Mono';color:#211E1A">{{ b.count }}</span>
+              <div class="best-row">
+                <span class="best-rank">{{ b.rank }}</span>
+                <span class="best-name">{{ b.name }}</span>
+                <span class="best-count">{{ b.count }}</span>
               </div>
             </sc-for>
           </div>
@@ -420,29 +356,29 @@
 
     <!-- ========== VIEW: ADRESY ========== -->
     <sc-if value="{{ isAdresy }}" hint-placeholder-val="">
-    <div style="flex:1;overflow-y:auto;padding:24px 30px 40px">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;max-width:920px;margin-bottom:26px">
+    <div class="view-scroll2">
+      <div class="zones-grid">
         <sc-for list="{{ adresy.zones }}" as="z" hint-placeholder-count="3">
-          <div style="background:#fff;border:1px solid #E7E2D9;border-radius:16px;padding:18px 20px">
-            <div style="display:flex;align-items:center;gap:9px"><span style="width:10px;height:10px;border-radius:50%;background:{{ z.dot }}"></span><span style="font:600 15px 'Geist';color:#211E1A">{{ z.name }}</span></div>
-            <div style="font:500 13px 'Geist';color:#8B857A;margin-top:8px">{{ z.area }}</div>
-            <div style="display:flex;gap:16px;margin-top:14px"><div><div style="font:700 16px 'Geist Mono';color:#211E1A">{{ z.feeText }}</div><div style="font:500 11px 'Geist';color:#A79F92;margin-top:2px">rozvoz</div></div><div><div style="font:700 16px 'Geist Mono';color:#211E1A">{{ z.time }}</div><div style="font:500 11px 'Geist';color:#A79F92;margin-top:2px">doručení</div></div></div>
+          <div class="zone-card">
+            <div class="zone-top"><span class="zone-dot" style="background:{{ z.dot }}"></span><span class="zone-name">{{ z.name }}</span></div>
+            <div class="zone-area">{{ z.area }}</div>
+            <div class="zone-stats"><div><div class="zone-stat-val">{{ z.feeText }}</div><div class="zone-stat-label">rozvoz</div></div><div><div class="zone-stat-val">{{ z.time }}</div><div class="zone-stat-label">doručení</div></div></div>
           </div>
         </sc-for>
       </div>
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;max-width:920px">
-        <span style="font:600 13px 'Geist';color:#211E1A;text-transform:uppercase;letter-spacing:.06em">Zákazníci</span>
-        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid #E7E2D9;border-radius:11px;padding:9px 13px;background:#fff;width:280px"><svg width="16" height="16" fill="none" stroke="#A79F92" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input value="{{ adresy.query }}" onInput="{{ adresy.setQuery }}" placeholder="Hledat jméno nebo adresu" style="border:none;background:transparent;outline:none;font:500 13.5px 'Geist';color:#211E1A;width:100%"></div>
+      <div class="adr-head">
+        <span class="eyebrow-dark">Zákazníci</span>
+        <div class="adr-search"><svg width="16" height="16" fill="none" stroke="#A79F92" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input value="{{ adresy.query }}" onInput="{{ adresy.setQuery }}" placeholder="Hledat jméno nebo adresu" class="search-input"></div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px;max-width:920px">
+      <div class="cust-list">
         <sc-for list="{{ adresy.customers }}" as="c" hint-placeholder-count="6">
-          <div style="display:flex;align-items:center;gap:14px;background:#fff;border:1px solid #E7E2D9;border-radius:13px;padding:12px 16px">
-            <div style="width:40px;height:40px;border-radius:50%;background:#F1EDE5;display:flex;align-items:center;justify-content:center;font:600 13px 'Geist';color:#6B655C;flex:none">{{ c.initials }}</div>
-            <div style="width:180px"><div style="font:600 14.5px 'Geist';color:#211E1A">{{ c.name }}</div><div style="font:500 12px 'Geist Mono';color:#8B857A;margin-top:2px">{{ c.phone }}</div></div>
-            <div style="flex:1"><div style="font:500 13.5px 'Geist';color:#4A443B">{{ c.address }}</div><div style="font:500 12px 'Geist';color:#A79F92;margin-top:2px">{{ c.city }}</div></div>
-            <span style="font:600 11.5px 'Geist';padding:4px 10px;border-radius:7px;color:{{ c.zoneFg }};background:{{ c.zoneBg }}">{{ c.zone }}</span>
-            <div style="text-align:right;width:96px"><div style="font:600 13.5px 'Geist Mono';color:#211E1A">{{ c.orders }}× obj.</div><div style="font:500 11.5px 'Geist';color:#A79F92;margin-top:2px">{{ c.last }}</div></div>
-            <button onClick="{{ c.startOrder }}" style="padding:9px 14px;border-radius:10px;border:1px solid #E7E2D9;background:#FBFAF7;color:#211E1A;font:600 12.5px 'Geist';cursor:pointer;white-space:nowrap">+ Objednávka</button>
+          <div class="cust-row">
+            <div class="cust-avatar">{{ c.initials }}</div>
+            <div class="cust-namecol"><div class="cust-name">{{ c.name }}</div><div class="cust-phone">{{ c.phone }}</div></div>
+            <div class="f1"><div class="cust-addr">{{ c.address }}</div><div class="cust-city">{{ c.city }}</div></div>
+            <span class="cust-zone" style="color:{{ c.zoneFg }};background:{{ c.zoneBg }}">{{ c.zone }}</span>
+            <div class="cust-ordcol"><div class="cust-orders">{{ c.orders }}× obj.</div><div class="cust-last">{{ c.last }}</div></div>
+            <button onClick="{{ c.startOrder }}" class="btn-order">+ Objednávka</button>
           </div>
         </sc-for>
       </div>
@@ -452,68 +388,89 @@
 
   <!-- ============ DETAIL MODAL ============ -->
   <sc-if value="{{ modalOpen }}" hint-placeholder-val="">
-    <div onClick="{{ closeModal }}" style="position:fixed;inset:0;background:rgba(28,20,12,.42);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:50;animation:fadeIn .15s ease;padding:30px">
-      <div onClick="{{ stop }}" style="width:660px;max-width:100%;max-height:88vh;background:#fff;border-radius:22px;box-shadow:0 30px 80px -20px rgba(40,25,10,.5);display:flex;flex-direction:column;overflow:hidden;animation:modalIn .22s cubic-bezier(.2,.9,.3,1)">
-        <div style="padding:24px 28px 20px;border-bottom:1px solid #EEEAE2;display:flex;align-items:flex-start;gap:14px;position:relative">
-          <div style="flex:1">
-            <div style="display:flex;align-items:center;gap:10px"><span style="font:600 11px 'Geist';color:#fff;padding:4px 11px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;background:{{ selected.statusBg }}">{{ selected.statusLabel }}</span><span style="font:600 13px 'Geist Mono';color:#8B857A">přišla {{ selected.agoText }} · {{ selected.placedAt }}</span></div>
-            <div style="font:600 25px/1.15 'Geist';color:#211E1A;margin-top:12px;letter-spacing:-.01em">{{ selected.name }}</div>
-            <div style="font:500 14px 'Geist';color:#8B857A;margin-top:5px">{{ selected.addressFull }}</div>
-            <div style="display:flex;align-items:center;gap:8px;margin-top:6px"><svg width="15" height="15" fill="none" stroke="#8B857A" stroke-width="1.7" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><span style="font:500 13.5px 'Geist';color:#4A443B">{{ selected.phone }}</span></div>
+    <div onClick="{{ closeModal }}" class="modal-overlay">
+      <div onClick="{{ stop }}" class="modal-detail">
+        <div class="det-head">
+          <div class="f1">
+            <div class="det-status-row"><span class="det-status" style="background:{{ selected.statusBg }}">{{ selected.statusLabel }}</span><span class="det-ago">přišla {{ selected.agoText }} · {{ selected.placedAt }}</span></div>
+            <div class="det-name">{{ selected.name }}</div>
+            <div class="det-addr">{{ selected.addressFull }}</div>
+            <div class="det-phone-row"><svg width="15" height="15" fill="none" stroke="#8B857A" stroke-width="1.7" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><span class="det-phone">{{ selected.phone }}</span></div>
           </div>
-          <div style="text-align:right">
-            <div style="font:600 12px 'Geist Mono';color:#B9B2A6">#{{ selected.num }}</div>
-            <div style="font:700 27px 'Geist Mono';color:#211E1A;margin-top:6px">{{ selected.priceText }}</div>
-            <div style="font:600 12px 'Geist';padding:4px 10px;border-radius:7px;margin-top:7px;display:inline-block;color:{{ selected.payFg }};background:{{ selected.payBg }}">{{ selected.payFull }}</div>
+          <div class="det-right">
+            <div class="det-num">#{{ selected.num }}</div>
+            <div class="det-price">{{ selected.priceText }}</div>
+            <div class="det-pay" style="color:{{ selected.payFg }};background:{{ selected.payBg }}">{{ selected.payFull }}</div>
           </div>
-          <button onClick="{{ closeModal }}" style="position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:10px;border:none;background:#F1EDE5;color:#6B655C;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          <button onClick="{{ closeModal }}" class="modal-close"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
         </div>
-        <div style="flex:1;overflow-y:auto;padding:22px 28px">
-          <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:13px">Položky</div>
-          <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="det-body">
+          <sc-if value="{{ selected.hasSpecial }}" hint-placeholder-val="">
+            <div class="det-special">
+              <span class="det-special-ic"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20.6 13.4 13 5.8V3H5.8L3 5.8V13l7.6 7.6a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-3z"/><circle cx="8" cy="8" r="1.3"/></svg></span>
+              <div><div class="det-special-label">Speciální úprava</div><div class="det-special-text">{{ selected.specialText }}</div></div>
+            </div>
+          </sc-if>
+          <div class="det-section-label">Položky</div>
+          <div class="det-items">
             <sc-for list="{{ selected.items }}" as="it">
-              <div style="display:flex;align-items:center;gap:14px">
-                <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" style="width:52px;height:52px;border-radius:12px;object-fit:cover;flex:none"></sc-if>
-                <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div style="width:52px;height:52px;border-radius:12px;background:#F1EDE5;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" fill="none" stroke="#B0A896" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
-                <div style="flex:1"><div style="font:600 15px 'Geist';color:#211E1A">{{ it.name }}</div><div style="font:500 12px 'Geist';color:#8B857A;margin-top:2px">{{ it.desc }}</div></div>
-                <span style="font:600 13px 'Geist Mono';color:#8B857A">{{ it.qtyText }}</span>
-                <span style="font:600 15px 'Geist Mono';color:#211E1A;width:74px;text-align:right">{{ it.lineText }}</span>
+              <div class="det-item {{ it.specialClass }}">
+                <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" class="det-item-img"></sc-if>
+                <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div class="det-item-ph"><svg width="22" height="22" fill="none" stroke="#B0A896" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
+                <div class="f1"><div class="det-item-namerow"><span class="det-item-name">{{ it.name }}</span><sc-if value="{{ it.isSpecial }}" hint-placeholder-val=""><span class="det-item-badge">{{ it.badge }}</span></sc-if></div><div class="det-item-desc">{{ it.desc }}</div></div>
+                <span class="det-item-qty">{{ it.qtyText }}</span>
+                <span class="det-item-line">{{ it.lineText }}</span>
               </div>
             </sc-for>
           </div>
           <sc-if value="{{ selected.hasNote }}" hint-placeholder-val="">
-            <div style="margin-top:18px;background:#FBF3E6;border:1px solid #F0E1C4;border-radius:14px;padding:14px 16px;display:flex;gap:11px;align-items:flex-start">
-              <svg width="18" height="18" fill="none" stroke="#B98518" stroke-width="1.7" viewBox="0 0 24 24" style="flex:none;margin-top:1px"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-              <div><div style="font:600 11px 'Geist';color:#9A6A1E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Poznámka zákazníka</div><div style="font:500 14px/1.45 'Geist';color:#7A5A14">{{ selected.note }}</div></div>
+            <div class="det-note">
+              <svg width="18" height="18" fill="none" stroke="#B98518" stroke-width="1.7" viewBox="0 0 24 24" class="det-note-icon"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+              <div><div class="det-note-label">Poznámka zákazníka</div><div class="det-note-text">{{ selected.note }}</div></div>
             </div>
           </sc-if>
-          <div style="height:1px;background:#EEEAE2;margin:20px 0"></div>
-          <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Průběh objednávky</div>
-          <div style="display:flex;gap:10px">
+          <div class="divider"></div>
+          <div class="uplabel12">Průběh objednávky</div>
+          <div class="det-timeline">
             <sc-for list="{{ selected.timeline }}" as="st" hint-placeholder-count="4">
-              <div style="flex:1;display:flex;flex-direction:column;gap:7px">
-                <span style="font:600 11.5px 'Geist';color:{{ st.labelColor }}">{{ st.label }}</span>
-                <div style="height:6px;border-radius:6px;background:{{ st.barBg }}"></div>
+              <div class="det-tl-step">
+                <span class="det-tl-label" style="color:{{ st.labelColor }}">{{ st.label }}</span>
+                <div class="det-tl-bar" style="background:{{ st.barBg }}"></div>
               </div>
             </sc-for>
           </div>
           <sc-if value="{{ selected.isNew }}" hint-placeholder-val="">
-            <div style="margin-top:22px">
-              <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Čas doručení</div>
-              <div style="display:flex;gap:9px">
+            <div class="mt22">
+              <div class="uplabel12">Čas doručení</div>
+              <div class="det-chips">
                 <sc-for list="{{ selected.timeChips }}" as="c" hint-placeholder-count="5">
-                  <button onClick="{{ c.onClick }}" style="flex:1;padding:14px 6px;border-radius:12px;font:600 14px 'Geist';cursor:pointer;border-width:1.5px;border-style:solid;background:{{ c.bg }};color:{{ c.fg }};border-color:{{ c.border }}">{{ c.label }}</button>
+                  <button onClick="{{ c.onClick }}" class="time-chip" style="background:{{ c.bg }};color:{{ c.fg }};border-color:{{ c.border }}">{{ c.label }}</button>
                 </sc-for>
               </div>
             </div>
           </sc-if>
         </div>
-        <div style="padding:18px 28px;border-top:1px solid #EEEAE2;display:flex;gap:12px;align-items:center">
-          <div style="font:500 13px 'Geist';color:#8B857A">{{ selected.footerHint }}</div>
+        <div class="det-footer">
+          <div class="det-footer-hint">{{ selected.footerHint }}</div>
           <sc-if value="{{ selected.hasSecondary }}" hint-placeholder-val="{{ true }}">
-            <button onClick="{{ selected.secondaryAction }}" style="margin-left:auto;padding:15px 22px;border-radius:13px;border:1px solid #E4CFC7;background:#fff;color:#B4472B;font:600 14px 'Geist';cursor:pointer">{{ selected.secondaryLabel }}</button>
+            <button onClick="{{ selected.secondaryAction }}" class="btn-detail-secondary">{{ selected.secondaryLabel }}</button>
           </sc-if>
-          <button onClick="{{ selected.primaryAction }}" style="padding:15px 30px;border-radius:13px;border:none;color:#fff;font:600 15px 'Geist';cursor:pointer;background:{{ selected.primaryBg }}">{{ selected.primaryLabel }}</button>
+          <button onClick="{{ selected.primaryAction }}" class="btn-detail-primary" style="background:{{ selected.primaryBg }}">{{ selected.primaryLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ POTVRZENÍ – VRÁTIT ZPĚT ============ -->
+  <sc-if value="{{ confirm.open }}" hint-placeholder-val="">
+    <div onClick="{{ cancelConfirm }}" class="confirm-overlay">
+      <div onClick="{{ stop }}" class="confirm-box">
+        <div class="confirm-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-1"/></svg></div>
+        <div class="confirm-title">Vrátit objednávku zpět?</div>
+        <div class="confirm-text">{{ confirm.text }}</div>
+        <div class="confirm-actions">
+          <button onClick="{{ cancelConfirm }}" class="confirm-cancel">Zrušit</button>
+          <button onClick="{{ confirmUndo }}" class="confirm-ok">Vrátit zpět</button>
         </div>
       </div>
     </div>
@@ -521,116 +478,116 @@
 
   <!-- ============ NOVÁ OBJEDNÁVKA MODAL ============ -->
   <sc-if value="{{ no.open }}" hint-placeholder-val="">
-    <div onClick="{{ no.close }}" style="position:fixed;inset:0;background:rgba(28,20,12,.42);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:60;animation:fadeIn .15s ease;padding:24px">
-      <div onClick="{{ stop }}" style="width:1120px;max-width:100%;height:760px;max-height:92vh;background:#fff;border-radius:22px;box-shadow:0 30px 80px -20px rgba(40,25,10,.5);display:flex;flex-direction:column;overflow:hidden;animation:modalIn .22s cubic-bezier(.2,.9,.3,1)">
-        <div style="padding:20px 26px;border-bottom:1px solid #EEEAE2;display:flex;align-items:center">
-          <div style="font:600 19px 'Geist';color:#211E1A">Nová objednávka</div>
-          <button onClick="{{ no.close }}" style="margin-left:auto;width:34px;height:34px;border-radius:10px;border:none;background:#F1EDE5;color:#6B655C;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div onClick="{{ no.close }}" class="no-overlay">
+      <div onClick="{{ stop }}" class="no-dialog">
+        <div class="no-head">
+          <div class="no-title">Nová objednávka</div>
+          <button onClick="{{ no.close }}" class="no-close"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
         </div>
-        <div style="flex:1;display:flex;min-height:0">
+        <div class="no-body">
           <!-- LEFT: zákazník + platba -->
-          <div style="width:400px;flex:none;border-right:1px solid #EEEAE2;display:flex;flex-direction:column;overflow-y:auto;padding:22px 24px">
-            <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Zákazník</div>
+          <div class="no-left">
+            <div class="uplabel12">Zákazník</div>
             <sc-if value="{{ no.hasCustomer }}" hint-placeholder-val="">
-              <div style="background:#F6F3EC;border:1px solid #E7E2D9;border-radius:14px;padding:16px;position:relative">
-                <button onClick="{{ no.clearCustomer }}" style="position:absolute;top:12px;right:12px;border:none;background:transparent;color:#8B857A;font:600 12px 'Geist';cursor:pointer">Změnit</button>
-                <div style="font:600 16px 'Geist';color:#211E1A">{{ no.custName }}</div>
-                <div style="font:500 13px 'Geist';color:#8B857A;margin-top:4px">{{ no.custAddress }}</div>
-                <div style="font:500 13px 'Geist Mono';color:#8B857A;margin-top:2px">{{ no.custPhone }}</div>
-                <span style="display:inline-block;margin-top:10px;font:600 11px 'Geist';padding:4px 10px;border-radius:7px;color:#3B6B48;background:#E7F0E7">{{ no.custZone }}</span>
+              <div class="no-cust-card">
+                <button onClick="{{ no.clearCustomer }}" class="no-cust-change">Změnit</button>
+                <div class="no-cust-name">{{ no.custName }}</div>
+                <div class="no-cust-addr">{{ no.custAddress }}</div>
+                <div class="no-cust-phone">{{ no.custPhone }}</div>
+                <span class="no-cust-zone">{{ no.custZone }}</span>
               </div>
             </sc-if>
             <sc-if value="{{ no.noCustomer }}" hint-placeholder-val="{{ true }}">
-              <div style="display:flex;align-items:center;gap:8px;border:1px solid #E7E2D9;border-radius:11px;padding:11px 13px;background:#FBFAF7"><svg width="16" height="16" fill="none" stroke="#A79F92" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input value="{{ no.query }}" onInput="{{ no.setQuery }}" placeholder="Hledat podle jména nebo adresy" style="border:none;background:transparent;outline:none;font:500 13.5px 'Geist';color:#211E1A;width:100%"></div>
+              <div class="no-search"><svg width="16" height="16" fill="none" stroke="#A79F92" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input value="{{ no.query }}" onInput="{{ no.setQuery }}" placeholder="Hledat podle jména nebo adresy" class="search-input"></div>
               <sc-if value="{{ no.hasResults }}" hint-placeholder-val="">
-                <div style="margin-top:8px;border:1px solid #E7E2D9;border-radius:12px;overflow:hidden">
+                <div class="no-results">
                   <sc-for list="{{ no.results }}" as="r" hint-placeholder-count="3">
-                    <div onClick="{{ r.pick }}" style="padding:11px 14px;border-bottom:1px solid #F1EDE5;cursor:pointer"><div style="font:600 13.5px 'Geist';color:#211E1A">{{ r.name }}</div><div style="font:500 12px 'Geist';color:#8B857A;margin-top:1px">{{ r.address }} · {{ r.phone }}</div></div>
+                    <div onClick="{{ r.pick }}" class="no-result"><div class="no-result-name">{{ r.name }}</div><div class="no-result-sub">{{ r.address }} · {{ r.phone }}</div></div>
                   </sc-for>
                 </div>
               </sc-if>
-              <div style="display:flex;align-items:center;gap:10px;margin:16px 0 12px"><div style="flex:1;height:1px;background:#EEEAE2"></div><span style="font:500 11px 'Geist';color:#A79F92">nebo nový zákazník</span><div style="flex:1;height:1px;background:#EEEAE2"></div></div>
-              <div style="display:flex;flex-direction:column;gap:9px">
-                <input value="{{ no.ncName }}" onInput="{{ no.setName }}" placeholder="Jméno a příjmení" style="border:1px solid #E7E2D9;border-radius:10px;padding:11px 13px;font:500 13.5px 'Geist';color:#211E1A;outline:none;background:#FBFAF7">
-                <input value="{{ no.ncPhone }}" onInput="{{ no.setPhone }}" placeholder="Telefon" style="border:1px solid #E7E2D9;border-radius:10px;padding:11px 13px;font:500 13.5px 'Geist';color:#211E1A;outline:none;background:#FBFAF7">
-                <input value="{{ no.ncAddress }}" onInput="{{ no.setAddress }}" placeholder="Ulice a číslo" style="border:1px solid #E7E2D9;border-radius:10px;padding:11px 13px;font:500 13.5px 'Geist';color:#211E1A;outline:none;background:#FBFAF7">
-                <select value="{{ no.ncZone }}" onChange="{{ no.setZone }}" style="border:1px solid #E7E2D9;border-radius:10px;padding:11px 13px;font:500 13.5px 'Geist';color:#211E1A;outline:none;background:#FBFAF7"><option>Zóna 1</option><option>Zóna 2</option><option>Zóna 3</option></select>
+              <div class="no-or"><div class="no-or-line"></div><span class="no-or-text">nebo nový zákazník</span><div class="no-or-line"></div></div>
+              <div class="no-nc-fields">
+                <input value="{{ no.ncName }}" onInput="{{ no.setName }}" placeholder="Jméno a příjmení" class="no-input">
+                <input value="{{ no.ncPhone }}" onInput="{{ no.setPhone }}" placeholder="Telefon" class="no-input">
+                <input value="{{ no.ncAddress }}" onInput="{{ no.setAddress }}" placeholder="Ulice a číslo" class="no-input">
+                <select value="{{ no.ncZone }}" onChange="{{ no.setZone }}" class="no-input"><option>Zóna 1</option><option>Zóna 2</option><option>Zóna 3</option></select>
               </div>
             </sc-if>
-            <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 12px">Platba</div>
-            <div style="display:flex;gap:8px;margin-bottom:18px">
-              <button onClick="{{ no.payCash }}" style="flex:1;padding:12px;border-radius:11px;font:600 13.5px 'Geist';cursor:pointer;border-width:1.5px;border-style:solid;background:{{ no.cashBg }};color:{{ no.cashFg }};border-color:{{ no.cashBorder }}">Hotově</button>
-              <button onClick="{{ no.payOnline }}" style="flex:1;padding:12px;border-radius:11px;font:600 13.5px 'Geist';cursor:pointer;border-width:1.5px;border-style:solid;background:{{ no.onlineBg }};color:{{ no.onlineFg }};border-color:{{ no.onlineBorder }}">Online</button>
+            <div class="uplabel-22">Platba</div>
+            <div class="no-pay-row">
+              <button onClick="{{ no.payCash }}" class="no-pay-btn" style="background:{{ no.cashBg }};color:{{ no.cashFg }};border-color:{{ no.cashBorder }}">Hotově</button>
+              <button onClick="{{ no.payOnline }}" class="no-pay-btn" style="background:{{ no.onlineBg }};color:{{ no.onlineFg }};border-color:{{ no.onlineBorder }}">Online</button>
             </div>
-            <div style="font:600 11px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Čas doručení</div>
-            <div style="display:flex;gap:7px">
+            <div class="uplabel12">Čas doručení</div>
+            <div class="no-time-chips">
               <sc-for list="{{ no.timeChips }}" as="c" hint-placeholder-count="5">
-                <button onClick="{{ c.onClick }}" style="flex:1;padding:11px 4px;border-radius:10px;font:600 12.5px 'Geist';cursor:pointer;border-width:1.5px;border-style:solid;background:{{ c.bg }};color:{{ c.fg }};border-color:{{ c.border }}">{{ c.label }}</button>
+                <button onClick="{{ c.onClick }}" class="no-time-chip" style="background:{{ c.bg }};color:{{ c.fg }};border-color:{{ c.border }}">{{ c.label }}</button>
               </sc-for>
             </div>
           </div>
           <!-- RIGHT: položky + košík -->
-          <div style="flex:1;display:flex;flex-direction:column;min-width:0">
-            <div style="padding:18px 24px 0;display:flex;gap:2px;background:#F1EDE5;margin:16px 24px 0;border-radius:12px;padding:4px;flex:none;align-self:flex-start">
-              <button onClick="{{ no.tabPizza }}" style="padding:8px 16px;border-radius:9px;border:none;font:600 13px 'Geist';cursor:pointer;background:{{ no.pizzaTabBg }};color:{{ no.pizzaTabFg }}">Pizzy</button>
-              <button onClick="{{ no.tabDrink }}" style="padding:8px 16px;border-radius:9px;border:none;font:600 13px 'Geist';cursor:pointer;background:{{ no.drinkTabBg }};color:{{ no.drinkTabFg }}">Nápoje</button>
+          <div class="no-right">
+            <div class="no-tabs">
+              <button onClick="{{ no.tabPizza }}" class="no-tab-btn" style="background:{{ no.pizzaTabBg }};color:{{ no.pizzaTabFg }}">Pizzy</button>
+              <button onClick="{{ no.tabDrink }}" class="no-tab-btn" style="background:{{ no.drinkTabBg }};color:{{ no.drinkTabFg }}">Nápoje</button>
             </div>
             <sc-if value="{{ no.isPizzaTab }}" hint-placeholder-val="{{ true }}">
               <div class="no-builder">
-                <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
-                  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div style="font:800 13.5px 'Geist';color:#211E1A">Pizza na půl</div><div style="font:600 12px 'Geist';color:#8B857A;margin-top:2px">Dražší půlka určí cenu · suroviny +15 Kč</div></div><span class="pill" style="background:#E7F0E7;color:#3B6B48">{{ no.custom.summary }}</span></div>
+                <div class="no-build-left">
+                  <div class="no-build-head"><div><div class="no-build-title">Pizza na půl</div><div class="no-build-sub">Dražší půlka určí cenu · suroviny +15 Kč</div></div><span class="pill pill-green">{{ no.custom.summary }}</span></div>
                   <div class="no-builder-grid">
                     <div><div class="field-label">Levá půlka</div><select value="{{ no.custom.leftId }}" onChange="{{ no.custom.setLeft }}"><sc-for list="{{ no.pizzaOptions }}" as="p"><option value="{{ p.id }}">{{ p.label }}</option></sc-for></select></div>
                     <div><div class="field-label">Pravá půlka</div><select value="{{ no.custom.rightId }}" onChange="{{ no.custom.setRight }}"><sc-for list="{{ no.pizzaOptions }}" as="p"><option value="{{ p.id }}">{{ p.label }}</option></sc-for></select></div>
                   </div>
                   <div>
                     <div class="field-label">Základ</div>
-                    <div style="display:flex;gap:8px">
-                      <button onClick="{{ no.custom.baseTomato }}" style="flex:1;padding:10px;border-radius:11px;border:1.5px solid {{ no.custom.tomatoBorder }};background:{{ no.custom.tomatoBg }};color:{{ no.custom.tomatoFg }};font:800 12.5px 'Geist';cursor:pointer">Rajčatový</button>
-                      <button onClick="{{ no.custom.baseCream }}" style="flex:1;padding:10px;border-radius:11px;border:1.5px solid {{ no.custom.creamBorder }};background:{{ no.custom.creamBg }};color:{{ no.custom.creamFg }};font:800 12.5px 'Geist';cursor:pointer">Smetanový</button>
+                    <div class="no-base-row">
+                      <button onClick="{{ no.custom.baseTomato }}" class="no-base-btn" style="border-color:{{ no.custom.tomatoBorder }};background:{{ no.custom.tomatoBg }};color:{{ no.custom.tomatoFg }}">Rajčatový</button>
+                      <button onClick="{{ no.custom.baseCream }}" class="no-base-btn" style="border-color:{{ no.custom.creamBorder }};background:{{ no.custom.creamBg }};color:{{ no.custom.creamFg }}">Smetanový</button>
                     </div>
                   </div>
                   <div><div class="field-label">Suroviny navíc</div><div class="no-extra-list"><sc-for list="{{ no.custom.extras }}" as="ex"><button onClick="{{ ex.toggle }}" class="no-extra-chip {{ ex.className }}">{{ ex.name }}</button></sc-for></div></div>
                 </div>
-                <div style="display:flex;flex-direction:column;gap:12px;background:#fff;border:1px solid #EEEAE2;border-radius:14px;padding:14px">
-                  <div><div style="font:800 12px 'Geist';color:#8B857A;text-transform:uppercase;letter-spacing:.06em">Cena za kus</div><div style="font:900 28px 'Geist Mono';color:#211E1A;margin-top:5px">{{ no.custom.unitText }}</div></div>
-                  <div style="display:flex;align-items:center;gap:8px"><button onClick="{{ no.custom.decQty }}" style="width:34px;height:34px;border-radius:10px;border:1px solid #E5DED2;background:#fff;font:800 18px 'Geist';cursor:pointer">−</button><span style="flex:1;text-align:center;font:900 17px 'Geist Mono';color:#211E1A">{{ no.custom.qty }}</span><button onClick="{{ no.custom.incQty }}" style="width:34px;height:34px;border-radius:10px;border:none;background:#211E1A;color:#fff;font:800 18px 'Geist';cursor:pointer">+</button></div>
-                  <button onClick="{{ no.custom.add }}" style="margin-top:auto;padding:13px;border-radius:12px;border:none;background:{{ no.custom.addBg }};color:{{ no.custom.addFg }};font:800 13.5px 'Geist';cursor:pointer">{{ no.custom.addLabel }}</button>
+                <div class="no-build-right">
+                  <div><div class="uplabel">Cena za kus</div><div class="no-unit">{{ no.custom.unitText }}</div></div>
+                  <div class="no-qty-row"><button onClick="{{ no.custom.decQty }}" class="no-qty-dec">−</button><span class="no-qty-val">{{ no.custom.qty }}</span><button onClick="{{ no.custom.incQty }}" class="no-qty-inc">+</button></div>
+                  <button onClick="{{ no.custom.add }}" class="no-add-btn" style="background:{{ no.custom.addBg }};color:{{ no.custom.addFg }}">{{ no.custom.addLabel }}</button>
                 </div>
               </div>
             </sc-if>
-            <div style="flex:1;overflow-y:auto;padding:14px 24px;display:flex;flex-direction:column;gap:7px;min-height:0">
+            <div class="no-menu-list">
               <sc-for list="{{ no.menuItems }}" as="it">
-                <div style="display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:11px;background:{{ it.rowBg }};opacity:{{ it.rowOpacity }}">
-                  <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" style="width:40px;height:40px;border-radius:9px;object-fit:cover;flex:none"></sc-if>
-                  <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div style="width:40px;height:40px;border-radius:9px;background:#EDE8DF;display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" fill="none" stroke="#B0A896" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
-                  <div style="flex:1;min-width:0"><div style="font:600 13.5px 'Geist';color:#211E1A">{{ it.name }}</div><div style="display:flex;align-items:center;gap:7px;margin-top:1px"><span style="font:600 12px 'Geist Mono';color:#8B857A">{{ it.priceText }}</span><sc-if value="{{ it.soldOut }}" hint-placeholder-val=""><span class="pill" style="background:#F6E3E0;color:#B4472B">Vyprodáno</span></sc-if></div></div>
+                <div class="no-menu-row" style="background:{{ it.rowBg }};opacity:{{ it.rowOpacity }}">
+                  <sc-if value="{{ it.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" class="no-menu-img"></sc-if>
+                  <sc-if value="{{ it.noImg }}" hint-placeholder-val=""><div class="no-menu-ph"><svg width="18" height="18" fill="none" stroke="#B0A896" stroke-width="1.6" viewBox="0 0 24 24"><path d="M7 3h10l-1 5H8L7 3zM8 8v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8"/></svg></div></sc-if>
+                  <div class="f1min0"><div class="no-menu-name">{{ it.name }}</div><div class="no-menu-meta"><span class="no-menu-price">{{ it.priceText }}</span><sc-if value="{{ it.soldOut }}" hint-placeholder-val=""><span class="pill pill-red">Vyprodáno</span></sc-if></div></div>
                   <sc-if value="{{ it.inCart }}" hint-placeholder-val="">
-                    <div style="display:flex;align-items:center;gap:10px"><button onClick="{{ it.dec }}" style="width:30px;height:30px;border-radius:9px;border:1px solid #E7E2D9;background:#fff;font-size:17px;color:#211E1A;cursor:pointer;line-height:1">−</button><span style="font:600 14px 'Geist Mono';color:#211E1A;width:16px;text-align:center">{{ it.qty }}</span><button onClick="{{ it.add }}" style="width:30px;height:30px;border-radius:9px;border:none;background:#211E1A;color:#fff;font-size:17px;cursor:pointer;line-height:1">+</button></div>
+                    <div class="no-menu-qty"><button onClick="{{ it.dec }}" class="no-menu-dec">−</button><span class="no-menu-qtyval">{{ it.qty }}</span><button onClick="{{ it.add }}" class="no-menu-inc">+</button></div>
                   </sc-if>
                   <sc-if value="{{ it.notInCart }}" hint-placeholder-val="{{ true }}">
-                    <button onClick="{{ it.add }}" style="padding:8px 14px;border-radius:9px;border:1px solid #E7E2D9;background:{{ it.addBg }};color:{{ it.addFg }};font:700 12.5px 'Geist';cursor:pointer">{{ it.addLabel }}</button>
+                    <button onClick="{{ it.add }}" class="no-menu-add" style="background:{{ it.addBg }};color:{{ it.addFg }}">{{ it.addLabel }}</button>
                   </sc-if>
                 </div>
               </sc-for>
             </div>
-            <div style="border-top:1px solid #EEEAE2;padding:16px 24px;flex:none">
-              <sc-if value="{{ no.cartEmpty }}" hint-placeholder-val="{{ true }}"><div style="font:500 13px 'Geist';color:#A79F92;text-align:center;padding:6px 0 14px">Košík je prázdný — přidej položky</div></sc-if>
+            <div class="no-foot">
+              <sc-if value="{{ no.cartEmpty }}" hint-placeholder-val="{{ true }}"><div class="no-cart-empty">Košík je prázdný — přidej položky</div></sc-if>
               <sc-if value="{{ no.hasCartRows }}" hint-placeholder-val="">
                 <div class="no-cart-list">
                   <sc-for list="{{ no.cartRows }}" as="r" hint-placeholder-count="3">
                     <div class="no-cart-row">
-                      <div style="min-width:0"><div style="font:800 13px 'Geist';color:#211E1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</div><div style="font:600 11.5px 'Geist';color:#8B857A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.desc }}</div></div>
-                      <span style="font:800 12px 'Geist Mono';color:#6B655C">{{ r.qtyText }}</span>
-                      <span style="font:800 12px 'Geist Mono';color:#211E1A">{{ r.lineText }}</span>
-                      <button onClick="{{ r.remove }}" style="width:28px;height:28px;border-radius:9px;border:none;background:#F1EDE5;color:#7B7469;font:800 14px 'Geist';cursor:pointer">×</button>
+                      <div class="min0"><div class="no-cart-name">{{ r.name }}</div><div class="no-cart-desc">{{ r.desc }}</div></div>
+                      <span class="no-cart-qty">{{ r.qtyText }}</span>
+                      <span class="no-cart-line">{{ r.lineText }}</span>
+                      <button onClick="{{ r.remove }}" class="no-cart-x">×</button>
                     </div>
                   </sc-for>
                 </div>
               </sc-if>
-              <div style="display:flex;align-items:center;gap:14px">
-                <div><div style="font:500 12px 'Geist';color:#8B857A">Celkem</div><div style="font:700 24px 'Geist Mono';color:#211E1A">{{ no.totalText }}</div></div>
-                <button onClick="{{ no.create }}" style="margin-left:auto;padding:15px 28px;border-radius:13px;border:none;color:#fff;font:600 15px 'Geist';cursor:pointer;background:{{ no.createBg }}">Vytvořit objednávku</button>
+              <div class="no-total-row">
+                <div><div class="no-total-label">Celkem</div><div class="no-total-val">{{ no.totalText }}</div></div>
+                <button onClick="{{ no.create }}" class="no-create" style="background:{{ no.createBg }}">Vytvořit objednávku</button>
               </div>
             </div>
           </div>
@@ -647,6 +604,8 @@ class Component extends DCLogic {
     view:'orders',
     ordersView:'cards',
     selectedId:null,
+    drag:null,
+    confirm:null,
     timeSel:30,
     menuTab:'pizza',
     menuEditId:'p1',
@@ -694,9 +653,9 @@ class Component extends DCLogic {
     ],
     orders:[
       { id:248, num:248, status:'new', name:'Jana Nováková', address:'Wagnerovo nám. 12', city:'Beroun', zone:'Zóna 1', phone:'+420 606 214 880', payment:'online', ago:1, placedAt:'14:22', within:null, note:'Zvonek nefunguje, prosím zavolat po příjezdu.',
-        items:[ {qty:2,name:'Margherita',desc:'rajčatový základ, mozzarella, bazalka',price:206,img:'assets/pizza/margherita.webp'}, {qty:1,name:'Pepsi 330ml',desc:'nápoj',price:25,img:null} ] },
+        items:[ {qty:1,name:'½ Margherita + ½ Bellizzi',desc:'rajčatový základ · navíc: Niva, Slanina',price:245,img:'assets/pizza/margherita.webp',half:true,extras:['Niva','Slanina']}, {qty:1,name:'Pepsi 330ml',desc:'nápoj',price:25,img:null} ] },
       { id:247, num:247, status:'prep', name:'Petr Svoboda', address:'Tyršova 445', city:'Beroun-Město', zone:'Zóna 1', phone:'+420 720 118 244', payment:'cash', ago:6, placedAt:'14:17', within:30, note:'',
-        items:[ {qty:1,name:'Bellizzi',desc:'šunka, salám, slanina, kozí rohy',price:230,img:'assets/pizza/bellizzi.webp'}, {qty:1,name:'Šunková',desc:'rajčatový základ, mozzarella, šunka',price:206,img:'assets/pizza/sunkova.webp'} ] },
+        items:[ {qty:1,name:'Bellizzi',desc:'šunka, salám, slanina, kozí rohy · navíc: Feferonky',price:245,img:'assets/pizza/bellizzi.webp',extras:['Feferonky']}, {qty:1,name:'Šunková',desc:'rajčatový základ, mozzarella, šunka',price:206,img:'assets/pizza/sunkova.webp'} ] },
       { id:246, num:246, status:'route', name:'Marie Dvořáková', address:'Košťálkova 8', city:'Beroun', zone:'Zóna 2', phone:'+420 777 340 112', payment:'online', ago:18, placedAt:'14:05', within:30, note:'Nechat u sousedů, byt č. 4.',
         items:[ {qty:1,name:'Quattro formaggi',desc:'smetanový základ, hermelín, niva, parmazán',price:230,img:'assets/pizza/quattro.webp'}, {qty:1,name:'Capri-Sun 200ml',desc:'nápoj',price:15,img:null} ] },
       { id:245, num:245, status:'prep', name:'Lukáš Horák', address:'Na Parkáně 3', city:'Králův Dvůr', zone:'Zóna 3', phone:'+420 605 998 021', payment:'cash', ago:3, placedAt:'14:20', within:45, note:'',
@@ -754,18 +713,35 @@ class Component extends DCLogic {
       return {promo:{...s.promo,pizzaIds:ids}}; });
   }
 
+  isSpecialItem(i){ return !!(i.custom||i.half||(i.extras&&i.extras.length)||/½|1\/2|napůl/i.test(i.name)); }
+  specialTags(o){
+    const sp=o.items.filter(i=>this.isSpecialItem(i));
+    const tags=[];
+    if(sp.some(i=>i.half||/½|1\/2|napůl/i.test(i.name)))tags.push('Pizza na půl');
+    if(sp.some(i=>i.extras&&i.extras.length))tags.push('Suroviny navíc');
+    if(o.note)tags.push('Poznámka');
+    return tags;
+  }
+
   cardView(o){
     const m=this.META[o.status], p=this.pay(o);
     const isNew=o.status==='new';
     const isRoute=o.status==='route';
     const preview=o.items.slice(0,4).map(i=>({ ...i, qtyText:i.qty+'×', lineText:(i.qty*i.price)+' Kč' }));
+    const tags=this.specialTags(o);
+    const isSpecial=tags.length>0;
+    const canSwipe=o.status==='prep'||o.status==='route';
+    const nextMap={ prep:{label:'Odeslat na rozvoz',color:'#3E6DA8'}, route:{label:'Doručeno',color:'linear-gradient(135deg,#2F7D49,#20663B)'} };
+    const nx=nextMap[o.status]||{label:'',color:'transparent'};
+    const drag=this.state.drag;
+    const dx=(drag&&drag.id===o.id)?drag.dx:0;
     return { ...o, statusLabel:m.label, statusBg:m.bg,
       agoText:o.ago===0?'právě teď':('před '+o.ago+' min'),
       addressLine:o.address+' · '+o.city,
       itemsLine:o.items.map(i=>i.qty+'× '+i.name).join(' · '),
       priceText:this.total(o)+' Kč', payLabel:p.label, payFg:p.fg, payBg:p.bg,
       isNew, notNew:o.status!=='new',
-      withinText:o.within?('do '+o.within+' min'):'',
+      withinText:o.within?('do '+o.within+' min'):'', hasWithin:!!o.within,
       cardBg:isNew?'#FFF9EF':'#fff',
       itemsBg:isNew?'#FFF2DF':'#FBFAF7', itemsBorder:isNew?'#E9C98C':'#EEEAE2',
       timeBg:isNew?'#FBF0DB':'#F1EDE5',
@@ -773,16 +749,49 @@ class Component extends DCLogic {
       glow:isNew?'0 0 0 4px #FBF1DD':'none',
       hoverGlow:isNew?'0 12px 30px rgba(203,119,42,.12), 0 0 0 4px #FBF1DD':'0 12px 28px rgba(55,40,20,.07)',
       hasAlert:isNew, alertText:'Čeká na potvrzení',
+      isSpecial, specialText:tags.join(' · '), specialClass:isSpecial?'is-special':'',
       itemsPreview:preview, itemsCountLabel:o.items.length+' pol.', hasMoreItems:o.items.length>4, moreItemsText:'+ '+(o.items.length-4)+' další položky',
       btnLabel:isRoute?'✓ Označit jako doručeno':'Odeslat na rozvoz →',
       btnBg:isRoute?'linear-gradient(135deg,#2F7D49,#20663B)':'#211E1A',
       btnClass:isRoute?'done-btn':'',
       doneLine:o.address+' · '+o.items.map(i=>i.name).join(', '), time:o.time,
-      open:()=>this.setState({selectedId:o.id, timeSel:o.within||30}),
+      canSwipe, nextLabel:nx.label, nextColor:nx.color,
+      dragPx:dx+'px',
+      dragTransition:(drag&&drag.id===o.id)?'none':'transform .28s cubic-bezier(.2,.9,.3,1)',
+      swipeActionOpacity:canSwipe?Math.min(1,dx/96):0,
+      swipeHint:canSwipe?'Potáhni doprava':'',
+      onDragStart:canSwipe?((e)=>this.dragStart(o.id,e)):(()=>{}),
+      onDragMove:canSwipe?((e)=>this.dragMove(o.id,e)):(()=>{}),
+      onDragEnd:canSwipe?((e)=>this.dragEnd(o.id,e)):(()=>{}),
+      open:()=>{ if(this.__suppressClick){ this.__suppressClick=false; return; } this.setState({selectedId:o.id, timeSel:o.within||30}); },
       onAdvance:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); this.advance(o.id); },
       onReject:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); this.reject(o.id); },
+      onUndo:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); this.setState({confirm:{orderId:o.id}}); },
     };
   }
+
+  dragStart(id,e){
+    if(e&&e.target&&e.target.closest&&e.target.closest('button'))return;
+    try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){}
+    this.__drag={id,startX:e.clientX,dx:0,moved:false};
+    this.setState({drag:{id,dx:0}});
+  }
+  dragMove(id,e){
+    if(!this.__drag||this.__drag.id!==id)return;
+    let dx=e.clientX-this.__drag.startX;
+    if(dx<0)dx=0; if(dx>170)dx=170;
+    this.__drag.dx=dx; if(dx>6)this.__drag.moved=true;
+    this.setState({drag:{id,dx}});
+  }
+  dragEnd(id,e){
+    if(!this.__drag||this.__drag.id!==id){ this.setState({drag:null}); return; }
+    const dx=this.__drag.dx, moved=this.__drag.moved;
+    try{ e.currentTarget.releasePointerCapture(e.pointerId); }catch(_){}
+    this.__drag=null; this.__suppressClick=moved;
+    if(dx>=96) this.advance(id);
+    this.setState({drag:null});
+  }
+  undo(id){ this.setState(s=>({ orders:s.orders.map(o=>o.id===id?{...o,status:'route',time:undefined}:o), confirm:null })); }
 
   detailView(o){
     const m=this.META[o.status], p=this.pay(o);
@@ -797,11 +806,15 @@ class Component extends DCLogic {
     else if(o.status==='prep'){ pl='Odeslat na rozvoz →'; pb='#211E1A'; pa=()=>this.advance(o.id); sl='Tisk účtenky'; sa=()=>{}; fh='Doručit do '+o.within+' min'; }
     else if(o.status==='route'){ pl='✓ Označit jako doručeno'; pb='linear-gradient(135deg,#2F7D49,#20663B)'; pa=()=>this.advance(o.id); sl='Tisk účtenky'; sa=()=>{}; fh='Na cestě · doručit do '+o.within+' min'; }
     else { pl='Zavřít'; pb='#211E1A'; pa=()=>this.setState({selectedId:null}); sl=null; fh='Doručeno v '+o.time; }
+    const tags=this.specialTags(o);
     return { ...o, statusLabel:m.label, statusBg:m.bg, agoText:o.ago===0?'právě teď':('před '+o.ago+' min'),
       addressFull:o.address+' · '+o.city+' · '+o.zone, priceText:this.total(o)+' Kč',
       payFg:p.fg, payBg:p.bg, payFull:p.full,
-      items:o.items.map(i=>({ ...i, hasImg:!!i.img, noImg:!i.img, qtyText:i.qty+'×', lineText:(i.qty*i.price)+' Kč' })),
+      items:o.items.map(i=>{ const sp=this.isSpecialItem(i);
+        const badge=(i.half||/½|1\/2|napůl/i.test(i.name))?'Na půl':((i.extras&&i.extras.length)?'Navíc':'Speciál');
+        return { ...i, hasImg:!!i.img, noImg:!i.img, qtyText:i.qty+'×', lineText:(i.qty*i.price)+' Kč', isSpecial:sp, badge, specialClass:sp?'is-special':'' }; }),
       hasNote:!!o.note, note:o.note, timeline, isNew:o.status==='new', timeChips,
+      hasSpecial:tags.length>0, specialText:tags.join(' · '),
       primaryLabel:pl, primaryBg:pb, primaryAction:pa, hasSecondary:!!sl, secondaryLabel:sl, secondaryAction:sa, footerHint:fh };
   }
 
@@ -859,9 +872,17 @@ class Component extends DCLogic {
     }; });
     // orders
     const active=s.orders.filter(o=>o.status!=='done').map(o=>this.cardView(o));
+    const colDefs=[
+      {key:'new',title:'Nové',accent:'#C98A2E',soft:'#FBF0DB',emptyText:'Žádné nové objednávky'},
+      {key:'prep',title:'V přípravě',accent:'#C15F3C',soft:'#F7E7E0',emptyText:'Nic se nepřipravuje'},
+      {key:'route',title:'Na cestě',accent:'#3E6DA8',soft:'#E9EFF7',emptyText:'Nikdo není na cestě'},
+    ];
+    const columns=colDefs.map(c=>{ const list=active.filter(o=>o.status===c.key); return {...c, orders:list, count:list.length, isEmpty:list.length===0}; });
     const doneO=s.orders.filter(o=>o.status==='done');
     const done=doneO.map(o=>this.cardView(o));
     const doneRev=doneO.reduce((a,o)=>a+this.total(o),0);
+    const confO=s.confirm?s.orders.find(o=>o.id===s.confirm.orderId):null;
+    const confirm={ open:!!s.confirm, text:confO?('Objednávka #'+confO.num+' • '+confO.name+' se vrátí zpět mezi „Na cestě“.'):'' };
     const cardsActive=s.ordersView!=='list';
     const ordersToggle={
       cardsBg:cardsActive?'#211E1A':'transparent', cardsFg:cardsActive?'#fff':'#6B655C', cardsShadow:cardsActive?'0 1px 2px rgba(17,17,17,.12)':'none',
@@ -1019,7 +1040,8 @@ class Component extends DCLogic {
       openNew:()=>this.openNew(null),
       ordersIsCards:cardsActive, ordersIsList:!cardsActive, ordersToggle,
       ordersViewCards:()=>this.setState({ordersView:'cards'}), ordersViewList:()=>this.setState({ordersView:'list'}),
-      active, done, activeCount:active.length, doneSummary:doneO.length+' · '+doneRev.toLocaleString('cs-CZ')+' Kč',
+      active, columns, done, doneEmpty:doneO.length===0, activeCount:active.length, doneSummary:doneO.length+' · '+doneRev.toLocaleString('cs-CZ')+' Kč',
+      confirm, confirmUndo:()=>{ const c=this.state.confirm; if(c)this.undo(c.orderId); }, cancelConfirm:()=>this.setState({confirm:null}),
       menu, akce, prijmy, adresy, no:noVals,
       modalOpen:!!selRaw, selected:selRaw?this.detailView(selRaw):{},
       closeModal:()=>this.setState({selectedId:null}), stop:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); },
