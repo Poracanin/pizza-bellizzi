@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="./styles.css?v=3">
 </helmet>
 
 <div class="app-shell">
@@ -85,7 +85,7 @@
                       <span class="order-swipe-label">{{ o.nextLabel }}</span>
                     </div>
                   </sc-if>
-                  <div onClick="{{ o.open }}" onPointerDown="{{ o.onDragStart }}" onPointerMove="{{ o.onDragMove }}" onPointerUp="{{ o.onDragEnd }}" onPointerCancel="{{ o.onDragEnd }}" class="order-card {{ o.specialClass }}" style="--orderBg:{{ o.cardBg }};--orderBorder:{{ o.borderColor }};--orderShadow:{{ o.glow }};--orderHoverShadow:{{ o.hoverGlow }};transform:translateX({{ o.dragPx }});transition:{{ o.dragTransition }}">
+                  <div onClick="{{ o.open }}" onPointerDown="{{ o.onDragStart }}" onPointerMove="{{ o.onDragMove }}" onPointerUp="{{ o.onDragEnd }}" onPointerCancel="{{ o.onDragEnd }}" class="order-card {{ o.specialClass }}" style="--orderBg:{{ o.cardBg }};--orderBorder:{{ o.borderColor }};--orderShadow:{{ o.glow }};--orderHoverShadow:{{ o.hoverGlow }};transform:{{ o.dragTransform }};transition:{{ o.dragTransition }}">
                     <div class="order-card-top">
                       <span class="order-status-pill" style="background:{{ o.statusBg }}">{{ o.statusLabel }}</span>
                       <span class="order-time-pill" style="background:{{ o.timeBg }}">{{ o.agoText }}</span>
@@ -886,6 +886,7 @@ class Component extends DCLogic {
       doneLine:o.address+' · '+o.items.map(i=>i.name).join(', '), time:o.time,
       canSwipe, nextLabel:nx.label, nextColor:nx.color,
       dragPx:dx+'px',
+      dragTransform:dx?('translateX('+dx+'px)'):'none',
       dragTransition:(drag&&drag.id===o.id)?'none':'transform .28s cubic-bezier(.2,.9,.3,1)',
       swipeActionOpacity:canSwipe?Math.min(1,dx/96):0,
       swipeHint:canSwipe?'Potáhni doprava':'',
