@@ -170,7 +170,7 @@
       try {
         new window.QRCode(el, {
           text: text, width: size, height: size,
-          colorDark: '#211E1A', colorLight: '#ffffff',
+          colorDark: '#1d1d1f', colorLight: '#ffffff',
           correctLevel: window.QRCode.CorrectLevel.M,
         });
         return;

@@ -915,6 +915,20 @@ function updateActiveNav() {
   topButton.classList.toggle("show", window.scrollY > 700);
 }
 
+/* Header: nahoře průhledný nad hero fotkou, po rolování se zabarví */
+const siteHeader = $(".header");
+
+function setHeaderHeight() {
+  document.documentElement.style.setProperty("--header-h", `${siteHeader.offsetHeight}px`);
+}
+
+function updateHeaderState() {
+  siteHeader.classList.toggle("at-top", window.scrollY < 10);
+}
+
+window.addEventListener("resize", setHeaderHeight);
+window.addEventListener("scroll", updateHeaderState, { passive: true });
+
 topButton.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
@@ -940,6 +954,8 @@ renderPizzas();
 renderDrinks();
 renderAllergens();
 renderCart();
+setHeaderHeight();
+updateHeaderState();
 updateActiveNav();
 updateOpenStatus();
 setInterval(updateOpenStatus, 1000);

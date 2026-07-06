@@ -6,9 +6,10 @@
   <meta name="description" content="Pizza Bellizzi Beroun - online menu pizz, nápojů, otevírací doba, kontakt a mapa provozovny.">
   <title>Pizza Bellizzi Beroun | Menu pizzy a rozvoz</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
+  <meta name="theme-color" content="#f5f3ef">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Bricolage+Grotesque:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -64,7 +65,7 @@
   <main>
     <section class="hero" id="menu">
       <div class="hero-banner">
-        <img src="assets/provozovna.png" alt="Provozovna Pizza Bellizzi Beroun s rozvozovým autem">
+        <img src="assets/provozovna-hero.png" alt="Provozovna Pizza Bellizzi Beroun s rozvozovým autem">
         <div class="hero-stripe" aria-hidden="true"></div>
         <div class="hero-overlay">
           <h1>Pizza Bellizzi <span>přímo k vašim dveřím</span></h1>
@@ -495,6 +496,30 @@
       </div>
     </div>
   </div>
+
+  <!-- Mobilní plovoucí navigace -->
+  <nav class="nav mobile-tabbar" aria-label="Mobilní navigace">
+    <a href="#menu">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/></svg>
+      Menu
+    </a>
+    <a href="#pizzy">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a17 17 0 0 1 10 4L12 22 2 6a17 17 0 0 1 10-4z"/><circle cx="12" cy="8" r="1" fill="currentColor" stroke="none"/><circle cx="9.5" cy="12.5" r="1" fill="currentColor" stroke="none"/><circle cx="13.5" cy="13.5" r="1" fill="currentColor" stroke="none"/></svg>
+      Pizzy
+    </a>
+    <a href="#napoje">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12l-1.5 18h-9L6 3z"/><path d="M6.6 10h10.8"/></svg>
+      Nápoje
+    </a>
+    <a href="#rozvoz">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.6"/></svg>
+      Rozvoz
+    </a>
+    <a href="#kontakt">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+      Kontakt
+    </a>
+  </nav>
 
   <button class="to-top" aria-label="Zpět nahoru">↑</button>
   <script src="script.js"></script>

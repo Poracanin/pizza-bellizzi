@@ -6,38 +6,38 @@
    ========================================================================== */
 
 :root {
-  --bg:        #FBFAF7;
+  --bg:        #f5f3ef;
   --surface:   #FFFFFF;
-  --ink:       #211E1A;
-  --ink-2:     #4A443B;
-  --muted:     #8B857A;
-  --faint:     #B9B2A6;
-  --line:      #E7E2D9;
-  --line-soft: #EEEAE2;
+  --ink:       #1d1d1f;
+  --ink-2:     #3a3a3c;
+  --muted:     #86868b;
+  --faint:     #b8b5b0;
+  --line:      rgba(29,29,31,.10);
+  --line-soft: rgba(29,29,31,.06);
 
   --green:      #0A8A3E;
   --green-hi:   #13A653;
   --green-lo:   #075D2E;
-  --green-soft: #E7F0E7;
-  --green-ink:  #3B6B48;
+  --green-soft: #e8f4ec;
+  --green-ink:  #2f7d49;
 
   --red:        #E1232B;
   --terra:      #C15F3C;
-  --red-soft:   #F6E3E0;
-  --red-ink:    #B4472B;
+  --red-soft:   #fdeeec;
+  --red-ink:    #c1352c;
 
   --blue:       #3E6DA8;
-  --blue-soft:  #E9EFF7;
+  --blue-soft:  #ecf1f8;
   --blue-ink:   #315F92;
 
   --amber:      #C98A2E;
-  --amber-soft: #FBF0DB;
+  --amber-soft: #fdf3d7;
   --amber-ink:  #9A5A16;
 
-  --radius:  18px;
-  --radius-sm: 13px;
-  --shadow:  0 12px 30px rgba(55,40,20,.08);
-  --shadow-lg: 0 -10px 30px rgba(40,25,10,.10);
+  --radius:  20px;
+  --radius-sm: 14px;
+  --shadow:  0 1px 2px rgba(29,29,31,.04), 0 14px 32px -16px rgba(29,29,31,.12);
+  --shadow-lg: 0 -12px 32px rgba(29,29,31,.10);
   --safe-b:  env(safe-area-inset-bottom, 0px);
 }
 
@@ -45,14 +45,14 @@
 
 html, body {
   margin: 0;
-  background: #2B2723;
+  background: #1c1c1e;
   font-family: 'Geist', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   color: var(--ink);
 }
 
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-thumb { background: #C9C0B2; border-radius: 8px; }
+::-webkit-scrollbar-thumb { background: #cfccc6; border-radius: 8px; }
 
 button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
@@ -238,13 +238,13 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   display: flex; align-items: center; gap: 12px;
   width: 100%; text-align: left;
   padding: 11px 13px;
-  border: 1px solid #CDE6D2;
+  border: 1px solid rgba(10,138,62,.18);
   border-radius: 14px;
-  background: linear-gradient(180deg, #F4FBF5, #ECF7EE);
+  background: var(--green-soft);
   transition: transform .16s, box-shadow .16s, border-color .16s;
 }
 .rz-call:active { transform: scale(.985); }
-.rz-call:hover { border-color: #B6DCBD; box-shadow: 0 8px 20px rgba(10,138,62,.12); }
+.rz-call:hover { border-color: rgba(10,138,62,.32); box-shadow: 0 8px 20px rgba(10,138,62,.12); }
 .rz-call-ic {
   width: 42px; height: 42px; flex: none;
   border-radius: 13px;
@@ -256,7 +256,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
 .rz-call-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
 .rz-call-label { font: 800 13.5px 'Geist'; color: var(--green-ink); }
 .rz-call-num { font: 700 13.5px 'Geist Mono'; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.rz-call-arrow { flex: none; color: #8FBF98; }
+.rz-call-arrow { flex: none; color: rgba(10,138,62,.5); }
 
 /* ---- rozklikávací mapa ------------------------------------------------- */
 .rz-map-toggle {
@@ -265,14 +265,14 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   padding: 10px 13px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #FBFAF7;
+  background: var(--bg);
   color: var(--ink-2); font: 700 12.5px 'Geist';
   transition: background .14s, border-color .14s;
 }
 .rz-map-toggle svg { flex: none; color: var(--muted); }
 .rz-map-toggle span { margin-right: auto; }
 .rz-map-toggle .rz-map-chev { margin-right: 0; transition: transform .22s ease; }
-.rz-map-toggle.is-open { background: #F2EFE8; border-color: #DED7CB; }
+.rz-map-toggle.is-open { background: rgba(29,29,31,.05); border-color: var(--line); }
 .rz-map-toggle.is-open .rz-map-chev { transform: rotate(90deg); }
 .rz-map {
   border: 1px solid var(--line);
@@ -295,7 +295,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   font: 800 9.5px 'Geist'; letter-spacing: .03em; text-transform: uppercase;
   padding: 4px 9px; border-radius: 999px;
 }
-.rz-paychip.pay-cash   { background: #F3EEDC; color: #7A6A2E; }
+.rz-paychip.pay-cash   { background: var(--amber-soft); color: var(--amber-ink); }
 .rz-paychip.pay-online { background: var(--green-soft); color: var(--green-ink); }
 .rz-items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .rz-item {
@@ -303,11 +303,11 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   grid-template-columns: auto minmax(0,1fr) auto;
   gap: 11px; align-items: center;
   padding: 10px 11px;
-  background: #FBFAF7;
+  background: var(--bg);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-sm);
 }
-.rz-item.is-special { background: #FFFBF2; border-color: #EAD9B4; }
+.rz-item.is-special { background: var(--amber-soft); border-color: rgba(201,138,46,.28); }
 .rz-qty {
   min-width: 30px; height: 30px; padding: 0 7px;
   border-radius: 9px; background: var(--ink); color: #fff;
@@ -340,7 +340,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
 .rz-note {
   display: flex; gap: 11px; align-items: flex-start;
   background: var(--amber-soft);
-  border: 1px solid #EAD3A2;
+  border: 1px solid rgba(201,138,46,.30);
   border-radius: var(--radius-sm);
   padding: 13px 14px;
 }
@@ -355,7 +355,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 14px 12px; border: none; border-radius: 14px;
   background: var(--ink); color: #fff; font: 800 13.5px 'Geist';
-  box-shadow: 0 10px 22px rgba(33,30,26,.20);
+  box-shadow: 0 10px 22px rgba(29,29,31,.20);
   transition: transform .16s, box-shadow .16s;
 }
 .rz-qr-btn svg { color: var(--amber); }
@@ -365,7 +365,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   flex: 1.15;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 14px 12px; border-radius: 14px;
-  background: var(--green-soft); border: 1px solid #CDE6D2;
+  background: var(--green-soft); border: 1px solid rgba(10,138,62,.18);
   color: var(--green-ink); font: 800 13px 'Geist';
 }
 .rz-done-btn {
@@ -384,7 +384,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(33,30,26,.55);
+  background: rgba(29,29,31,.55);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   display: flex; align-items: center; justify-content: center;
@@ -397,7 +397,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   max-width: 400px;
   max-height: calc(100dvh - 36px);
   overflow-y: auto;
-  background: linear-gradient(180deg, #FFFFFF, #FBF7EF);
+  background: #ffffff;
   border-radius: 26px;
   padding: 26px 22px 22px;
   box-shadow: 0 30px 70px rgba(0,0,0,.4);
@@ -444,7 +444,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   border: 1.5px solid var(--line); background: #fff;
   transition: border-color .14s, box-shadow .14s;
 }
-.rz-tip-custom.is-on { border-color: var(--ink); box-shadow: 0 0 0 2px rgba(33,30,26,.12); }
+.rz-tip-custom.is-on { border-color: var(--ink); box-shadow: 0 0 0 2px rgba(29,29,31,.12); }
 .rz-tip-custom span { font: 700 12px 'Geist'; color: var(--muted); white-space: nowrap; }
 .rz-tip-custom input {
   width: 100%; min-width: 0;
@@ -458,7 +458,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   width: min(78vw, 340px); aspect-ratio: 1/1;
   display: flex; align-items: center; justify-content: center;
   background: #fff; padding: 16px; border-radius: 20px;
-  box-shadow: 0 10px 26px rgba(40,25,10,.14);
+  box-shadow: 0 10px 26px rgba(20,20,22,.14);
 }
 .rz-modal-qr img, .rz-modal-qr canvas { width: 100% !important; height: 100% !important; display: block; }
 .rz-modal-meta {
@@ -492,7 +492,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
 .rz-hist-row {
   display: flex; align-items: center; gap: 12px;
   padding: 11px 13px;
-  background: #F5F2EC;
+  background: rgba(29,29,31,.035);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-sm);
 }
@@ -508,7 +508,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
   padding: 3px 7px; border-radius: 6px; flex: none;
 }
 .rz-hist-pay.pay-online { background: var(--blue-soft); color: var(--blue-ink); }
-.rz-hist-pay.pay-cash   { background: #F3EEDC; color: #7A6A2E; }
+.rz-hist-pay.pay-cash   { background: var(--amber-soft); color: var(--amber-ink); }
 .rz-hist-empty { font: 600 13px 'Geist'; color: var(--faint); text-align: center; padding: 18px; border: 1px dashed var(--line); border-radius: var(--radius-sm); }
 
 /* ---- empty state (bez zastávek) ---------------------------------------- */
@@ -551,7 +551,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
 .rz-btn svg { flex: none; }
 .rz-btn-nav {
   background: var(--ink); color: #fff;
-  box-shadow: 0 12px 26px rgba(33,30,26,.24);
+  box-shadow: 0 12px 26px rgba(29,29,31,.24);
 }
 .rz-btn-route {
   background: #fff; color: var(--ink);
@@ -584,7 +584,7 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
     min-height: calc(100vh - 44px);
     border-radius: 30px;
     overflow: hidden;
-    border: 1px solid #3a352f;
+    border: 1px solid #38383c;
   }
   .rz-top { border-radius: 30px 30px 0 0; }
 }
