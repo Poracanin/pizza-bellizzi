@@ -908,10 +908,8 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 .lunch-modal .lunch-deal-info { min-width: 0; }
 .lunch-modal .lunch-deal {
   margin: 0;
-  max-height: 90vh;
-  overflow: auto;
+  overflow: hidden;
   border-radius: 26px;
-  -webkit-overflow-scrolling: touch;
   animation: lunchModalIn .3s cubic-bezier(.2,.8,.2,1);
 }
 @keyframes lunchModalIn {
