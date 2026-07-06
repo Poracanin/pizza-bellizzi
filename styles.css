@@ -752,6 +752,21 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 .lunch-deal::before { left: -70px; top: -90px; width: 176px; height: 176px; border-width: 18px; }
 
 .lunch-deal-info { position: relative; z-index: 1; }
+.lunch-deal-pizzas { position: relative; z-index: 1; }
+
+/* Bílý průhledný vodoznak s logem v okně polední akce (na červené kartě) */
+.lunch-mark {
+  position: absolute;
+  right: -55px;
+  bottom: -80px;
+  width: 320px;
+  height: 320px;
+  z-index: 0;
+  background: url("assets/logo-watermark.png") center / contain no-repeat;
+  filter: brightness(0) invert(1);
+  opacity: .12;
+  pointer-events: none;
+}
 
 .lunch-badge {
   display: inline-flex;
@@ -1672,6 +1687,27 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   min-height: 0;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+}
+
+/* ===== Jemný vodoznak s logem v pozadí modálních oken ===== */
+/* Logo prosvítá v prázdném prostoru pod obsahem, okraj jemně přesahuje
+   a je oříznutý rohem okna – decentní branding, nepřekáží obsahu. */
+#pizzaModal .modal,
+#checkoutModal .modal { isolation: isolate; }
+
+#pizzaModal .modal::after,
+#checkoutModal .modal::after {
+  content: "";
+  position: absolute;
+  right: -9%;
+  bottom: -7%;
+  width: min(380px, 66%);
+  aspect-ratio: 1;
+  background: url("assets/logo-watermark.png") center / contain no-repeat;
+  opacity: .08;
+  filter: grayscale(1);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* ===== Pizza modal hero — čtvercová fotka + overlay s názvem a základem ===== */
@@ -2687,6 +2723,15 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
     overflow-y: auto;
   }
   .lunch-modal .lunch-deal-info { min-width: 0; }
+  /* Vodoznak na mobilu do pravého horního rohu, kde je volné místo */
+  .lunch-modal .lunch-mark {
+    right: -42px;
+    top: -6px;
+    bottom: auto;
+    width: 190px;
+    height: 190px;
+    opacity: .14;
+  }
   /* Dekorativní kruhy v modalu na mobilu vypnout — rozšiřovaly obsah a ořezávaly ho */
   .lunch-modal .lunch-deal::before,
   .lunch-modal .lunch-deal::after { content: none; }
