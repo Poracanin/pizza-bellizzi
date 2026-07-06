@@ -280,7 +280,11 @@ function renderAllergens() {
    ============================================================ */
 
 const modal = $("#pizzaModal");
-const modalImg = $("#modalImg");
+const modalHero = $(".modal-hero", modal);
+const modalBody = $(".modal-body", modal);
+const modalImgWrap = $("#modalImgWrap");
+const modalImgLeft = $("#modalImgLeft");
+const modalImgRight = $("#modalImgRight");
 const modalTitle = $("#modalTitle");
 const modalDesc = $("#modalDesc");
 const modalAdd = $("#modalAdd");
@@ -323,16 +327,12 @@ function openPizzaModal(pizzaId) {
     qty: 1
   };
 
-  modalImg.src = `jidla-pizza-vylepsene-webp/${pizza.img}`;
-  modalImg.alt = `Pizza ${pizza.name}`;
-  modalTitle.textContent = pizza.name;
-  modalDesc.textContent = `${pizza.base === "cream" ? "Smetanový základ" : "Rajčatový základ"}, ${pizza.desc}`;
-
   halfLeft.value = String(pizza.id);
   halfRight.value = String(pizza.id);
 
   $$(".extra-opt", extrasListEl).forEach((el) => el.classList.remove("sel"));
 
+  syncHeroHalves();
   syncBasePills();
   syncQty();
   updateModalTotal();
@@ -340,6 +340,12 @@ function openPizzaModal(pizzaId) {
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
   lockScroll();
+
+  // Reset a změření výšky fotky pro efekt překrytí oknem při rolování
+  modalBody.scrollTop = 0;
+  modalHero.style.height = "";
+  modalHero.style.setProperty("--collapse", "0");
+  requestAnimationFrame(measureHero);
 }
 
 function closePizzaModal() {
@@ -347,8 +353,64 @@ function closePizzaModal() {
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
   unlockScroll();
+  modalHero.style.height = "";
+  modalHero.style.setProperty("--collapse", "0");
   modalState = null;
 }
+
+/* Vykreslení fotky podle vybraných půlek — když jsou půlky jiné, fotka se rozpůlí */
+function syncHeroHalves() {
+  if (!modalState) return;
+  const left = findPizza(modalState.leftId);
+  const right = findPizza(modalState.rightId);
+  const split = modalState.leftId !== modalState.rightId;
+  const baseLabel = modalState.base === "cream" ? "Smetanový základ" : "Rajčatový základ";
+
+  modalImgLeft.src = `jidla-pizza-vylepsene-webp/${left.img}`;
+  modalImgLeft.alt = `Pizza ${left.name}`;
+
+  if (split) {
+    modalImgRight.src = `jidla-pizza-vylepsene-webp/${right.img}`;
+    modalImgRight.alt = `Pizza ${right.name}`;
+    modalImgWrap.classList.add("is-split");
+    modalTitle.textContent = `${left.name} & ${right.name}`;
+    modalDesc.textContent = `${baseLabel} · vlevo ${left.name}, vpravo ${right.name}`;
+  } else {
+    modalImgWrap.classList.remove("is-split");
+    modalImgRight.removeAttribute("src");
+    modalTitle.textContent = left.name;
+    modalDesc.textContent = `${baseLabel}, ${left.desc}`;
+  }
+}
+
+/* Fotka zůstává v plné velikosti, okno přes ni jen vyjíždí (necháme viditelnou ~1/3) */
+const HERO_MIN_RATIO = 1 / 3;
+let heroFullH = 0;
+
+function measureHero() {
+  modalHero.style.height = "";
+  heroFullH = modalHero.getBoundingClientRect().height;
+  modalHero.style.setProperty("--hero-full-h", `${heroFullH}px`);
+}
+
+function applyHeroCollapse() {
+  if (!modal.classList.contains("open")) return;
+  if (!heroFullH) measureHero();
+  if (!heroFullH) return;
+  const minH = heroFullH * HERO_MIN_RATIO;
+  const maxShrink = heroFullH - minH;
+  const s = Math.min(Math.max(modalBody.scrollTop, 0), maxShrink);
+  modalHero.style.height = s <= 0 ? "" : `${heroFullH - s}px`;
+  const fade = Math.min(1, s / (maxShrink * 0.6 || 1));
+  modalHero.style.setProperty("--collapse", fade.toFixed(3));
+}
+
+modalBody.addEventListener("scroll", applyHeroCollapse, { passive: true });
+window.addEventListener("resize", () => {
+  if (!modal.classList.contains("open")) return;
+  measureHero();
+  applyHeroCollapse();
+});
 
 function syncBasePills() {
   $$(".base-pill", baseRow).forEach((el) => {
@@ -372,17 +434,20 @@ baseRow.addEventListener("click", (e) => {
   if (!btn || !modalState) return;
   modalState.base = btn.dataset.base;
   syncBasePills();
+  syncHeroHalves();
   updateModalTotal();
 });
 
 halfLeft.addEventListener("change", () => {
   if (!modalState) return;
   modalState.leftId = Number(halfLeft.value);
+  syncHeroHalves();
   updateModalTotal();
 });
 halfRight.addEventListener("change", () => {
   if (!modalState) return;
   modalState.rightId = Number(halfRight.value);
+  syncHeroHalves();
   updateModalTotal();
 });
 
