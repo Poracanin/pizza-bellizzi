@@ -304,7 +304,7 @@ const modalClose = $("#modalClose");
 let modalState = null;
 
 function fillHalfSelect(select) {
-  select.innerHTML = PIZZAS.map((p) => `<option value="${p.id}">${p.id}. ${p.name} (${p.price} Kč)</option>`).join("");
+  select.innerHTML = PIZZAS.map((p) => `<option value="${p.id}">${p.name} (${p.price} Kč)</option>`).join("");
 }
 
 function fillExtras() {
@@ -561,6 +561,7 @@ function closeCart() {
 cartBtn.addEventListener("click", openCart);
 cartCloseBtn.addEventListener("click", closeCart);
 cartBackdrop.addEventListener("click", closeCart);
+$("#cartContinueBtn")?.addEventListener("click", closeCart);
 
 function addToCart(item) {
   cart.push(item);
@@ -670,14 +671,65 @@ const cardForm = $("#cardForm");
 const checkoutTotalLg = $("#checkoutTotalLg");
 const thanksMsg = $("#thanksMsg");
 const thanksSummary = $("#thanksSummary");
+const deliverOpts = $$(".deliver-opt");
+const addrFields = $("#addrFields");
+const pickupInfo = $("#pickupInfo");
+const modeInput = checkoutForm.elements["mode"];
 
 let currentStep = 1;
 const TOTAL_STEPS = 3;
+const CHECKOUT_KEY = "pb_checkout_info";
+const REMEMBER_FIELDS = ["name", "phone", "email", "street", "city", "zip", "note"];
+
+function setMode(mode) {
+  modeInput.value = mode;
+  deliverOpts.forEach((b) => {
+    const active = b.dataset.mode === mode;
+    b.classList.toggle("active", active);
+    b.setAttribute("aria-selected", active ? "true" : "false");
+  });
+  const pickup = mode === "pickup";
+  addrFields.hidden = pickup;
+  pickupInfo.hidden = !pickup;
+  if (pickup) {
+    ["street", "city", "zip"].forEach((n) => checkoutForm.elements[n]?.classList.remove("invalid"));
+  }
+}
+
+function loadCheckoutInfo() {
+  let data = null;
+  try { data = JSON.parse(localStorage.getItem(CHECKOUT_KEY) || "null"); } catch { data = null; }
+  if (!data) return;
+  REMEMBER_FIELDS.forEach((n) => {
+    const el = checkoutForm.elements[n];
+    if (el && data[n] != null && data[n] !== "") el.value = data[n];
+  });
+  if (data.mode) setMode(data.mode);
+  const rem = checkoutForm.elements["remember"];
+  if (rem) rem.checked = true;
+}
+
+function saveCheckoutInfo() {
+  const rem = checkoutForm.elements["remember"];
+  if (rem && rem.checked) {
+    const data = { mode: modeInput.value };
+    REMEMBER_FIELDS.forEach((n) => {
+      const el = checkoutForm.elements[n];
+      data[n] = el ? el.value : "";
+    });
+    try { localStorage.setItem(CHECKOUT_KEY, JSON.stringify(data)); } catch {}
+  } else {
+    try { localStorage.removeItem(CHECKOUT_KEY); } catch {}
+  }
+}
+
+deliverOpts.forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
 
 function openCheckout() {
   if (cart.length === 0) return;
   currentStep = 1;
   showStep();
+  loadCheckoutInfo();
   checkoutTotalLg.textContent = fmt(cart.reduce((s, i) => s + itemTotal(i), 0));
   checkoutModal.classList.add("open");
   checkoutModal.setAttribute("aria-hidden", "false");
@@ -702,16 +754,26 @@ function showStep() {
   });
   checkoutBack.hidden = currentStep === 1 || currentStep === 3;
   if (currentStep === 1) checkoutNext.textContent = "Pokračovat k platbě";
-  else if (currentStep === 2) checkoutNext.textContent = "Zaplatit a dokončit";
+  else if (currentStep === 2) checkoutNext.textContent = nextLabelForStep2();
   else checkoutNext.textContent = "Zavřít";
 }
 
+function nextLabelForStep2() {
+  return checkoutForm.elements["pay"].value === "card-online"
+    ? "Zaplatit a dokončit"
+    : "Odeslat objednávku";
+}
+
 function validateStep1() {
-  const required = ["name", "phone", "email", "street", "city", "zip"];
+  const required = ["name", "phone", "email"];
+  if (modeInput.value !== "pickup") required.push("street", "city", "zip");
   let valid = true;
   required.forEach((n) => {
     const input = checkoutForm.elements[n];
-    if (!input.value.trim()) {
+    if (!input) return;
+    const empty = !input.value.trim();
+    const badEmail = n === "email" && !empty && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+    if (empty || badEmail) {
       input.classList.add("invalid");
       valid = false;
     } else {
@@ -741,15 +803,19 @@ function validateStep2() {
 function buildThanks() {
   const data = new FormData(checkoutForm);
   const pay = data.get("pay");
-  const payLabel = pay === "cash" ? "Hotově při převzetí"
-    : pay === "card-on" ? "Kartou při převzetí"
-    : "Online kartou (DEMO)";
+  const payLabel = pay === "cash" ? "Hotově při převzetí" : "Online platba (DEMO)";
+  const pickup = data.get("mode") === "pickup";
   const total = cart.reduce((s, i) => s + itemTotal(i), 0);
   const orderNo = "PB-" + Math.floor(100000 + Math.random() * 900000);
-  thanksMsg.textContent = `Brzy vás zkontaktujeme na čísle ${data.get("phone") || ""} a potvrdíme čas doručení.`;
+  thanksMsg.textContent = pickup
+    ? `Brzy vás zkontaktujeme na čísle ${data.get("phone") || ""}. Objednávku si vyzvednete na provozovně.`
+    : `Brzy vás zkontaktujeme na čísle ${data.get("phone") || ""} a potvrdíme čas doručení.`;
+  const whereRow = pickup
+    ? `<div><strong>Vyzvednutí:</strong> Plzeňská 86, 266 01 Beroun</div>`
+    : `<div><strong>Doručit na:</strong> ${data.get("street")}, ${data.get("zip")} ${data.get("city")}</div>`;
   thanksSummary.innerHTML = `
     <div><strong>Číslo objednávky:</strong> ${orderNo}</div>
-    <div><strong>Doručit na:</strong> ${data.get("street")}, ${data.get("zip")} ${data.get("city")}</div>
+    ${whereRow}
     <div><strong>Platba:</strong> ${payLabel}</div>
     <div><strong>Celkem:</strong> ${fmt(total)}</div>
   `;
@@ -777,6 +843,7 @@ checkoutNext.addEventListener("click", () => {
   }
   if (currentStep === 2) {
     if (!validateStep2()) return;
+    saveCheckoutInfo();
     buildThanks();
     currentStep = 3;
     showStep();
@@ -792,7 +859,9 @@ checkoutNext.addEventListener("click", () => {
 checkoutForm.addEventListener("change", (e) => {
   if (e.target.name === "pay") {
     cardForm.hidden = e.target.value !== "card-online";
+    if (currentStep === 2) checkoutNext.textContent = nextLabelForStep2();
   }
+  if (e.target.name === "remember") saveCheckoutInfo();
 });
 
 // Pomocné formátování karty

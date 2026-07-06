@@ -2205,11 +2205,19 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 
 .halves-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
-.half-block { display: grid; gap: 6px; }
+.half-block {
+  display: grid;
+  gap: 6px;
+  max-width: 50%;
+}
+.half-block[hidden] { display: none; }
+@media (max-width: 560px) {
+  .half-block { max-width: 100%; }
+}
 .half-block label {
   font-size: 11px;
   font-weight: 700;
@@ -2570,6 +2578,26 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 .checkout-btn:hover { background: #000; transform: translateY(-1px); }
 .checkout-btn:active { transform: scale(0.98); }
 
+.cart-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.cart-continue-btn {
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: var(--r-pill);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s var(--ease-spring);
+}
+.cart-continue-btn:hover { background: var(--surface-2); border-color: var(--ink); }
+.cart-continue-btn:active { transform: scale(0.98); }
+
 .cart-note {
   margin: 0;
   font-size: 11.5px;
@@ -2726,15 +2754,13 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 
 .pay-methods {
   display: grid;
-  gap: 8px;
-  font-size: 13px;
+  gap: 10px;
 }
-.pay-methods > span { font-weight: 700; color: var(--ink-2); }
 .pay-opt {
   display: flex;
-  align-items: flex-start;
-  gap: 11px;
-  padding: 14px 15px;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 16px;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-md);
   background: var(--surface);
@@ -2742,15 +2768,47 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 .pay-opt:hover { border-color: var(--ink); }
-.pay-opt input { accent-color: var(--ink); margin-top: 3px; }
-.pay-opt > span { display: flex; flex-direction: column; gap: 2px; }
-.pay-opt strong { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
-.pay-opt small { font-size: 12px; color: var(--muted); font-weight: 500; }
+.pay-opt input {
+  accent-color: var(--ink);
+  flex: 0 0 auto;
+  width: 19px;
+  height: 19px;
+}
+.pay-opt-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.pay-opt-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pay-opt-text strong { font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; }
+.pay-opt-text small { font-size: 12px; color: var(--muted); font-weight: 500; }
 .pay-opt:has(input:checked) {
   border-color: var(--ink);
-  background: var(--surface);
   box-shadow: 0 0 0 1px var(--ink), var(--shadow-sm);
 }
+.pay-visual { color: var(--verde); flex: 0 0 auto; display: inline-flex; }
+
+.pay-brands {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+.pay-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 27px;
+  padding: 0 3px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+.pay-brand svg { display: block; }
 
 .card-form {
   margin-top: 14px;
@@ -2758,6 +2816,121 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   border: 1px dashed var(--grigio-300);
   border-radius: var(--r-md);
   background: var(--surface-2);
+}
+
+/* ===== Doručení / vyzvednutí přepínač ===== */
+.deliver-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.deliver-opt {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.deliver-opt svg { color: var(--muted); flex: 0 0 auto; transition: color 0.15s ease; }
+.deliver-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.deliver-txt strong { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+.deliver-txt small { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+.deliver-opt:hover { border-color: var(--ink); }
+.deliver-opt.active {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink), var(--shadow-sm);
+}
+.deliver-opt.active svg { color: var(--ink); }
+
+/* ===== Rozestupy panelu kontaktu ===== */
+.step-panel[data-step="1"] > .form-grid,
+.step-panel[data-step="1"] > .addr-fields,
+.step-panel[data-step="1"] > .pickup-info,
+.step-panel[data-step="1"] > .switch-row { margin-top: 14px; }
+
+.form-field em {
+  font-style: normal;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ===== Vyzvednutí — info karta ===== */
+.pickup-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+}
+.pickup-info[hidden] { display: none; }
+.pickup-info svg { color: var(--verde); flex: 0 0 auto; margin-top: 1px; }
+.pickup-info > div { display: flex; flex-direction: column; gap: 3px; }
+.pickup-info strong { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+.pickup-info span { font-size: 12.5px; color: var(--muted); font-weight: 500; }
+
+/* ===== Zapamatovat údaje — Apple přepínač ===== */
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  cursor: pointer;
+}
+.switch-txt { display: flex; flex-direction: column; gap: 2px; }
+.switch-txt strong { font-size: 13.5px; font-weight: 700; letter-spacing: -0.01em; }
+.switch-txt small { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+.switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 46px;
+  height: 28px;
+}
+.switch input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.switch-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--grigio-300);
+  border-radius: 999px;
+  transition: background 0.22s ease;
+}
+.switch-slider::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.22);
+  transition: transform 0.24s var(--ease-spring);
+}
+.switch input:checked + .switch-slider { background: var(--verde); }
+.switch input:checked + .switch-slider::before { transform: translateX(18px); }
+.switch input:focus-visible + .switch-slider { box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.15); }
+
+@media (max-width: 560px) {
+  .deliver-toggle { grid-template-columns: 1fr; }
+  .pay-opt-body { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .pay-brands { flex-wrap: wrap; }
 }
 
 .checkout-foot {

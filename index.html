@@ -305,17 +305,16 @@
       <div class="modal-body">
         <div class="opt-group">
           <div class="opt-group-head">
-            <h4>Půlky pizzy</h4>
-            <span class="hint">Levá a pravá půlka může být jiná</span>
+            <h4>Vybrat druhou půlku</h4>
+            <span class="hint">Zkombinujte dvě chutě na jedné pizze</span>
           </div>
           <div class="halves-grid">
-            <div class="half-block">
+            <div class="half-block" hidden aria-hidden="true">
               <label>Levá půlka</label>
-              <select id="halfLeft"></select>
+              <select id="halfLeft" tabindex="-1"></select>
             </div>
             <div class="half-block">
-              <label>Pravá půlka</label>
-              <select id="halfRight"></select>
+              <select id="halfRight" aria-label="Druhá půlka"></select>
             </div>
           </div>
           <p class="hint-note">Cena vychází z dražší poloviny.</p>
@@ -421,7 +420,10 @@
         <div class="totals-row"><span>Doprava (Beroun)</span><span class="free-shipping">ZDARMA</span></div>
         <div class="totals-row total"><span>Celkem</span><span id="grandTotal">0 Kč</span></div>
       </div>
-      <button class="checkout-btn" id="checkoutBtn">Pokračovat k objednávce · <span id="checkoutTotal">0 Kč</span></button>
+      <div class="cart-actions">
+        <button class="checkout-btn" id="checkoutBtn">Pokračovat k platbě · <span id="checkoutTotal">0 Kč</span></button>
+        <button class="cart-continue-btn" id="cartContinueBtn" type="button">Zpět k nákupu</button>
+      </div>
       <p class="cart-note">Doprava po Berouně zdarma. Připravujeme i online platby.</p>
     </div>
   </aside>
@@ -437,32 +439,87 @@
       </div>
 
       <form class="checkout-body" id="checkoutForm" novalidate>
-        <!-- Step 1: kontakt -->
+        <!-- Step 1: doručení + kontakt -->
         <section class="step-panel active" data-step="1">
-          <h2 id="checkoutTitle">Kontaktní a doručovací údaje</h2>
+          <h2 id="checkoutTitle">Doručení a kontakt</h2>
+
+          <div class="deliver-toggle" role="tablist" aria-label="Způsob převzetí">
+            <button type="button" class="deliver-opt active" data-mode="delivery" role="tab" aria-selected="true">
+              <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.5h11v8.5H3z"/><path d="M14 10.5h3.6L21 14v2h-7z"/><circle cx="7" cy="18" r="1.7"/><circle cx="17.5" cy="18" r="1.7"/></svg>
+              <span class="deliver-txt"><strong>Doručit</strong><small>Rozvoz po Berouně zdarma</small></span>
+            </button>
+            <button type="button" class="deliver-opt" data-mode="pickup" role="tab" aria-selected="false">
+              <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 9.5V20h15V9.5"/><path d="M3 9.5 4.6 4h14.8L21 9.5a2.5 2.5 0 0 1-4.5 1.5 2.5 2.5 0 0 1-4.5 0 2.5 2.5 0 0 1-4.5 0A2.5 2.5 0 0 1 3 9.5z"/></svg>
+              <span class="deliver-txt"><strong>Vyzvednout</strong><small>Osobně na provozovně</small></span>
+            </button>
+          </div>
+          <input type="hidden" name="mode" value="delivery">
+
           <div class="form-grid">
             <label class="form-field"><span>Jméno a příjmení *</span><input type="text" name="name" required autocomplete="name"></label>
             <label class="form-field"><span>Telefon *</span><input type="tel" name="phone" required placeholder="+420 ___ ___ ___" autocomplete="tel"></label>
-            <label class="form-field full"><span>E-mail (pro potvrzení) *</span><input type="email" name="email" required autocomplete="email"></label>
-            <label class="form-field full"><span>Ulice a č. p. *</span><input type="text" name="street" required placeholder="Plzeňská 86" autocomplete="street-address"></label>
-            <label class="form-field"><span>Město *</span><input type="text" name="city" required value="Beroun" autocomplete="address-level2"></label>
-            <label class="form-field"><span>PSČ *</span><input type="text" name="zip" required placeholder="266 01" autocomplete="postal-code"></label>
-            <label class="form-field full"><span>Poznámka pro řidiče</span><textarea name="note" rows="2" placeholder="Patro, zvonek, alergie…"></textarea></label>
+            <label class="form-field full"><span>E-mail <em>(pro potvrzení)</em> *</span><input type="email" name="email" required autocomplete="email" placeholder="jan@email.cz"></label>
           </div>
+
+          <div class="addr-fields" id="addrFields">
+            <div class="form-grid">
+              <label class="form-field full"><span>Ulice a č. p. *</span><input type="text" name="street" placeholder="Plzeňská 86" autocomplete="street-address"></label>
+              <label class="form-field"><span>Město *</span><input type="text" name="city" value="Beroun" autocomplete="address-level2"></label>
+              <label class="form-field"><span>PSČ *</span><input type="text" name="zip" placeholder="266 01" autocomplete="postal-code"></label>
+            </div>
+          </div>
+
+          <div class="pickup-info" id="pickupInfo" hidden>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.4-6.5-10.2A6.5 6.5 0 0 1 12 4a6.5 6.5 0 0 1 6.5 6.8C18.5 15.6 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.3"/></svg>
+            <div>
+              <strong>Pizza Bellizzi — provozovna</strong>
+              <span>Plzeňská 86, 266 01 Beroun</span>
+              <span>Po–Ne 11:00–22:00 · připravíme do ~25 min</span>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <label class="form-field full"><span>Poznámka <em>(nepovinné)</em></span><textarea name="note" rows="2" placeholder="Patro, zvonek, alergie…"></textarea></label>
+          </div>
+
+          <label class="switch-row">
+            <span class="switch-txt"><strong>Zapamatovat údaje pro příště</strong><small>Uloží se jen ve vašem prohlížeči.</small></span>
+            <span class="switch"><input type="checkbox" name="remember"><span class="switch-slider"></span></span>
+          </label>
         </section>
 
         <!-- Step 2: platba -->
         <section class="step-panel" data-step="2">
-          <h2>Vyberte způsob platby</h2>
+          <h2>Způsob platby</h2>
           <div class="pay-methods">
-            <label class="pay-opt"><input type="radio" name="pay" value="cash" checked>
-              <span><strong>Hotově při převzetí</strong><small>Zaplatíte řidiči v hotovosti.</small></span>
+            <label class="pay-opt">
+              <input type="radio" name="pay" value="cash" checked>
+              <span class="pay-opt-body">
+                <span class="pay-opt-text"><strong>Hotově při převzetí</strong><small>Zaplatíte při doručení nebo vyzvednutí.</small></span>
+                <span class="pay-visual" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/></svg>
+                </span>
+              </span>
             </label>
-            <label class="pay-opt"><input type="radio" name="pay" value="card-on">
-              <span><strong>Kartou při převzetí</strong><small>Řidič přiveze platební terminál.</small></span>
-            </label>
-            <label class="pay-opt"><input type="radio" name="pay" value="card-online">
-              <span><strong>Online kartou</strong><small>Simulace platby — bez skutečné transakce.</small></span>
+            <label class="pay-opt">
+              <input type="radio" name="pay" value="card-online">
+              <span class="pay-opt-body">
+                <span class="pay-opt-text"><strong>Online platba</strong><small>Kartou, Apple Pay nebo Google Pay.</small></span>
+                <span class="pay-brands" aria-hidden="true">
+                  <span class="pay-brand" title="Visa">
+                    <svg viewBox="0 0 40 24" width="40" height="24" role="img" aria-label="Visa"><text x="20" y="17" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-style="italic" font-weight="700" letter-spacing="0.5" fill="#1434CB">VISA</text></svg>
+                  </span>
+                  <span class="pay-brand" title="Mastercard">
+                    <svg viewBox="0 0 40 24" width="40" height="24" role="img" aria-label="Mastercard"><circle cx="16" cy="12" r="7" fill="#EB001B"/><circle cx="24" cy="12" r="7" fill="#F79E1B"/><path d="M20 6.6a7 7 0 0 0 0 10.8 7 7 0 0 0 0-10.8z" fill="#FF5F00"/></svg>
+                  </span>
+                  <span class="pay-brand" title="Apple Pay">
+                    <svg viewBox="0 0 40 24" width="40" height="24" role="img" aria-label="Apple Pay"><path fill="#000" d="M12.4 7.5c-.4.48-1.04.85-1.68.8-.08-.63.23-1.29.6-1.7.4-.48 1.1-.83 1.66-.85.07.66-.19 1.3-.58 1.75zm.57.9c-.93-.05-1.72.52-2.14.52-.43 0-1.11-.5-1.83-.49-.94.01-1.82.55-2.3 1.4-.98 1.7-.25 4.22.7 5.6.47.68 1.02 1.45 1.75 1.42.7-.03.97-.45 1.81-.45.85 0 1.09.45 1.83.44.76-.01 1.24-.69 1.7-1.38.54-.79.76-1.55.77-1.59-.02-.01-1.47-.57-1.49-2.26-.01-1.41 1.15-2.09 1.2-2.12-.66-.97-1.68-1.08-2.04-1.1z"/><text x="19" y="16" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#000">Pay</text></svg>
+                  </span>
+                  <span class="pay-brand" title="Google Pay">
+                    <svg viewBox="0 0 44 24" width="44" height="24" role="img" aria-label="Google Pay"><g transform="translate(4,5.2) scale(0.285)"><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/></g><text x="20" y="16" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#5F6368">Pay</text></svg>
+                  </span>
+                </span>
+              </span>
             </label>
           </div>
 
