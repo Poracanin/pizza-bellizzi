@@ -489,6 +489,48 @@ modalAdd.addEventListener("click", () => {
 });
 
 /* ============================================================
+   Polední akce – modální okno (3 pizzy za 179 Kč)
+   ============================================================ */
+
+const lunchModal = $("#lunchModal");
+if (lunchModal) {
+  const lunchClose = $("#lunchModalClose");
+
+  const openLunchModal = () => {
+    lunchModal.classList.add("open");
+    lunchModal.setAttribute("aria-hidden", "false");
+    lockScroll();
+  };
+  const closeLunchModal = () => {
+    if (!lunchModal.classList.contains("open")) return;
+    lunchModal.classList.remove("open");
+    lunchModal.setAttribute("aria-hidden", "true");
+    unlockScroll();
+  };
+
+  // Otevření z karet akce (klik i klávesnice)
+  $$("[data-lunch-open]").forEach((card) => {
+    card.addEventListener("click", openLunchModal);
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLunchModal(); }
+    });
+  });
+
+  // CTA v modalu → zavřít a přejít na výběr pizz
+  const lunchOrder = $("[data-lunch-order]", lunchModal);
+  if (lunchOrder) lunchOrder.addEventListener("click", closeLunchModal);
+
+  lunchClose.addEventListener("click", closeLunchModal);
+  lunchModal.addEventListener("click", (e) => { if (e.target === lunchModal) closeLunchModal(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lunchModal.classList.contains("open")) closeLunchModal();
+  });
+
+  // Automatické zobrazení akce ihned po načtení stránky
+  openLunchModal();
+}
+
+/* ============================================================
    Cart
    ============================================================ */
 

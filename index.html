@@ -84,32 +84,50 @@
           <p>Vyzvedněte si akční nabídky tento týden.</p>
         </div>
       </div>
-      <div class="deals-grid">
-        <article class="deal-card red">
-          <span class="deal-tag">Akce týdne</span>
-          <h3>2× Bellizzi + 2× nápoj</h3>
-          <p>Náš podnikový mix se slevou 12 %. Klasická velikost, hotově nebo kartou.</p>
-          <div class="deal-foot">
-            <span class="deal-price"><s>520 Kč</s> 459 Kč</span>
-            <a class="btn-primary deal-cta" href="#pizzy">Objednat</a>
+      <div class="deals-grid deals-grid-3">
+        <article class="deal-pizza" data-lunch-open tabindex="0" role="button" aria-label="Polední akce – Nivová za 179 Kč, sleva 18 %, zobrazit detail">
+          <span class="deal-pizza-flag">Akce · Po–Pá do 14:00</span>
+          <span class="deal-pizza-disc"><b>−18</b><i>%</i></span>
+          <div class="deal-pizza-media">
+            <img src="jidla-pizza-vylepsene-webp/15-nivova.webp" alt="Pizza Nivová" loading="lazy" width="600" height="600">
+          </div>
+          <div class="deal-pizza-body">
+            <h3>Nivová</h3>
+            <p>smetanový základ, mozzarella, niva</p>
+            <div class="deal-pizza-foot">
+              <span class="deal-pizza-price"><s>218 Kč</s><b>179 Kč</b></span>
+              <span class="deal-pizza-cta">Detail akce</span>
+            </div>
           </div>
         </article>
-        <article class="deal-card green">
-          <span class="deal-tag">Rozvoz</span>
-          <h3>Po Berouně zdarma</h3>
-          <p>Minimální objednávka 250 Kč. Mimo Beroun se domluvíme telefonicky.</p>
-          <div class="deal-foot">
-            <span class="deal-price">0 Kč doprava</span>
-            <a class="btn-secondary dark deal-cta" href="#rozvoz">Kam dovážíme</a>
+        <article class="deal-pizza" data-lunch-open tabindex="0" role="button" aria-label="Polední akce – Picante za 179 Kč, sleva 18 %, zobrazit detail">
+          <span class="deal-pizza-flag">Akce · Po–Pá do 14:00</span>
+          <span class="deal-pizza-disc"><b>−18</b><i>%</i></span>
+          <div class="deal-pizza-media">
+            <img src="jidla-pizza-vylepsene-webp/13-picante.webp" alt="Pizza Picante" loading="lazy" width="600" height="600">
+          </div>
+          <div class="deal-pizza-body">
+            <h3>Picante</h3>
+            <p>pikantní salám, kozí rohy, feferonky</p>
+            <div class="deal-pizza-foot">
+              <span class="deal-pizza-price"><s>218 Kč</s><b>179 Kč</b></span>
+              <span class="deal-pizza-cta">Detail akce</span>
+            </div>
           </div>
         </article>
-        <article class="deal-card black">
-          <span class="deal-tag">Studentská</span>
-          <h3>Každé úterý −10 %</h3>
-          <p>Po předložení studentské karty (ISIC) získáte 10 % slevu na celou objednávku.</p>
-          <div class="deal-foot">
-            <span class="deal-price">−10 %</span>
-            <a class="btn-secondary dark deal-cta" href="tel:+420722177006">Zavolat</a>
+        <article class="deal-pizza" data-lunch-open tabindex="0" role="button" aria-label="Polední akce – Selská za 179 Kč, sleva 22 %, zobrazit detail">
+          <span class="deal-pizza-flag">Akce · Po–Pá do 14:00</span>
+          <span class="deal-pizza-disc"><b>−22</b><i>%</i></span>
+          <div class="deal-pizza-media">
+            <img src="jidla-pizza-vylepsene-webp/17-selska.webp" alt="Pizza Selská" loading="lazy" width="600" height="600">
+          </div>
+          <div class="deal-pizza-body">
+            <h3>Selská</h3>
+            <p>slanina, klobása, zelí</p>
+            <div class="deal-pizza-foot">
+              <span class="deal-pizza-price"><s>230 Kč</s><b>179 Kč</b></span>
+              <span class="deal-pizza-cta">Detail akce</span>
+            </div>
           </div>
         </article>
       </div>
@@ -313,6 +331,64 @@
           <span class="total" id="modalTotal">0 Kč</span>
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Polední akce modal -->
+  <div class="modal-backdrop lunch-modal" id="lunchModal" aria-hidden="true">
+    <div class="modal lunch-modal-box" role="dialog" aria-modal="true" aria-labelledby="lunchModalTitle">
+      <button class="modal-close" id="lunchModalClose" aria-label="Zavřít">✕</button>
+      <article class="lunch-deal">
+        <div class="lunch-deal-info">
+          <span class="lunch-badge">
+            <span class="lunch-badge-dot" aria-hidden="true"></span>
+            Polední akce · Po–Pá do 14:00
+          </span>
+          <h3 class="lunch-title" id="lunchModalTitle">3 vybrané pizzy<span>jen za 179 Kč</span></h3>
+          <p class="lunch-sub">Nivová, Picante a Selská za jednu akční cenu. Platí každý všední den (Po–Pá) do 14:00 — na provozovně i s rozvozem po Berouně.</p>
+          <div class="lunch-meta">
+            <span class="lunch-chip lunch-chip-save">Ušetříte až 51 Kč</span>
+            <span class="lunch-chip">Rozvoz po Berouně zdarma</span>
+          </div>
+          <a class="btn-primary lunch-cta" href="#pizzy" data-lunch-order>Objednat za 179 Kč</a>
+        </div>
+
+        <div class="lunch-deal-pizzas">
+          <div class="lunch-pizza">
+            <div class="lunch-pizza-img">
+              <img src="jidla-pizza-vylepsene-webp/15-nivova.webp" alt="Pizza Nivová" loading="lazy" width="200" height="200">
+              <span class="lunch-save">−39 Kč</span>
+            </div>
+            <div class="lunch-pizza-text">
+              <strong>Nivová</strong>
+              <small>smetanový základ, mozzarella, niva</small>
+              <span class="lunch-price"><s>218 Kč</s> 179 Kč</span>
+            </div>
+          </div>
+          <div class="lunch-pizza">
+            <div class="lunch-pizza-img">
+              <img src="jidla-pizza-vylepsene-webp/13-picante.webp" alt="Pizza Picante" loading="lazy" width="200" height="200">
+              <span class="lunch-save">−39 Kč</span>
+            </div>
+            <div class="lunch-pizza-text">
+              <strong>Picante</strong>
+              <small>pikantní salám, kozí rohy, feferonky</small>
+              <span class="lunch-price"><s>218 Kč</s> 179 Kč</span>
+            </div>
+          </div>
+          <div class="lunch-pizza">
+            <div class="lunch-pizza-img">
+              <img src="jidla-pizza-vylepsene-webp/17-selska.webp" alt="Pizza Selská" loading="lazy" width="200" height="200">
+              <span class="lunch-save">−51 Kč</span>
+            </div>
+            <div class="lunch-pizza-text">
+              <strong>Selská</strong>
+              <small>slanina, klobása, zelí</small>
+              <span class="lunch-price"><s>230 Kč</s> 179 Kč</span>
+            </div>
+          </div>
+        </div>
+      </article>
     </div>
   </div>
 
