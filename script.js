@@ -169,17 +169,19 @@ function basePrice(pizza) {
 }
 
 function calcItemUnit(item) {
-  // item: { leftId, rightId, base, extras: [ids] }
+  // item: { leftId, rightId, base, extras: [ids], dealPrice? }
   const left = findPizza(item.leftId);
   const right = findPizza(item.rightId);
-  // Cena vychází z dražší poloviny (jak je v Itálii zvykem)
-  const halfPrice = Math.max(left.price, right.price);
   const isHalfHalf = item.leftId !== item.rightId;
   const naturalBase = isHalfHalf
     ? (left.base === right.base ? left.base : "tomato")
     : left.base;
   const baseCharge = item.base !== naturalBase ? BASE_CHANGE_PRICE : 0;
   const extrasCharge = item.extras.length * EXTRA_PRICE;
+  // Akční pizzy z polední nabídky mají pevnou cenu, jinak vychází z dražší poloviny
+  const halfPrice = item.dealPrice != null
+    ? item.dealPrice
+    : Math.max(left.price, right.price);
   return halfPrice + baseCharge + extrasCharge;
 }
 
@@ -204,8 +206,8 @@ const navLinks = $$(".nav a");
 const topButton = $(".to-top");
 
 let currentFilter = "all";
-// Na mobilu defaultně seznam, na desktopu dlaždice
-let currentView = window.matchMedia("(max-width: 640px)").matches ? "list" : "grid";
+// Dlaždice jako výchozí zobrazení (na mobilu 2 sloupce), seznam je volitelný přes přepínač
+let currentView = "grid";
 
 function renderPizzas(filter = currentFilter) {
   currentFilter = filter;
@@ -508,17 +510,13 @@ if (lunchModal) {
     unlockScroll();
   };
 
-  // Otevření z karet akce (klik i klávesnice)
+  // Otevření z karet akce (klik i klávesnice) – volitelné, pokud existují
   $$("[data-lunch-open]").forEach((card) => {
     card.addEventListener("click", openLunchModal);
     card.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLunchModal(); }
     });
   });
-
-  // CTA v modalu → zavřít a přejít na výběr pizz
-  const lunchOrder = $("[data-lunch-order]", lunchModal);
-  if (lunchOrder) lunchOrder.addEventListener("click", closeLunchModal);
 
   lunchClose.addEventListener("click", closeLunchModal);
   lunchModal.addEventListener("click", (e) => { if (e.target === lunchModal) closeLunchModal(); });
@@ -627,7 +625,7 @@ function renderCart() {
       <div class="cart-item">
         <img src="${itemImg(item)}" alt="">
         <div class="cart-item-info">
-          <strong>${itemTitle(item)}</strong>
+          <strong>${itemTitle(item)}${item.dealLabel ? ` <span class="cart-item-deal">${item.dealLabel}</span>` : ""}</strong>
           <span class="meta">${describeItem(item)}</span>
           <span class="meta">${fmt(unit)} / ks</span>
         </div>
@@ -857,6 +855,26 @@ drinkGrid.addEventListener("click", (e) => {
     qty: 1
   });
   openCart();
+});
+
+/* Karty polední akce – přidání pizzy za akční cenu (179 Kč) rovnou do košíku */
+$$("[data-deal-add]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const pizza = findPizza(Number(btn.dataset.dealAdd));
+    if (!pizza) return;
+    addToCart({
+      id: uid(),
+      kind: "pizza",
+      leftId: pizza.id,
+      rightId: pizza.id,
+      base: pizza.base,
+      extras: [],
+      qty: 1,
+      dealPrice: Number(btn.dataset.dealPrice),
+      dealLabel: "Polední akce"
+    });
+    openCart();
+  });
 });
 
 /* ============================================================

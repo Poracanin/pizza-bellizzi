@@ -572,7 +572,6 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
     linear-gradient(155deg, var(--rosso) 0%, var(--rosso-dark) 62%, #8f1519 100%);
   color: var(--bianco);
   box-shadow: var(--shadow-pop);
-  cursor: pointer;
   text-align: left;
   transition: transform .18s ease, box-shadow .18s ease;
 }
@@ -701,8 +700,9 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 .deal-pizza-cta {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 9px 15px;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
   border-radius: var(--r-pill);
   background: var(--bianco);
   color: var(--rosso-dark);
@@ -710,8 +710,16 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   font-weight: 800;
   white-space: nowrap;
   box-shadow: var(--shadow-sm);
-  transition: background .18s ease, transform .18s ease;
+  cursor: pointer;
+  transition: background .18s ease, transform .12s ease, box-shadow .18s ease;
 }
+.deal-pizza-cta svg { width: 15px; height: 15px; color: var(--rosso); }
+.deal-pizza-cta:hover {
+  background: #fff6d8;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0,0,0,.22);
+}
+.deal-pizza-cta:active { transform: translateY(0) scale(.97); }
 .deal-pizza:hover .deal-pizza-cta { background: #fff6d8; }
 
 /* ===== Polední akce – propracovaná nabídka (modal) ===== */
@@ -2186,6 +2194,19 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
 .cart-item-info { display: grid; gap: 4px; min-width: 0; }
 .cart-item-info strong { font-size: 14px; }
 .cart-item-info .meta { font-size: 12px; color: var(--grigio-500); line-height: 1.3; }
+.cart-item-deal {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  background: var(--rosso);
+  color: var(--bianco);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
 
 .cart-item-side {
   display: flex;
@@ -2704,9 +2725,42 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   .filters::-webkit-scrollbar { display: none; }
   .chip { flex: 0 0 auto; white-space: nowrap; }
 
-  /* Default na mobilu = seznam, fotka přesný čtverec až ke spodní hraně karty */
-  .pizza-grid { grid-template-columns: 1fr; }
-  .pizza-grid.view-list { gap: 8px; }
+  /* Dlaždice na mobilu = 2 sloupce (výchozí), seznam = 1 sloupec */
+  .pizza-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .pizza-grid.view-list { grid-template-columns: 1fr; gap: 8px; }
+
+  /* Vypiplané dlaždice na mobilu – čistší, kompaktní, tlačítka pod sebou */
+  .pizza-grid:not(.view-list) .pizza-card { border-radius: 18px; }
+  .pizza-grid:not(.view-list) .pizza-card:hover { transform: none; }
+  .pizza-grid:not(.view-list) .pizza-badges { top: 8px; right: 8px; gap: 4px; }
+  .pizza-grid:not(.view-list) .pizza-badge { padding: 3px 7px; font-size: 9px; }
+  .pizza-grid:not(.view-list) .pizza-body { padding: 12px 12px 13px; }
+  .pizza-grid:not(.view-list) .pizza-body h3 { font-size: 16px; line-height: 1.12; }
+  .pizza-grid:not(.view-list) .pizza-desc {
+    margin-top: 4px;
+    font-size: 11.5px;
+    line-height: 1.32;
+    min-height: 30px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .pizza-grid:not(.view-list) .pizza-allerg { display: none; }
+  .pizza-grid:not(.view-list) .pizza-price-row { padding-top: 9px; }
+  .pizza-grid:not(.view-list) .price { font-size: 23px; }
+  .pizza-grid:not(.view-list) .price small { font-size: 12px; }
+  .pizza-grid:not(.view-list) .pizza-actions {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-top: 11px;
+  }
+  .pizza-grid:not(.view-list) .btn-edit,
+  .pizza-grid:not(.view-list) .btn-quick-add {
+    width: 100%;
+    min-height: 40px;
+    font-size: 13px;
+  }
   .view-list .pizza-card {
     height: 128px;
     align-items: stretch;

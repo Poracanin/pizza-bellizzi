@@ -85,7 +85,7 @@
         </div>
       </div>
       <div class="deals-grid deals-grid-3">
-        <article class="deal-pizza" data-lunch-open tabindex="0" role="button" aria-label="Polední akce – Nivová za 179 Kč, sleva 18 %, zobrazit detail">
+        <article class="deal-pizza">
           <span class="deal-pizza-flag">Akce · Po–Pá do 14:00</span>
           <span class="deal-pizza-disc"><b>−18</b><i>%</i></span>
           <div class="deal-pizza-media">
@@ -96,11 +96,14 @@
             <p>smetanový základ, mozzarella, niva</p>
             <div class="deal-pizza-foot">
               <span class="deal-pizza-price"><s>218 Kč</s><b>179 Kč</b></span>
-              <span class="deal-pizza-cta">Detail akce</span>
+              <button type="button" class="deal-pizza-cta" data-deal-add="15" data-deal-price="179" aria-label="Přidat pizzu Nivová za 179 Kč do košíku">
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21.5 8H6.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.6" fill="currentColor"/><circle cx="17" cy="20" r="1.6" fill="currentColor"/></svg>
+                Do košíku
+              </button>
             </div>
           </div>
         </article>
-        <article class="deal-pizza" data-lunch-open tabindex="0" role="button" aria-label="Polední akce – Picante za 179 Kč, sleva 18 %, zobrazit detail">
+        <article class="deal-pizza">
           <span class="deal-pizza-flag">Akce · Po–Pá do 14:00</span>
           <span class="deal-pizza-disc"><b>−18</b><i>%</i></span>
           <div class="deal-pizza-media">
@@ -111,11 +114,14 @@
             <p>pikantní salám, kozí rohy, feferonky</p>
             <div class="deal-pizza-foot">
               <span class="deal-pizza-price"><s>218 Kč</s><b>179 Kč</b></span>
-              <span class="deal-pizza-cta">Detail akce</span>
+              <button type="button" class="deal-pizza-cta" data-deal-add="13" data-deal-price="179" aria-label="Přidat pizzu Picante za 179 Kč do košíku">
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21.5 8H6.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.6" fill="currentColor"/><circle cx="17" cy="20" r="1.6" fill="currentColor"/></svg>
+                Do košíku
+              </button>
             </div>
           </div>
         </article>
-        <article class="deal-pizza" data-lunch-open tabindex="0" role="button" aria-label="Polední akce – Selská za 179 Kč, sleva 22 %, zobrazit detail">
+        <article class="deal-pizza">
           <span class="deal-pizza-flag">Akce · Po–Pá do 14:00</span>
           <span class="deal-pizza-disc"><b>−22</b><i>%</i></span>
           <div class="deal-pizza-media">
@@ -126,7 +132,10 @@
             <p>slanina, klobása, zelí</p>
             <div class="deal-pizza-foot">
               <span class="deal-pizza-price"><s>230 Kč</s><b>179 Kč</b></span>
-              <span class="deal-pizza-cta">Detail akce</span>
+              <button type="button" class="deal-pizza-cta" data-deal-add="17" data-deal-price="179" aria-label="Přidat pizzu Selská za 179 Kč do košíku">
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21.5 8H6.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.6" fill="currentColor"/><circle cx="17" cy="20" r="1.6" fill="currentColor"/></svg>
+                Do košíku
+              </button>
             </div>
           </div>
         </article>
@@ -344,13 +353,11 @@
             <span class="lunch-badge-dot" aria-hidden="true"></span>
             Polední akce · Po–Pá do 14:00
           </span>
-          <h3 class="lunch-title" id="lunchModalTitle">3 vybrané pizzy<span>jen za 179 Kč</span></h3>
+          <h3 class="lunch-title" id="lunchModalTitle">Vyber si pizzu<span>jen za 179 Kč</span></h3>
           <p class="lunch-sub">Nivová, Picante a Selská za jednu akční cenu. Platí každý všední den (Po–Pá) do 14:00 — na provozovně i s rozvozem po Berouně.</p>
           <div class="lunch-meta">
             <span class="lunch-chip lunch-chip-save">Ušetříte až 51 Kč</span>
-            <span class="lunch-chip">Rozvoz po Berouně zdarma</span>
           </div>
-          <a class="btn-primary lunch-cta" href="#pizzy" data-lunch-order>Objednat za 179 Kč</a>
         </div>
 
         <div class="lunch-deal-pizzas">
