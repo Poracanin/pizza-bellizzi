@@ -562,3 +562,73 @@ button:hover{transform:translateY(-1px)}
 @media (max-width:560px){.no-cfg-hero{flex-direction:column;align-items:flex-start;gap:12px}.no-pizza-viz{align-self:center}.cfg-foot{flex-wrap:wrap}.cfg-foot .no-qty-row{width:100%}}
 @media (max-width:760px){.nav-rail{width:46px;padding-left:5px}.nav-item{min-height:44px}.nav-label{font-size:10.5px}.admin-header{padding:15px 18px 14px;gap:12px}.admin-brand{min-width:0}.admin-brand-mark{width:40px;height:40px}.admin-brand-word{font-size:22px}.admin-brand-sub{font-size:9.5px;letter-spacing:.13em}.mega-order-btn{padding:12px 14px}.menu-grid,.promo-items,.add-list,.income-grid,.extras-settings{grid-template-columns:1fr}}
 @media (max-width:640px){.done-row{flex-wrap:wrap}.done-time{display:none}}
+
+/* ==========================================================================
+   Celebrace – „Objednávka je na cestě" (kurýr vyráží s pizzou)
+   Přehraje se při odeslání objednávky na rozvoz. Text nahoře, animovaná
+   scéna dole (na mobilu úplně dole, na PC velká přes celou obrazovku).
+   ========================================================================== */
+@keyframes cel-drift{from{transform:translateX(0)}to{transform:translateX(140px)}}
+@keyframes cel-sway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
+@keyframes cel-puff{0%{transform:translate(0,0) scale(.4);opacity:.75}100%{transform:translate(90px,-40px) scale(1.7);opacity:0}}
+@keyframes cel-pop{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes cel-numglow{0%,100%{text-shadow:0 3px 20px rgba(0,0,0,.55)}50%{text-shadow:0 0 30px rgba(255,206,105,.95),0 0 66px rgba(255,150,60,.6),0 3px 20px rgba(0,0,0,.55)}}
+@keyframes cel-shine{0%{transform:translateX(-140%)}55%,100%{transform:translateX(320%)}}
+@keyframes cel-dotpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.55);opacity:.45}}
+
+.cel-overlay{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;
+  background:radial-gradient(130% 92% at 50% -12%,#12314f 0%,#0a1420 55%,#05080e 100%);
+  animation:fadeIn .22s ease;overscroll-behavior:contain;cursor:pointer}
+
+/* ---- animovaná scéna (kurýr + auto) ---- */
+.cel-view{position:relative;flex:1;min-height:0;overflow:hidden;background:linear-gradient(#7fb5e0,#cfe4f2)}
+.cel-stage{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:0 0;
+  transform:translate(50%,58%) scale(.62) translate(-800px,-560px);will-change:transform}
+.cel-vignette{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 200px rgba(8,10,18,.45)}
+.cel-scene-fade{position:absolute;left:0;right:0;top:0;height:190px;pointer-events:none;
+  background:linear-gradient(rgba(6,10,18,.6),transparent)}
+
+/* ---- text nahoře ---- */
+.cel-header{flex:none;position:relative;z-index:2;text-align:center;padding:36px 24px 28px;color:#fff}
+.cel-badge{display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;
+  background:rgba(214,34,42,.18);border:1px solid rgba(255,120,120,.4);color:#ffd9d0;
+  font:800 12px 'Geist';text-transform:uppercase;letter-spacing:.14em;animation:cel-pop .5s .05s both}
+.cel-badge-dot{width:8px;height:8px;border-radius:50%;background:#ff5a4d;animation:cel-dotpulse 1.4s ease-in-out infinite}
+.cel-title{margin:16px 0 0;font:900 clamp(29px,4.8vw,60px)/1.02 'Geist',system-ui,sans-serif;
+  letter-spacing:-.02em;color:#fff;text-shadow:0 4px 26px rgba(0,0,0,.5);animation:cel-pop .5s .1s both}
+.cel-num{display:inline-block;margin:8px 0 2px;font:900 clamp(62px,12.5vw,168px)/1 'Geist Mono','Geist',monospace;
+  letter-spacing:-.03em;color:#fff;animation:cel-pop .55s .16s both,cel-numglow 2.6s 1s ease-in-out infinite}
+.cel-num-hash{color:#ffb057}
+.cel-meta{margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 16px;animation:cel-pop .5s .22s both}
+.cel-name{font:800 clamp(16px,2.3vw,26px) 'Geist';color:#fff}
+.cel-eta{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;
+  background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);font:700 14px 'Geist';color:#fff;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.cel-chips{margin-top:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;animation:cel-pop .5s .28s both}
+.cel-chip{max-width:min(90vw,620px);padding:8px 14px;border-radius:12px;background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.13);font:600 12.5px 'Geist';color:rgba(255,255,255,.9);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cel-chip strong{color:#fff;font-weight:800}
+.cel-done{position:relative;overflow:hidden;margin-top:22px;padding:15px 36px;border-radius:999px;border:none;
+  background:linear-gradient(135deg,#e8323b,#c0161d);color:#fff;font:800 15px 'Geist';cursor:pointer;
+  box-shadow:0 12px 30px rgba(180,20,26,.5);animation:cel-pop .5s .34s both}
+.cel-done::after{content:"";position:absolute;top:0;left:0;width:38%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:translateX(-140%);animation:cel-shine 2.8s 1.2s ease-in-out infinite}
+.cel-done:hover{transform:translateY(-1px)}
+.cel-hint{position:absolute;left:0;right:0;bottom:12px;z-index:4;text-align:center;
+  font:600 11px 'Geist';color:rgba(255,255,255,.5);pointer-events:none;letter-spacing:.02em}
+
+/* na menších obrazovkách trochu stáhnout text, ať zbyde dost místa pro scénu dole */
+@media (max-width:760px){
+  .cel-header{padding:24px 18px 18px}
+  .cel-title{margin-top:12px}
+  .cel-num{margin-top:6px}
+  .cel-chips .cel-chip{max-width:88vw}
+  .cel-done{margin-top:16px;padding:13px 30px}
+}
+@media (max-height:560px){
+  .cel-header{padding:16px 16px 12px}
+  .cel-num{font-size:clamp(48px,11vw,90px)}
+  .cel-chips{display:none}
+}
