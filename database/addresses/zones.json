@@ -65,6 +65,7 @@
     { "code": 531243, "name": "Hýskov", "default_zone": "zone-50" },
     { "code": 531839, "name": "Tetín", "default_zone": "zone-50" },
     { "code": 531880, "name": "Trubská", "default_zone": "zone-50" },
+    { "code": 531944, "name": "Vráž", "default_zone": "zone-50" },
     { "code": 531332, "name": "Koněprusy", "default_zone": "zone-60" },
     { "code": 599417, "name": "Železná", "default_zone": "zone-60" },
     { "code": 531596, "name": "Nižbor", "default_zone": "zone-80" },

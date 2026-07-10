@@ -291,7 +291,7 @@
       elements.selection.innerHTML = `
         <div class="side-eyebrow">Rozvozová oblast</div>
         <div class="selection-title">Beroun a okolí</div>
-        <div class="selection-meta"><span>23 obcí</span><span>8 cenových pásem</span></div>
+        <div class="selection-meta"><span>24 obcí</span><span>8 cenových pásem</span></div>
       `;
       return;
     }
