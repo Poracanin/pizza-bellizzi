@@ -582,9 +582,10 @@
 
   <!-- ============ CELEBRACE: OBJEDNÁVKA NA CESTĚ ============ -->
   <div class="pb-cel" id="pbCel" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Objednávka odeslána">
+    <img class="pb-cel-logo" src="assets/logo.png" alt="" aria-hidden="true">
     <div class="pb-cel-card">
       <span class="pb-cel-check" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
       </span>
       <span class="pb-cel-badge">Objednávka přijata</span>
       <h2 class="pb-cel-title" id="pbCelTitle">Vaše pizza je na cestě</h2>
@@ -594,7 +595,6 @@
         <span class="pb-cel-chip pb-cel-total" id="pbCelTotal">0 Kč</span>
       </div>
       <p class="pb-cel-sub" id="pbCelSub">Brzy vám zavoláme a potvrdíme čas doručení.</p>
-      <button class="pb-cel-done" id="pbCelDone" type="button">Hotovo</button>
     </div>
 
     <div class="pb-cel-stage-wrap">
@@ -747,6 +747,8 @@
       <div class="pb-cel-fade" aria-hidden="true"></div>
       <div class="pb-cel-vignette" aria-hidden="true"></div>
     </div>
+
+    <button class="pb-cel-done" id="pbCelDone" type="button">Hotovo</button>
   </div>
 
   <script src="script.js"></script>

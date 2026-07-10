@@ -3493,45 +3493,63 @@ body.no-scroll {
 }
 .pb-cel.open { display: flex; animation: pbcel-in .28s ease; }
 
-/* horní bílá karta s potvrzením */
+/* jemné logo nahoře „do ztracena" */
+.pb-cel-logo {
+  position: absolute; top: clamp(14px, 3vh, 34px); left: 50%; transform: translateX(-50%);
+  width: clamp(88px, 12vw, 132px); height: auto; z-index: 1; pointer-events: none;
+  opacity: .085;
+  -webkit-mask-image: linear-gradient(180deg, #000 42%, transparent 96%);
+  mask-image: linear-gradient(180deg, #000 42%, transparent 96%);
+  animation: pbcel-in .8s .1s both;
+}
+
+/* horní bílá karta s potvrzením – vzdušný „apple" layout */
 .pb-cel-card {
-  flex: none; position: relative; z-index: 2;
-  display: flex; flex-direction: column; align-items: center; text-align: center;
-  padding: 34px 22px 26px; background: var(--surface, #fff);
-  animation: pbcel-cardin .45s var(--ease-spring) both;
+  flex: 1; min-height: 0; position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  padding: clamp(72px, 12vh, 128px) 22px 22px; background: transparent;
+  animation: pbcel-cardin .5s var(--ease-spring) both;
 }
 .pb-cel-check {
-  width: 52px; height: 52px; border-radius: 50%;
+  width: 50px; height: 50px; border-radius: 50%;
   background: var(--verde-soft, #e8f4ec); color: var(--verde, #0a8a3e);
-  display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
-  animation: pbcel-check .5s .12s var(--ease-spring) both;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+  box-shadow: 0 0 0 8px rgba(10,138,62,.06);
+  animation: pbcel-check .55s .14s var(--ease-spring) both;
 }
 .pb-cel-badge {
-  font: 700 12px/1 var(--font-heading); letter-spacing: .14em;
+  font: 700 11.5px/1 var(--font-heading); letter-spacing: .16em;
   text-transform: uppercase; color: var(--verde-dark, #0a6e34);
 }
 .pb-cel-title {
-  margin: 10px 0 0; letter-spacing: -.02em; color: var(--ink);
-  font: 800 clamp(22px, 3.2vw, 34px)/1.05 var(--font-heading);
+  margin: 12px 0 0; letter-spacing: -.025em; color: var(--ink);
+  font: 800 clamp(23px, 3.4vw, 36px)/1.04 var(--font-heading);
 }
-.pb-cel-num { margin-top: 10px; font: 500 14px var(--font-body); color: var(--muted); }
-.pb-cel-num b { font: 700 15px var(--font-mono); color: var(--ink); letter-spacing: .01em; }
-.pb-cel-meta { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-.pb-cel-chip { padding: 8px 15px; border-radius: var(--r-pill); font: 700 13px var(--font-heading); border: 1px solid var(--line); }
+.pb-cel-num { margin-top: 12px; font: 500 13.5px var(--font-body); color: var(--muted); }
+.pb-cel-num b { font: 700 14.5px var(--font-mono); color: var(--ink); letter-spacing: .01em; }
+.pb-cel-meta { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.pb-cel-chip { padding: 9px 16px; border-radius: var(--r-pill); font: 700 13px var(--font-heading); border: 1px solid var(--line); }
 .pb-cel-eta { background: var(--rosso-soft, #fdeeec); color: var(--rosso-dark, #b81c22); border-color: transparent; }
 .pb-cel-total { background: var(--bg, #f5f3ef); color: var(--ink); }
-.pb-cel-sub { margin: 14px auto 0; width: 100%; max-width: 440px; box-sizing: border-box; color: var(--muted); font: 500 13.5px/1.5 var(--font-body); }
-.pb-cel-done {
-  margin-top: 20px; padding: 13px 32px; border: none; border-radius: var(--r-pill); cursor: pointer;
-  background: var(--ink); color: #fff; font: 700 14px var(--font-heading);
-  box-shadow: var(--shadow-md); transition: transform .16s var(--ease-spring), background .16s;
-}
-.pb-cel-done:hover { transform: translateY(-1px); background: #000; }
-.pb-cel-done:active { transform: scale(.97); }
+.pb-cel-sub { margin: 16px auto 0; width: 100%; max-width: 430px; box-sizing: border-box; color: var(--muted); font: 500 13.5px/1.55 var(--font-body); }
 
-/* spodní animovaná scéna přes celou šířku */
+/* tlačítko úplně dole „na silnici" – matné sklo */
+.pb-cel-done {
+  position: absolute; left: 50%; bottom: clamp(16px, 3.4vh, 30px); transform: translateX(-50%);
+  z-index: 6; padding: 13px 38px; border: none; border-radius: var(--r-pill); cursor: pointer;
+  background: rgba(255,255,255,.82); color: var(--ink); font: 700 14px var(--font-heading);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3); backdrop-filter: blur(12px) saturate(1.3);
+  box-shadow: 0 10px 30px rgba(8,10,18,.32), inset 0 0 0 1px rgba(255,255,255,.55);
+  transition: transform .18s var(--ease-spring), background .18s;
+  animation: pbcel-in .5s .35s both;
+}
+.pb-cel-done:hover { transform: translateX(-50%) translateY(-2px); background: #fff; }
+.pb-cel-done:active { transform: translateX(-50%) scale(.97); }
+
+/* spodní animovaná scéna ~1/3 obrazovky, přes celou šířku */
 .pb-cel-stage-wrap {
-  position: relative; flex: 1; min-height: 0; width: 100%;
+  position: relative; flex: none; width: 100%;
+  height: clamp(240px, 36vh, 430px);
   overflow: hidden; background: linear-gradient(#7fb5e0, #cfe4f2);
 }
 .pb-cel-stage {
@@ -3539,20 +3557,25 @@ body.no-scroll {
   transform-origin: 0 0; transform: translate(50%,58%) scale(.6) translate(-800px,-560px);
   will-change: transform;
 }
+/* přechod „do ztracena" – scéna se rozplyne do bílé */
 .pb-cel-fade {
-  position: absolute; left: 0; right: 0; top: 0; height: 110px; pointer-events: none;
-  background: linear-gradient(var(--surface, #fff), rgba(255,255,255,0));
+  position: absolute; left: 0; right: 0; top: 0; height: 62%; pointer-events: none;
+  background: linear-gradient(180deg,
+    var(--surface, #fff) 0%,
+    rgba(255,255,255,.82) 24%,
+    rgba(255,255,255,.4) 52%,
+    rgba(255,255,255,0) 100%);
 }
-.pb-cel-vignette { position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 180px rgba(10,12,20,.22); }
+.pb-cel-vignette { position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 -60px 90px rgba(10,12,20,.22); }
 
 @media (max-width: 640px) {
-  .pb-cel-card { padding: 24px 18px 18px; }
-  .pb-cel-title { font-size: clamp(20px, 6vw, 27px); }
-  .pb-cel-num { margin-top: 8px; }
-  .pb-cel-done { margin-top: 16px; }
+  .pb-cel-card { padding-top: clamp(70px, 12vh, 110px); }
+  .pb-cel-title { font-size: clamp(21px, 6.2vw, 29px); }
+  .pb-cel-num { margin-top: 10px; }
+  .pb-cel-meta { margin-top: 15px; }
 }
-@media (max-height: 560px) {
-  .pb-cel-card { padding: 16px 16px 12px; }
+@media (max-height: 620px) {
+  .pb-cel-logo { opacity: .06; }
   .pb-cel-sub { display: none; }
-  .pb-cel-done { margin-top: 12px; }
+  .pb-cel-stage-wrap { height: 34vh; }
 }
