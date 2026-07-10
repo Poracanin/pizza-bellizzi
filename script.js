@@ -544,6 +544,30 @@ const subtotalEl = $("#subtotal");
 const grandTotalEl = $("#grandTotal");
 const checkoutTotalEl = $("#checkoutTotal");
 const checkoutBtn = $("#checkoutBtn");
+const cartDeliveryLabel = $("#cartDeliveryLabel");
+const cartDeliveryFee = $("#cartDeliveryFee");
+
+let selectedDeliveryAddress = null;
+let activeFulfillmentMode = "delivery";
+
+function orderSubtotal() {
+  return cart.reduce((sum, item) => sum + itemTotal(item), 0);
+}
+
+function selectedDeliveryFee() {
+  if (activeFulfillmentMode === "pickup" || !selectedDeliveryAddress) return 0;
+  return selectedDeliveryAddress[3];
+}
+
+function orderTotal() {
+  return orderSubtotal() + selectedDeliveryFee();
+}
+
+function deliveryFeeText() {
+  if (activeFulfillmentMode === "pickup") return "Zdarma";
+  if (!selectedDeliveryAddress) return "Dle adresy";
+  return selectedDeliveryFee() === 0 ? "Zdarma" : fmt(selectedDeliveryFee());
+}
 
 function openCart() {
   if (cartDrawer.classList.contains("open")) return;
@@ -642,10 +666,9 @@ function renderCart() {
       </div>`;
   }).join("");
 
-  const subtotal = cart.reduce((s, i) => s + itemTotal(i), 0);
+  const subtotal = orderSubtotal();
   subtotalEl.textContent = fmt(subtotal);
-  grandTotalEl.textContent = fmt(subtotal);
-  checkoutTotalEl.textContent = fmt(subtotal);
+  updatePriceDisplays();
   cartFoot.hidden = false;
 }
 
@@ -675,14 +698,371 @@ const deliverOpts = $$(".deliver-opt");
 const addrFields = $("#addrFields");
 const pickupInfo = $("#pickupInfo");
 const modeInput = checkoutForm.elements["mode"];
+const paymentSubtotal = $("#paymentSubtotal");
+const paymentDeliveryLabel = $("#paymentDeliveryLabel");
+const paymentDeliveryFee = $("#paymentDeliveryFee");
+const paymentGrandTotal = $("#paymentGrandTotal");
+const deliveryAddressInput = $("#deliveryAddress");
+const deliveryAddressClear = $("#deliveryAddressClear");
+const deliveryAddressResults = $("#deliveryAddressResults");
+const deliveryAddressHelp = $("#deliveryAddressHelp");
+const deliveryAddressCard = $("#deliveryAddressCard");
+const deliveryAddressSelected = $("#deliveryAddressSelected");
+const deliveryAddressZone = $("#deliveryAddressZone");
+const deliveryAddressFee = $("#deliveryAddressFee");
+const checkoutDeliveryMap = $("#checkoutDeliveryMap");
+
+const DELIVERY_DATA_URL = "admin/data/address-search.json";
+const DELIVERY_BOUNDARIES_URL = "admin/data/delivery-zones.geojson";
+const DELIVERY_ROW = { id: 0, address: 1, search: 2, fee: 3, zone: 4, y: 5, x: 6, rule: 7, priority: 8, municipality: 9 };
+
+let deliveryData = null;
+let deliveryBoundaries = null;
+let deliveryDataPromise = null;
+let deliveryExactAddresses = new Map();
+let deliveryResultRows = [];
+let activeDeliveryResult = -1;
+let checkoutMap = null;
+let checkoutMapMarker = null;
+let checkoutMapBoundary = null;
+
+function normalizeDeliveryAddress(value) {
+  return (value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/-/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function escapeDeliveryHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function deliveryZoneForRow(row) {
+  return deliveryData?.zones.find((zone) => zone.code === row[DELIVERY_ROW.zone]);
+}
+
+function deliveryFeeLabel(fee) {
+  return fee === 0 ? "Zdarma" : fmt(fee);
+}
+
+function updatePriceDisplays() {
+  const subtotal = orderSubtotal();
+  const fee = selectedDeliveryFee();
+  const total = subtotal + fee;
+  const feeLabel = deliveryFeeText();
+  const deliveryLabel = activeFulfillmentMode === "pickup"
+    ? "Vyzvednutí"
+    : selectedDeliveryAddress
+      ? `Rozvoz · ${selectedDeliveryAddress[DELIVERY_ROW.rule]}`
+      : "Rozvoz";
+
+  if (grandTotalEl) grandTotalEl.textContent = fmt(total);
+  if (checkoutTotalEl) checkoutTotalEl.textContent = fmt(total);
+  if (checkoutTotalLg) checkoutTotalLg.textContent = fmt(total);
+  if (cartDeliveryLabel) cartDeliveryLabel.textContent = deliveryLabel;
+  if (cartDeliveryFee) {
+    cartDeliveryFee.textContent = feeLabel;
+    cartDeliveryFee.classList.toggle("delivery-fee-free", fee === 0 && feeLabel !== "Dle adresy");
+  }
+  if (paymentSubtotal) paymentSubtotal.textContent = fmt(subtotal);
+  if (paymentDeliveryLabel) paymentDeliveryLabel.textContent = deliveryLabel;
+  if (paymentDeliveryFee) {
+    paymentDeliveryFee.textContent = feeLabel;
+    paymentDeliveryFee.classList.toggle("delivery-fee-free", fee === 0 && feeLabel !== "Dle adresy");
+  }
+  if (paymentGrandTotal) paymentGrandTotal.textContent = fmt(total);
+}
+
+function setAddressHelp(text, state = "") {
+  deliveryAddressHelp.textContent = text;
+  deliveryAddressHelp.classList.toggle("is-error", state === "error");
+  deliveryAddressHelp.classList.toggle("is-valid", state === "valid");
+}
+
+function setAddressResultsOpen(open) {
+  deliveryAddressResults.hidden = !open;
+  deliveryAddressInput.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
+function loadDeliveryData() {
+  if (deliveryDataPromise) return deliveryDataPromise;
+  setAddressHelp("Načítám databázi doručovacích adres…");
+  deliveryDataPromise = Promise.all([
+    fetch(DELIVERY_DATA_URL).then((response) => {
+      if (!response.ok) throw new Error("Adresy se nepodařilo načíst");
+      return response.json();
+    }),
+    fetch(DELIVERY_BOUNDARIES_URL).then((response) => response.ok ? response.json() : null).catch(() => null),
+  ]).then(([addresses, boundaries]) => {
+    deliveryData = addresses;
+    deliveryBoundaries = boundaries;
+    deliveryExactAddresses = new Map();
+    deliveryData.addresses.forEach((row) => {
+      const key = normalizeDeliveryAddress(row[DELIVERY_ROW.address]);
+      if (!deliveryExactAddresses.has(key)) deliveryExactAddresses.set(key, row);
+    });
+    setAddressHelp("Vyberte přesnou adresu ze seznamu. Podle ní spočítáme rozvoz.");
+    restoreSelectedAddress();
+    return deliveryData;
+  }).catch((error) => {
+    deliveryDataPromise = null;
+    setAddressHelp("Databázi adres se nepodařilo načíst. Zvolte vyzvednutí nebo to zkuste znovu.", "error");
+    throw error;
+  });
+  return deliveryDataPromise;
+}
+
+function scoreDeliveryAddress(row, query, tokens) {
+  const haystack = row[DELIVERY_ROW.search];
+  if (!tokens.every((token) => haystack.includes(token))) return null;
+  let score = haystack.startsWith(query) ? 0 : 20;
+  const position = haystack.indexOf(query);
+  score += position === -1 ? 50 : position;
+  return score + haystack.length / 1000;
+}
+
+function findDeliveryAddresses(value) {
+  if (!deliveryData) return [];
+  const query = normalizeDeliveryAddress(value);
+  if (query.length < 2) return [];
+  const tokens = query.split(" ");
+  const matches = [];
+  deliveryData.addresses.forEach((row) => {
+    const score = scoreDeliveryAddress(row, query, tokens);
+    if (score !== null) matches.push({ row, score });
+  });
+  matches.sort((a, b) => a.score - b.score);
+  return matches.slice(0, 7).map((match) => match.row);
+}
+
+function renderDeliveryAddressResults(rows) {
+  deliveryResultRows = rows;
+  activeDeliveryResult = -1;
+  if (!deliveryAddressInput.value.trim()) {
+    deliveryAddressResults.innerHTML = "";
+    setAddressResultsOpen(false);
+    return;
+  }
+  if (!rows.length) {
+    deliveryAddressResults.innerHTML = '<div class="address-empty">Adresa nebyla nalezena v oblasti rozvozu</div>';
+    setAddressResultsOpen(true);
+    return;
+  }
+  deliveryAddressResults.innerHTML = rows.map((row, index) => {
+    const zone = deliveryZoneForRow(row);
+    return `
+      <button class="address-result" type="button" role="option" aria-selected="false" data-address-index="${index}" style="--address-zone:${zone.color}">
+        <span class="address-result-pin" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        </span>
+        <span class="address-result-copy"><strong>${escapeDeliveryHtml(row[DELIVERY_ROW.address])}</strong><small>${escapeDeliveryHtml(row[DELIVERY_ROW.rule])}</small></span>
+        <span class="address-result-fee">${deliveryFeeLabel(row[DELIVERY_ROW.fee])}</span>
+      </button>`;
+  }).join("");
+  setAddressResultsOpen(true);
+  $$(".address-result", deliveryAddressResults).forEach((button) => {
+    button.addEventListener("click", () => selectDeliveryAddress(rows[Number(button.dataset.addressIndex)]));
+  });
+}
+
+function setActiveDeliveryResult(index) {
+  const buttons = $$(".address-result", deliveryAddressResults);
+  if (!buttons.length) return;
+  activeDeliveryResult = Math.max(0, Math.min(index, buttons.length - 1));
+  buttons.forEach((button, buttonIndex) => {
+    const active = buttonIndex === activeDeliveryResult;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", active ? "true" : "false");
+  });
+  buttons[activeDeliveryResult].scrollIntoView({ block: "nearest" });
+}
+
+function initCheckoutProjection() {
+  if (!window.proj4) return false;
+  window.proj4.defs(
+    "EPSG:5514",
+    "+proj=krovak +lat_0=49.5 +lon_0=24.83333333333333 +alpha=30.28813975277778 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=589,76,480,0,0,0,0 +units=m +no_defs"
+  );
+  return true;
+}
+
+function projectDeliveryAddress(row) {
+  if (!initCheckoutProjection()) return null;
+  const y = row[DELIVERY_ROW.y];
+  const x = row[DELIVERY_ROW.x];
+  if (!Number.isFinite(y) || !Number.isFinite(x)) return null;
+  const result = window.proj4("EPSG:5514", "EPSG:4326", [-y, -x]);
+  return [result[1], result[0]];
+}
+
+function ensureCheckoutMap() {
+  if (checkoutMap || !window.L) return checkoutMap;
+  window.L.Browser.any3d = false;
+  checkoutMap = window.L.map(checkoutDeliveryMap, {
+    center: [49.9638, 14.0720],
+    zoom: 14,
+    minZoom: 10,
+    maxZoom: 18,
+    scrollWheelZoom: false,
+    zoomControl: true,
+    zoomAnimation: false,
+    fadeAnimation: false,
+    markerZoomAnimation: false,
+  });
+  window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    updateWhenIdle: true,
+    attribution: "&copy; OpenStreetMap",
+  }).addTo(checkoutMap);
+  return checkoutMap;
+}
+
+function showSelectedAddressMap(row) {
+  const point = projectDeliveryAddress(row);
+  if (!point) return;
+  window.requestAnimationFrame(() => {
+    const map = ensureCheckoutMap();
+    if (!map) {
+      checkoutDeliveryMap.textContent = "Mapu se nepodařilo načíst.";
+      return;
+    }
+    if (checkoutMapMarker) checkoutMap.removeLayer(checkoutMapMarker);
+    if (checkoutMapBoundary) checkoutMap.removeLayer(checkoutMapBoundary);
+    const zone = deliveryZoneForRow(row);
+    const feature = deliveryBoundaries?.features.find((item) => item.properties.name === row[DELIVERY_ROW.municipality]);
+    if (feature) {
+      checkoutMapBoundary = window.L.geoJSON(feature, {
+        style: { color: zone.color, weight: 2.5, opacity: 0.9, fillColor: zone.color, fillOpacity: 0.16 },
+      }).addTo(checkoutMap);
+    }
+    const markerIcon = window.L.divIcon({
+      className: "",
+      html: `<div class="checkout-address-marker" style="--marker:${zone.color}"></div>`,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9],
+    });
+    checkoutMapMarker = window.L.marker(point, { icon: markerIcon, zIndexOffset: 1000 }).addTo(checkoutMap);
+    checkoutMapMarker.bindPopup(`<strong>${escapeDeliveryHtml(row[DELIVERY_ROW.address])}</strong><br>${deliveryFeeLabel(row[DELIVERY_ROW.fee])} rozvoz`).openPopup();
+    checkoutMap.setView(point, 15, { animate: false });
+    checkoutMap.invalidateSize();
+  });
+}
+
+function parseSelectedAddress(row) {
+  const match = row[DELIVERY_ROW.address].match(/,\s*(\d{5})\s+(.+)$/);
+  return { zip: match ? match[1] : "", city: match ? match[2] : row[DELIVERY_ROW.municipality] };
+}
+
+function selectDeliveryAddress(row) {
+  const zone = deliveryZoneForRow(row);
+  const parsed = parseSelectedAddress(row);
+  selectedDeliveryAddress = row;
+  deliveryAddressInput.value = row[DELIVERY_ROW.address];
+  deliveryAddressInput.classList.remove("invalid");
+  checkoutForm.elements["city"].value = parsed.city;
+  checkoutForm.elements["zip"].value = parsed.zip;
+  checkoutForm.elements["addressId"].value = row[DELIVERY_ROW.id];
+  checkoutForm.elements["deliveryZone"].value = row[DELIVERY_ROW.zone];
+  checkoutForm.elements["deliveryFee"].value = row[DELIVERY_ROW.fee];
+  deliveryAddressSelected.textContent = row[DELIVERY_ROW.address];
+  deliveryAddressZone.textContent = `${zone.name} · RÚIAN`;
+  deliveryAddressFee.textContent = deliveryFeeLabel(row[DELIVERY_ROW.fee]);
+  deliveryAddressCard.style.setProperty("--delivery-zone", zone.color);
+  deliveryAddressCard.hidden = false;
+  deliveryAddressClear.hidden = false;
+  setAddressHelp(`${deliveryFeeLabel(row[DELIVERY_ROW.fee])} rozvoz · adresa je ověřená`, "valid");
+  setAddressResultsOpen(false);
+  updatePriceDisplays();
+  showSelectedAddressMap(row);
+}
+
+function clearSelectedDeliveryAddress({ keepInput = false } = {}) {
+  selectedDeliveryAddress = null;
+  if (!keepInput) deliveryAddressInput.value = "";
+  ["city", "zip", "addressId", "deliveryZone"].forEach((name) => { checkoutForm.elements[name].value = ""; });
+  checkoutForm.elements["deliveryFee"].value = "0";
+  deliveryAddressCard.hidden = true;
+  deliveryAddressClear.hidden = !deliveryAddressInput.value;
+  setAddressHelp("Vyberte přesnou adresu ze seznamu. Podle ní spočítáme rozvoz.");
+  updatePriceDisplays();
+}
+
+function restoreSelectedAddress() {
+  const value = deliveryAddressInput.value.trim();
+  if (!value || !deliveryData) return;
+  const exact = deliveryExactAddresses.get(normalizeDeliveryAddress(value));
+  if (exact) selectDeliveryAddress(exact);
+  else renderDeliveryAddressResults(findDeliveryAddresses(value));
+}
+
+deliveryAddressInput.addEventListener("input", () => {
+  if (selectedDeliveryAddress && deliveryAddressInput.value !== selectedDeliveryAddress[DELIVERY_ROW.address]) {
+    clearSelectedDeliveryAddress({ keepInput: true });
+  }
+  deliveryAddressClear.hidden = !deliveryAddressInput.value;
+  deliveryAddressInput.classList.remove("invalid");
+  if (!deliveryData) {
+    loadDeliveryData().then(restoreSelectedAddress).catch(() => {});
+    return;
+  }
+  const exact = deliveryExactAddresses.get(normalizeDeliveryAddress(deliveryAddressInput.value));
+  if (exact) {
+    selectDeliveryAddress(exact);
+    return;
+  }
+  renderDeliveryAddressResults(findDeliveryAddresses(deliveryAddressInput.value));
+});
+
+deliveryAddressInput.addEventListener("focus", () => {
+  if (!selectedDeliveryAddress && deliveryAddressInput.value.trim() && deliveryData) {
+    renderDeliveryAddressResults(findDeliveryAddresses(deliveryAddressInput.value));
+  }
+});
+
+deliveryAddressInput.addEventListener("keydown", (event) => {
+  if (deliveryAddressResults.hidden || !deliveryResultRows.length) return;
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    setActiveDeliveryResult(activeDeliveryResult + 1);
+  } else if (event.key === "ArrowUp") {
+    event.preventDefault();
+    setActiveDeliveryResult(activeDeliveryResult <= 0 ? deliveryResultRows.length - 1 : activeDeliveryResult - 1);
+  } else if (event.key === "Enter" && activeDeliveryResult >= 0) {
+    event.preventDefault();
+    selectDeliveryAddress(deliveryResultRows[activeDeliveryResult]);
+  } else if (event.key === "Escape") {
+    setAddressResultsOpen(false);
+  }
+});
+
+deliveryAddressClear.addEventListener("click", () => {
+  clearSelectedDeliveryAddress();
+  deliveryAddressInput.classList.remove("invalid");
+  deliveryAddressResults.innerHTML = "";
+  setAddressResultsOpen(false);
+  deliveryAddressInput.focus();
+});
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".address-search-wrap")) setAddressResultsOpen(false);
+});
 
 let currentStep = 1;
 const TOTAL_STEPS = 3;
 const CHECKOUT_KEY = "pb_checkout_info";
-const REMEMBER_FIELDS = ["name", "phone", "email", "street", "city", "zip", "note"];
+const REMEMBER_FIELDS = ["name", "phone", "email", "street", "note"];
 
 function setMode(mode) {
   modeInput.value = mode;
+  activeFulfillmentMode = mode;
   deliverOpts.forEach((b) => {
     const active = b.dataset.mode === mode;
     b.classList.toggle("active", active);
@@ -693,7 +1073,15 @@ function setMode(mode) {
   pickupInfo.hidden = !pickup;
   if (pickup) {
     ["street", "city", "zip"].forEach((n) => checkoutForm.elements[n]?.classList.remove("invalid"));
+    setAddressResultsOpen(false);
+  } else {
+    loadDeliveryData().catch(() => {});
+    if (selectedDeliveryAddress) {
+      deliveryAddressCard.hidden = false;
+      showSelectedAddressMap(selectedDeliveryAddress);
+    }
   }
+  updatePriceDisplays();
 }
 
 function loadCheckoutInfo() {
@@ -707,6 +1095,7 @@ function loadCheckoutInfo() {
   if (data.mode) setMode(data.mode);
   const rem = checkoutForm.elements["remember"];
   if (rem) rem.checked = true;
+  loadDeliveryData().then(restoreSelectedAddress).catch(() => {});
 }
 
 function saveCheckoutInfo() {
@@ -730,7 +1119,8 @@ function openCheckout() {
   currentStep = 1;
   showStep();
   loadCheckoutInfo();
-  checkoutTotalLg.textContent = fmt(cart.reduce((s, i) => s + itemTotal(i), 0));
+  loadDeliveryData().catch(() => {});
+  updatePriceDisplays();
   checkoutModal.classList.add("open");
   checkoutModal.setAttribute("aria-hidden", "false");
   lockScroll();
@@ -756,6 +1146,7 @@ function showStep() {
   if (currentStep === 1) checkoutNext.textContent = "Pokračovat k platbě";
   else if (currentStep === 2) checkoutNext.textContent = nextLabelForStep2();
   else checkoutNext.textContent = "Zavřít";
+  updatePriceDisplays();
 }
 
 function nextLabelForStep2() {
@@ -766,7 +1157,6 @@ function nextLabelForStep2() {
 
 function validateStep1() {
   const required = ["name", "phone", "email"];
-  if (modeInput.value !== "pickup") required.push("street", "city", "zip");
   let valid = true;
   required.forEach((n) => {
     const input = checkoutForm.elements[n];
@@ -780,6 +1170,17 @@ function validateStep1() {
       input.classList.remove("invalid");
     }
   });
+  if (modeInput.value !== "pickup") {
+    const exact = deliveryData
+      ? deliveryExactAddresses.get(normalizeDeliveryAddress(deliveryAddressInput.value))
+      : null;
+    if (!selectedDeliveryAddress && exact) selectDeliveryAddress(exact);
+    if (!selectedDeliveryAddress) {
+      deliveryAddressInput.classList.add("invalid");
+      setAddressHelp("Vyberte celou doručovací adresu z našeptávače.", "error");
+      valid = false;
+    }
+  }
   return valid;
 }
 
@@ -805,17 +1206,21 @@ function buildThanks() {
   const pay = data.get("pay");
   const payLabel = pay === "cash" ? "Hotově při převzetí" : "Online platba (DEMO)";
   const pickup = data.get("mode") === "pickup";
-  const total = cart.reduce((s, i) => s + itemTotal(i), 0);
+  const total = orderTotal();
   const orderNo = "PB-" + Math.floor(100000 + Math.random() * 900000);
   thanksMsg.textContent = pickup
     ? `Brzy vás zkontaktujeme na čísle ${data.get("phone") || ""}. Objednávku si vyzvednete na provozovně.`
     : `Brzy vás zkontaktujeme na čísle ${data.get("phone") || ""} a potvrdíme čas doručení.`;
   const whereRow = pickup
     ? `<div><strong>Vyzvednutí:</strong> Plzeňská 86, 266 01 Beroun</div>`
-    : `<div><strong>Doručit na:</strong> ${data.get("street")}, ${data.get("zip")} ${data.get("city")}</div>`;
+    : `<div><strong>Doručit na:</strong> ${data.get("street")}</div>`;
+  const deliveryRow = pickup
+    ? ""
+    : `<div><strong>Rozvoz:</strong> ${deliveryFeeLabel(selectedDeliveryFee())}</div>`;
   thanksSummary.innerHTML = `
     <div><strong>Číslo objednávky:</strong> ${orderNo}</div>
     ${whereRow}
+    ${deliveryRow}
     <div><strong>Platba:</strong> ${payLabel}</div>
     <div><strong>Celkem:</strong> ${fmt(total)}</div>
   `;
@@ -847,6 +1252,7 @@ checkoutNext.addEventListener("click", () => {
     const order = celOrderData();
     // Vyprázdnit košík po úspěšné objednávce
     cart.length = 0;
+    clearSelectedDeliveryAddress();
     renderCart();
     // Zavřít checkout a spustit oslavnou animaci „na cestě"
     closeCheckout();
@@ -900,7 +1306,7 @@ function celOrderData() {
   const data = new FormData(checkoutForm);
   const pickup = data.get("mode") === "pickup";
   const pay = data.get("pay");
-  const total = cart.reduce((s, i) => s + itemTotal(i), 0);
+  const total = orderTotal();
   const orderNo = "PB-" + Math.floor(100000 + Math.random() * 900000);
   return {
     orderNo, total, pickup,

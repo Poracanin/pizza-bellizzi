@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -417,14 +418,14 @@
     <div class="cart-foot" id="cartFoot" hidden>
       <div class="totals">
         <div class="totals-row"><span>Mezisoučet</span><span id="subtotal">0 Kč</span></div>
-        <div class="totals-row"><span>Doprava (Beroun)</span><span class="free-shipping">ZDARMA</span></div>
+        <div class="totals-row"><span id="cartDeliveryLabel">Rozvoz</span><span id="cartDeliveryFee">Dle adresy</span></div>
         <div class="totals-row total"><span>Celkem</span><span id="grandTotal">0 Kč</span></div>
       </div>
       <div class="cart-actions">
         <button class="checkout-btn" id="checkoutBtn">Pokračovat k platbě · <span id="checkoutTotal">0 Kč</span></button>
         <button class="cart-continue-btn" id="cartContinueBtn" type="button">Zpět k nákupu</button>
       </div>
-      <p class="cart-note">Doprava po Berouně zdarma. Připravujeme i online platby.</p>
+      <p class="cart-note">Cena rozvozu se vypočítá podle zvolené adresy.</p>
     </div>
   </aside>
 
@@ -446,7 +447,7 @@
           <div class="deliver-toggle" role="tablist" aria-label="Způsob převzetí">
             <button type="button" class="deliver-opt active" data-mode="delivery" role="tab" aria-selected="true">
               <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.5h11v8.5H3z"/><path d="M14 10.5h3.6L21 14v2h-7z"/><circle cx="7" cy="18" r="1.7"/><circle cx="17.5" cy="18" r="1.7"/></svg>
-              <span class="deliver-txt"><strong>Doručit</strong><small>Rozvoz po Berouně zdarma</small></span>
+              <span class="deliver-txt"><strong>Doručit</strong><small>Cena podle adresy</small></span>
             </button>
             <button type="button" class="deliver-opt" data-mode="pickup" role="tab" aria-selected="false">
               <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 9.5V20h15V9.5"/><path d="M3 9.5 4.6 4h14.8L21 9.5a2.5 2.5 0 0 1-4.5 1.5 2.5 2.5 0 0 1-4.5 0 2.5 2.5 0 0 1-4.5 0A2.5 2.5 0 0 1 3 9.5z"/></svg>
@@ -462,10 +463,34 @@
           </div>
 
           <div class="addr-fields" id="addrFields">
-            <div class="form-grid">
-              <label class="form-field full"><span>Ulice a č. p. *</span><input type="text" name="street" placeholder="Plzeňská 86" autocomplete="street-address"></label>
-              <label class="form-field"><span>Město *</span><input type="text" name="city" value="Beroun" autocomplete="address-level2"></label>
-              <label class="form-field"><span>PSČ *</span><input type="text" name="zip" placeholder="266 01" autocomplete="postal-code"></label>
+            <div class="address-search-wrap">
+              <label class="form-field full" for="deliveryAddress">
+                <span>Doručovací adresa *</span>
+                <span class="address-input-shell">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+                  <input id="deliveryAddress" type="text" name="street" placeholder="Začněte psát ulici, číslo nebo obec" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="deliveryAddressResults" aria-expanded="false" aria-describedby="deliveryAddressHelp">
+                  <button class="address-clear" id="deliveryAddressClear" type="button" aria-label="Vymazat adresu" hidden>×</button>
+                </span>
+              </label>
+              <div class="address-suggestions" id="deliveryAddressResults" role="listbox" aria-label="Nalezené adresy" hidden></div>
+              <p class="address-help" id="deliveryAddressHelp">Vyberte přesnou adresu ze seznamu. Podle ní spočítáme rozvoz.</p>
+            </div>
+
+            <input type="hidden" name="city">
+            <input type="hidden" name="zip">
+            <input type="hidden" name="addressId">
+            <input type="hidden" name="deliveryZone">
+            <input type="hidden" name="deliveryFee" value="0">
+
+            <div class="delivery-address-card" id="deliveryAddressCard" hidden>
+              <div class="delivery-address-summary">
+                <span class="delivery-address-pin" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                </span>
+                <span class="delivery-address-copy"><small>Ověřená adresa</small><strong id="deliveryAddressSelected"></strong><span id="deliveryAddressZone"></span></span>
+                <strong class="delivery-address-fee" id="deliveryAddressFee"></strong>
+              </div>
+              <div class="checkout-delivery-map" id="checkoutDeliveryMap" role="region" aria-label="Mapa zvolené doručovací adresy"></div>
             </div>
           </div>
 
@@ -491,6 +516,11 @@
         <!-- Step 2: platba -->
         <section class="step-panel" data-step="2">
           <h2>Způsob platby</h2>
+          <div class="checkout-price-summary" aria-label="Souhrn ceny">
+            <div><span>Objednávka</span><strong id="paymentSubtotal">0 Kč</strong></div>
+            <div><span id="paymentDeliveryLabel">Rozvoz</span><strong id="paymentDeliveryFee">0 Kč</strong></div>
+            <div class="checkout-price-total"><span>Celkem</span><strong id="paymentGrandTotal">0 Kč</strong></div>
+          </div>
           <div class="pay-methods">
             <label class="pay-opt">
               <input type="radio" name="pay" value="cash" checked>
@@ -750,6 +780,8 @@
     <button class="pb-cel-done" id="pbCelDone" type="button">Hotovo</button>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.11.0/proj4.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

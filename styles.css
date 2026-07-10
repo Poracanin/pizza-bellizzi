@@ -2752,6 +2752,208 @@ button { font: inherit; cursor: pointer; border: 0; color: inherit; background: 
   box-shadow: 0 0 0 3.5px rgba(225, 35, 43, 0.08);
 }
 
+/* ===== Ověření doručovací adresy ===== */
+.address-search-wrap {
+  position: relative;
+}
+
+.address-input-shell {
+  min-height: 47px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 10px 0 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--muted);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.address-input-shell:focus-within {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3.5px rgba(29, 29, 31, 0.08);
+}
+
+.address-input-shell:has(input.invalid) {
+  border-color: var(--rosso);
+  background: #fff7f6;
+  box-shadow: 0 0 0 3.5px rgba(225, 35, 43, 0.08);
+}
+
+.form-field .address-input-shell input {
+  min-width: 0;
+  flex: 1;
+  padding: 12px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.form-field .address-input-shell input:focus,
+.form-field .address-input-shell input.invalid {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.address-clear {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: var(--grigio-100);
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.address-clear:hover { color: var(--ink); background: var(--grigio-200); }
+.address-clear[hidden] { display: none; }
+
+.address-help {
+  margin: 7px 2px 0;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.address-help.is-error { color: var(--rosso); }
+.address-help.is-valid { color: var(--verde); }
+
+.address-suggestions {
+  position: absolute;
+  z-index: 40;
+  top: 72px;
+  left: 0;
+  right: 0;
+  max-height: 258px;
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: #fff;
+  box-shadow: 0 18px 46px -18px rgba(29, 29, 31, 0.42);
+}
+
+.address-suggestions[hidden] { display: none; }
+
+.address-result {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--ink);
+  text-align: left;
+}
+
+.address-result:hover,
+.address-result.is-active { background: var(--surface-2); }
+
+.address-result-pin {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--address-zone) 12%, white);
+  color: var(--address-zone);
+}
+
+.address-result-copy { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.address-result-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; }
+.address-result-copy small { color: var(--muted); font-size: 11px; font-weight: 500; }
+.address-result-fee { color: var(--address-zone); font-family: var(--font-heading); font-size: 13px; font-weight: 800; white-space: nowrap; }
+.address-empty { padding: 13px; color: var(--muted); font-size: 12.5px; font-weight: 600; text-align: center; }
+
+.delivery-address-card {
+  margin-top: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+}
+
+.delivery-address-card[hidden] { display: none; }
+
+.delivery-address-summary {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 13px;
+  border-bottom: 1px solid var(--line);
+}
+
+.delivery-address-pin {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  color: var(--delivery-zone, var(--verde));
+  background: color-mix(in srgb, var(--delivery-zone, var(--verde)) 12%, white);
+}
+
+.delivery-address-copy { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.delivery-address-copy small { color: var(--verde); font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+.delivery-address-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; }
+.delivery-address-copy span { color: var(--muted); font-size: 11.5px; font-weight: 500; }
+.delivery-address-fee { color: var(--delivery-zone, var(--verde)); font-family: var(--font-heading); font-size: 16px; font-weight: 800; white-space: nowrap; }
+
+.checkout-delivery-map {
+  width: 100%;
+  height: 190px;
+  background: #e8ece7;
+}
+
+.checkout-delivery-map .leaflet-control-attribution { font-size: 8px; }
+.checkout-delivery-map .leaflet-control-zoom a { color: var(--ink); }
+.checkout-address-marker {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--marker);
+  box-shadow: 0 4px 12px rgba(29, 29, 31, 0.42);
+}
+
+.delivery-fee-free { color: var(--verde); font-weight: 700; }
+
+.checkout-price-summary {
+  display: grid;
+  gap: 7px;
+  margin: -2px 0 16px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+}
+
+.checkout-price-summary > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.checkout-price-summary strong { color: var(--ink); font-family: var(--font-heading); font-weight: 700; }
+.checkout-price-summary .checkout-price-total { margin-top: 2px; padding-top: 9px; border-top: 1px solid var(--line); color: var(--ink); font-size: 14px; }
+.checkout-price-summary .checkout-price-total strong { font-size: 17px; font-weight: 800; }
+
 .pay-methods {
   display: grid;
   gap: 10px;
