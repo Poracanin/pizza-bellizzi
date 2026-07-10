@@ -30,6 +30,15 @@ Import navic kontroluje, ze kazda obec i kazda mistni vyjimka obsahuje adresy.
 Pokud CUZK zmeni nazev nebo strukturu dat, aktualizace se zastavi a puvodni
 databaze zustane zachovana.
 
+Data pro interaktivni admin mapu se po importu aktualizuji prikazem:
+
+```bash
+python3 database/addresses/export_map_data.py
+```
+
+Volba `--refresh-boundaries` znovu stahne hranice obci z OpenStreetMap. Bez teto
+volby se obnovi pouze adresy a existujici hranice zustanou zachovane.
+
 ## Priklad naseptavace v SQLite
 
 Dotaz uzivatele se pred vyhledanim prevede na mala pismena bez diakritiky.

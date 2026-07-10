@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f5f2">
+  <title>Pizza Bellizzi · Mapa rozvozu</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="mapa.css">
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.11.0/proj4.js" defer></script>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="mapa.js" defer></script>
+</head>
+<body>
+  <div class="map-admin">
+    <nav class="map-nav" aria-label="Administrace">
+      <a class="map-brand-card" href="Pizza%20Bellizzi%20Panel.dc.html" title="Pizza Bellizzi admin">
+        <img src="assets/logo.png" alt="Pizza Bellizzi">
+      </a>
+      <a class="map-nav-item" href="Pizza%20Bellizzi%20Panel.dc.html" title="Zpět do panelu">
+        <i data-lucide="arrow-left"></i>
+        <span>Panel</span>
+      </a>
+      <span class="map-nav-item is-active" aria-current="page">
+        <i data-lucide="map"></i>
+        <span>Mapa</span>
+      </span>
+      <span class="map-nav-user">PB</span>
+    </nav>
+
+    <main class="map-main">
+      <header class="map-header">
+        <div class="map-header-brand">
+          <span class="map-header-logo"><img src="assets/logo.png" alt=""></span>
+          <span class="map-header-copy">
+            <span class="map-wordmark"><span>Pizza</span><span>Bellizzi</span></span>
+            <span class="map-header-sub">Admin panel · Mapa rozvozu</span>
+          </span>
+        </div>
+        <div class="map-header-status">
+          <span class="status-dot"></span>
+          <span id="address-count">Načítám adresy</span>
+        </div>
+        <a class="map-back-btn" href="Pizza%20Bellizzi%20Panel.dc.html">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Admin panel</span>
+        </a>
+      </header>
+
+      <div class="map-workspace">
+        <section class="map-canvas-wrap" aria-label="Mapa rozvozových zón">
+          <div id="delivery-map"></div>
+
+          <div class="address-search-box">
+            <div class="address-search-input">
+              <i data-lucide="search"></i>
+              <input id="address-search" type="search" autocomplete="off" spellcheck="false" placeholder="Ulice, číslo nebo obec" aria-label="Hledat adresu">
+              <button id="clear-search" class="search-clear" type="button" title="Vymazat hledání" hidden>
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+            <div id="search-results" class="search-results" role="listbox" hidden></div>
+          </div>
+
+          <div id="map-error" class="map-error" hidden>
+            <i data-lucide="triangle-alert"></i>
+            <span>Mapová data se nepodařilo načíst.</span>
+          </div>
+        </section>
+
+        <aside class="map-side">
+          <section id="selection-panel" class="selection-panel">
+            <div class="side-eyebrow">Rozvozová oblast</div>
+            <div class="selection-title">Beroun a okolí</div>
+            <div class="selection-meta"><span>23 obcí</span><span>8 cenových pásem</span></div>
+          </section>
+
+          <div class="side-divider"></div>
+
+          <section class="layers-section">
+            <div class="side-section-title">Vrstvy mapy</div>
+            <label class="layer-toggle">
+              <input id="toggle-municipalities" type="checkbox" checked>
+              <span class="toggle-track"></span>
+              <span>Hranice obcí</span>
+            </label>
+            <label class="layer-toggle">
+              <input id="toggle-overrides" type="checkbox" checked>
+              <span class="toggle-track"></span>
+              <span>Místní výjimky</span>
+            </label>
+          </section>
+
+          <div class="side-divider"></div>
+
+          <section class="legend-section">
+            <div class="legend-head">
+              <div class="side-section-title">Poplatek za rozvoz</div>
+              <button id="show-all-zones" class="legend-all is-active" type="button">Vše</button>
+            </div>
+            <div id="zone-legend" class="zone-legend"></div>
+          </section>
+
+          <div class="map-source">
+            <span id="source-date">RÚIAN</span>
+            <span>·</span>
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
