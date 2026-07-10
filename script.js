@@ -844,12 +844,14 @@ checkoutNext.addEventListener("click", () => {
   if (currentStep === 2) {
     if (!validateStep2()) return;
     saveCheckoutInfo();
-    buildThanks();
-    currentStep = 3;
-    showStep();
+    const order = celOrderData();
     // Vyprázdnit košík po úspěšné objednávce
     cart.length = 0;
     renderCart();
+    // Zavřít checkout a spustit oslavnou animaci „na cestě"
+    closeCheckout();
+    currentStep = 1;
+    showCelebration(order);
     return;
   }
   // step 3 - zavřít
@@ -880,6 +882,136 @@ checkoutForm.addEventListener("input", (e) => {
     t.classList.remove("invalid");
   }
 });
+
+/* ============================================================
+   Celebrace „Vaše pizza je na cestě" (po odeslání objednávky)
+   ============================================================ */
+const pbCel = $("#pbCel");
+const pbCelNum = $("#pbCelNum");
+const pbCelEta = $("#pbCelEta");
+const pbCelTotal = $("#pbCelTotal");
+const pbCelTitle = $("#pbCelTitle");
+const pbCelSub = $("#pbCelSub");
+const pbCelDone = $("#pbCelDone");
+
+let pbCelRaf = null, pbCelT0 = null, pbCelNodes = null, pbCelWheel = 0, pbCelLastX = 0;
+
+function celOrderData() {
+  const data = new FormData(checkoutForm);
+  const pickup = data.get("mode") === "pickup";
+  const pay = data.get("pay");
+  const total = cart.reduce((s, i) => s + itemTotal(i), 0);
+  const orderNo = "PB-" + Math.floor(100000 + Math.random() * 900000);
+  return {
+    orderNo, total, pickup,
+    title: pickup ? "Objednávka je přijata" : "Vaše pizza je na cestě",
+    eta: pickup ? "Vyzvednutí za ~25 min" : "Doručení do ~30 min",
+    sub: pickup
+      ? "Připravíme ji na provozovně Plzeňská 86. Brzy vám zavoláme s potvrzením."
+      : "Kurýr už s ní vyráží k vašim dveřím. Brzy vám zavoláme s potvrzením času."
+  };
+}
+
+function celCacheNodes() {
+  const root = pbCel.querySelector(".pb-cel-stage-wrap");
+  if (!root) return false;
+  const q = (k) => root.querySelector('[data-cel="' + k + '"]');
+  pbCelNodes = {
+    root, stage: q("stage"), sky: q("sky"), clouds: q("clouds"), tree: q("tree"), fore: q("fore"),
+    car: q("car"), wheelF: q("wheelF"), wheelB: q("wheelB"), dust: q("dust"), light: q("light"), door: q("door"),
+    courier: q("courier"), pose: q("pose"), legL: q("legL"), legR: q("legR")
+  };
+  pbCelWheel = 0; pbCelLastX = 0;
+  return true;
+}
+
+function celFrame(now) {
+  if (!pbCelNodes && !celCacheNodes()) { pbCelRaf = requestAnimationFrame(celFrame); return; }
+  const N = pbCelNodes, root = N.root, stage = N.stage;
+  const vw = root.clientWidth, vh = root.clientHeight;
+  if (!vw || !vh || !stage) { pbCelRaf = requestAnimationFrame(celFrame); return; }
+  if (pbCelT0 == null) pbCelT0 = now;
+  const DUR = 5200, elapsed = now - pbCelT0;
+  const cl = (v, a, b) => Math.max(a, Math.min(b, v));
+  const seg = (x, a, b) => cl((x - a) / (b - a), 0, 1);
+  const ss = (t) => t * t * (3 - 2 * t);
+  const mix = (a, b, t) => a + (b - a) * t;
+  const setT = (el, v) => { if (el) el.style.transform = v; };
+  const p = cl(elapsed / DUR, 0, 1);
+  // jízda auta
+  const dT = Math.pow(seg(p, 0.62, 0.97), 1.65);
+  const driveX = -1980 * dT;
+  const dx = driveX - pbCelLastX; pbCelLastX = driveX; pbCelWheel += dx / 28;
+  const spd = (dT > 0 && dT < 1) ? Math.pow(seg(p, 0.62, 0.97), 0.65) : 0;
+  // kamera
+  const K = [[0.00,760,560,1.50],[0.16,850,580,1.38],[0.42,1160,600,1.47],[0.58,1100,592,1.33],[0.84,830,560,1.15],[1.00,800,485,1.03]];
+  let i = 0; while (i < K.length - 2 && p > K[i + 1][0]) i++;
+  const a = K[i], b = K[i + 1], t = ss(seg(p, a[0], b[0]));
+  let fx = mix(a[1], b[1], t), fy = mix(a[2], b[2], t), z = mix(a[3], b[3], t);
+  const carCx = 1185 + driveX;
+  const fw = seg(p, 0.63, 0.71) * (1 - seg(p, 0.85, 0.93));
+  fx = mix(fx, cl(carCx + 60, 430, 1230), fw); fy = mix(fy, 640, fw * 0.7); z = mix(z, 1.26, fw * 0.6);
+  const S = Math.max(vw / 1600, vh / 900), Z = S * z, hw = vw / (2 * Z), hh = vh / (2 * Z);
+  fx = cl(fx, hw, 1600 - hw); fy = cl(fy, hh, 900 - hh);
+  stage.style.transform = 'translate(' + (vw / 2) + 'px,' + (vh / 2) + 'px) scale(' + Z + ') translate(' + (-fx) + 'px,' + (-fy) + 'px)';
+  // paralaxa
+  setT(N.sky, 'translate(' + ((fx - 800) * 0.8) + 'px,' + ((fy - 540) * 0.55) + 'px)');
+  setT(N.clouds, 'translate(' + ((fx - 800) * 0.7) + 'px,' + ((fy - 540) * 0.45) + 'px)');
+  setT(N.tree, 'translate(' + ((fx - 800) * -0.04) + 'px,0)');
+  setT(N.fore, 'translate(' + ((fx - 800) * -0.2) + 'px,' + ((fy - 540) * -0.1) + 'px)');
+  // auto
+  const shake = Math.sin(now / 26) * seg(p, 0.575, 0.61) * (1 - seg(p, 0.66, 0.72)) * 1.8;
+  const carScale = 1 + 0.13 * seg(p, 0.64, 0.97), carY = 10 * seg(p, 0.64, 0.97) + shake;
+  setT(N.car, 'translate(' + driveX + 'px,' + carY + 'px) scale(' + carScale + ')');
+  const deg = pbCelWheel * 57.29;
+  setT(N.wheelF, 'rotate(' + deg + 'deg)'); setT(N.wheelB, 'rotate(' + deg + 'deg)');
+  if (N.dust) N.dust.style.opacity = cl(spd * 0.9, 0, 0.85) * (driveX > -1900 ? 1 : 0);
+  if (N.light) N.light.style.opacity = seg(p, 0.60, 0.64) * 0.6;
+  // dveře pizzerie
+  const sOpen = ss(seg(p, 0.03, 0.09) * (1 - seg(p, 0.20, 0.27)));
+  setT(N.door, 'perspective(500px) rotateY(' + (-72 * sOpen) + 'deg)');
+  // kurýr
+  const wT = ss(seg(p, 0.07, 0.41));
+  const pts = [[705,688],[905,728],[1055,764],[1152,784]];
+  const u = wT * 3, si = Math.min(2, Math.floor(u)), lu = u - si;
+  let cx = mix(pts[si][0], pts[si + 1][0], lu), cy = mix(pts[si][1], pts[si + 1][1], lu);
+  const eT = ss(seg(p, 0.46, 0.545)); cx += eT * 30; cy -= eT * 10;
+  const walking = (wT > 0 && wT < 1) ? 1 : 0, phase = wT * 30, bob = Math.abs(Math.sin(phase)) * 3.5 * walking;
+  const op = seg(p, 0.045, 0.09) * (1 - seg(p, 0.50, 0.555));
+  if (N.courier) { N.courier.style.opacity = op; N.courier.style.transform = 'translate(' + cx + 'px,' + (cy - bob) + 'px)'; }
+  setT(N.pose, 'scale(' + (1.30 + (cy - 688) * 0.0016) + ') rotate(' + (-10 * eT) + 'deg) scaleY(' + (1 - 0.22 * eT) + ')');
+  const swing = Math.sin(phase) * 26 * walking;
+  setT(N.legL, 'rotate(' + swing + 'deg)'); setT(N.legR, 'rotate(' + (-swing) + 'deg)');
+  // po dojezdu animaci zastavíme (CSS animace mraků/stromu běží dál)
+  if (elapsed < DUR + 700) pbCelRaf = requestAnimationFrame(celFrame);
+  else pbCelRaf = null;
+}
+
+function showCelebration(order) {
+  pbCelNum.textContent = order.orderNo;
+  pbCelEta.textContent = order.eta;
+  pbCelTotal.textContent = fmt(order.total);
+  pbCelTitle.textContent = order.title;
+  pbCelSub.textContent = order.sub;
+  pbCel.classList.add("open");
+  pbCel.setAttribute("aria-hidden", "false");
+  lockScroll();
+  pbCelNodes = null; pbCelT0 = null;
+  if (pbCelRaf) cancelAnimationFrame(pbCelRaf);
+  pbCelRaf = requestAnimationFrame(celFrame);
+}
+
+function closeCelebration() {
+  if (!pbCel.classList.contains("open")) return;
+  pbCel.classList.remove("open");
+  pbCel.setAttribute("aria-hidden", "true");
+  if (pbCelRaf) { cancelAnimationFrame(pbCelRaf); pbCelRaf = null; }
+  pbCelNodes = null;
+  unlockScroll();
+}
+
+pbCelDone.addEventListener("click", closeCelebration);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && pbCel.classList.contains("open")) closeCelebration(); });
 
 /* ============================================================
    Card actions + drink add

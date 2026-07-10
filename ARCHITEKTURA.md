@@ -8,6 +8,7 @@ Tento dokument kresli doporucenou architekturu pro objednavkovy system Pizza Bel
 - admin panel
 - rozhrani pro ridice
 - zakaznicke ucty
+- verejne sledovani stavu objednavky pres bezpecny odkaz
 - online platby pres Comgate
 - e-mailove a interni notifikace
 
@@ -17,6 +18,7 @@ Tento dokument kresli doporucenou architekturu pro objednavkovy system Pizza Bel
 flowchart LR
   customer[Zakaznik<br>mobil / desktop]
   publicWeb[Verejny web<br>HTML + CSS + JS]
+  trackingPage[Stranka sledovani objednavky<br>/sledovat-objednavku]
   api[PHP backend API]
   db[(MariaDB)]
   comgate[Comgate<br>platebni brana]
@@ -26,7 +28,9 @@ flowchart LR
   owner[Majitel / owner]
 
   customer --> publicWeb
+  customer --> trackingPage
   publicWeb --> api
+  trackingPage --> api
 
   api --> db
   api --> comgate
@@ -56,11 +60,11 @@ sequenceDiagram
 
   Z->>W: Vybere pizzu a vyplni objednavku
   W->>API: POST /api/orders/create payment_method=cash
-  API->>DB: Ulozi objednavku se stavem new
-  API->>M: Posle potvrzeni zakaznikovi
+  API->>DB: Ulozi objednavku se stavem new + tracking token
+  API->>M: Posle potvrzeni + odkaz na sledovani
   API->>A: Objednavka se zobrazi v adminu
-  API-->>W: Vrati cislo objednavky
-  W-->>Z: Zobrazi potvrzeni objednavky
+  API-->>W: Vrati cislo objednavky + tracking URL
+  W-->>Z: Zobrazi potvrzeni + odkaz na sledovani
 ```
 
 ## Tok objednavky pri online platbe Comgate
@@ -79,7 +83,7 @@ sequenceDiagram
 
   Z->>W: Vybere pizzu a zvoli online platbu
   W->>API: POST /api/orders/create payment_method=comgate
-  API->>DB: Ulozi objednavku jako pending_payment
+  API->>DB: Ulozi objednavku jako pending_payment + tracking token
   API->>CG: Vytvori platbu u Comgate
   CG-->>API: Vrati payment_id a URL platby
   API->>DB: Ulozi comgate_transaction_id
@@ -92,13 +96,13 @@ sequenceDiagram
 
   alt Platba potvrzena
     API->>DB: payment_status=paid, order_status=new
-    API->>M: Posle potvrzeni zakaznikovi
+    API->>M: Posle potvrzeni + odkaz na sledovani
     API->>A: Objednavka se zobrazi v adminu
   else Platba zrusena nebo selhala
     API->>DB: payment_status=failed/cancelled, order_status=cancelled
   end
 
-  CG-->>Z: Vrati zakaznika na dekovaci / chybovou stranku
+  CG-->>Z: Vrati zakaznika na dekovaci / chybovou stranku s odkazem na sledovani
 ```
 
 ## Pravidlo pro zobrazeni objednavky v adminu
@@ -136,6 +140,88 @@ SELECT *
 FROM orders
 WHERE payment_method = 'cash'
    OR payment_status = 'paid';
+```
+
+## Sledovani objednavky pro zakaznika
+
+Kazda objednavka dostane verejny tracking odkaz, ktery se:
+
+- zobrazi na webu po dokonceni objednavky
+- posle zakaznikovi v potvrzovacim e-mailu
+- pouzije pro sledovani stavu bez prihlaseni
+
+Odkaz nesmi obsahovat jednoduche ID objednavky. Ma obsahovat dlouhy nahodny token, napr.:
+
+```txt
+https://pizzabellizzi.cz/sledovat-objednavku/tk_8b4c9f7a...dlouhy-token
+```
+
+V databazi je lepsi ulozit jen hash tokenu, ne samotny token.
+
+```mermaid
+flowchart TD
+  created[Objednavka vytvorena]
+  token[Backend vygeneruje tracking token]
+  hash[Do DB ulozi tracking_token_hash]
+  url[Backend sestavi tracking URL]
+  web[Web zobrazi odkaz po objednavce]
+  email[E-mail obsahuje stejny odkaz]
+  open[Zakaznik otevre odkaz]
+  api[GET /api/orders/track/:token]
+  timeline[Stranka ukaze stav objednavky]
+
+  created --> token
+  token --> hash
+  token --> url
+  url --> web
+  url --> email
+  web --> open
+  email --> open
+  open --> api
+  api --> timeline
+```
+
+### Timeline pro zakaznika
+
+```mermaid
+flowchart LR
+  accepted[Prijato]
+  preparing[Priprava]
+  route[Predano ridici]
+  done[Doruceno]
+
+  accepted --> preparing
+  preparing --> route
+  route --> done
+```
+
+Mapovani internich stavu na text pro zakaznika:
+
+```txt
+accepted  -> Prijato
+preparing -> Priprava
+route     -> Predano ridici
+done      -> Doruceno
+```
+
+Pokud je objednavka online a platba jeste neni potvrzena, tracking stranka muze ukazat:
+
+```txt
+Cekame na potvrzeni platby
+```
+
+## E-mail s odkazem na sledovani
+
+Potvrzovaci e-mail zakaznikovi ma obsahovat cislo objednavky, souhrn objednavky a tlacitko/odkaz:
+
+```txt
+Predmet: Pizza Bellizzi - objednavka PB-10245
+
+Dekujeme za objednavku.
+Cislo objednavky: PB-10245
+
+Stav objednavky muzete sledovat zde:
+https://pizzabellizzi.cz/sledovat-objednavku/tk_8b4c9f7a...dlouhy-token
 ```
 
 ## Role a prihlaseni
@@ -209,9 +295,11 @@ erDiagram
     string order_status
     string payment_method
     string payment_status
+    string tracking_token_hash
     decimal total_amount
     string currency
     datetime paid_at
+    datetime tracking_sent_at
     datetime created_at
   }
 
@@ -244,6 +332,7 @@ erDiagram
     int changed_by_user_id FK
     string old_status
     string new_status
+    bool customer_visible
     datetime created_at
   }
 
@@ -275,11 +364,11 @@ stateDiagram-v2
   pending_payment --> new: Comgate paid
   pending_payment --> cancelled: Comgate failed/cancelled
 
-  new --> accepted: admin prijal
-  accepted --> preparing: priprava
+  new --> accepted: admin prijal / zakaznik vidi Prijato
+  accepted --> preparing: zakaznik vidi Priprava
   preparing --> ready: hotovo
-  ready --> route: predano ridici
-  route --> done: doruceno
+  ready --> route: zakaznik vidi Predano ridici
+  route --> done: zakaznik vidi Doruceno
 
   new --> cancelled
   accepted --> cancelled
@@ -300,6 +389,7 @@ flowchart LR
   api[PHP API]
 
   web --> createOrder[POST /api/orders/create]
+  web --> trackOrder[GET /api/orders/track/:token]
   web --> createPayment[POST /api/payments/comgate/create]
   web --> customerLogin[POST /api/auth/login]
 
@@ -314,6 +404,7 @@ flowchart LR
   customer --> addresses[GET/POST /api/customer/addresses]
 
   createOrder --> api
+  trackOrder --> api
   createPayment --> api
   customerLogin --> api
   adminOrders --> api
@@ -338,8 +429,9 @@ flowchart TD
 
   adminSound[Zvuk / badge v adminu]
   driverPush[Notifikace ridici]
-  customerEmail[E-mail zakaznikovi]
+  customerEmail[E-mail zakaznikovi<br>vcetne odkazu na sledovani]
   ownerEmail[E-mail provozovne]
+  trackingPage[Stranka sledovani<br>ukaze novy stav]
 
   event --> type
   type --> newOrder
@@ -352,6 +444,7 @@ flowchart TD
 
   statusChanged --> driverPush
   statusChanged --> customerEmail
+  statusChanged --> trackingPage
 
   paymentFailed --> customerEmail
 ```
@@ -382,4 +475,3 @@ Prihlaseni:
 Hosting:
   PHP hosting nebo male VPS
 ```
-
