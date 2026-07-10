@@ -411,15 +411,16 @@ flowchart TD
 
 | Cena rozvozu | Obce / casti obce |
 | ---: | --- |
+| 0 Kc | Beroun |
 | 20 Kc (1x pizza) | Kraluv Dvur, Listice |
 | 40 Kc | Trubin |
-| 50 Kc | Hyskov, Tetin, Vraz, Krizatky, Zelezna, Zdejcina, Trubska |
-| 60 Kc | Koneprusy, Zelezna, Cernin, Kosov/Korno `overit` |
+| 50 Kc | Hyskov, Tetin, Krizatky, Zdejcina, Trubska |
+| 60 Kc | Koneprusy, Zelezna, Cernin, Hostim |
 | 80 Kc | Nizbor, Lodenice, Hudlice, Zdice, Srbsko, Male Prilepy, Chynava |
-| 100 Kc | Chrustenice, Otrocinoves, Tman, Stradonice, Bubovice, Svata, Skuhrov, Skripel `overit` |
-| 120 Kc | Novy Jachymov, Zloukovice |
+| 100 Kc | Chrustenice, Otrocinoves, Tman, Stradonice, Bubovice, Svata, Skuhrov, Skripel, Zloukovice, Svaty Jan pod Skalou |
+| 120 Kc | Novy Jachymov |
 
-Poznamka: Chynava je na fotce v tistenem radku 100 Kc skrtnuta a rucne dopsana do radku 80 Kc, proto je v navrhu v zone 80 Kc.
+Rozhodujici je upresneny seznam provozovatele z 10. 7. 2026. Databazova pravidla jsou v `database/addresses/zones.json`.
 
 ## Databaze adres a automaticka zona
 
@@ -494,7 +495,7 @@ Priklad naseptavace:
 Plzenska 86, Beroun-Mesto, 266 01 Beroun
 Zona: Beroun / zakladni rozvoz
 
-Listice 120, Kraluv Dvur, 267 01
+Listice 120, 266 01 Beroun
 Zona: 20 Kc
 
 Trubin 25, 267 01

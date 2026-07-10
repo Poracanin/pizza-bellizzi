@@ -1,0 +1,144 @@
+{
+  "source_note": "Rozvozove zony Pizza Bellizzi potvrzene 2026-07-10. Pravidla s vyssi prioritou prepisuji vychozi zonu obce.",
+  "zones": [
+    {
+      "id": 1,
+      "code": "beroun-free",
+      "name": "Beroun zdarma",
+      "fee_czk": 0,
+      "min_pizzas": 0
+    },
+    {
+      "id": 2,
+      "code": "zone-20",
+      "name": "Rozvoz 20 Kc",
+      "fee_czk": 20,
+      "min_pizzas": 1
+    },
+    {
+      "id": 3,
+      "code": "zone-40",
+      "name": "Rozvoz 40 Kc",
+      "fee_czk": 40,
+      "min_pizzas": 0
+    },
+    {
+      "id": 4,
+      "code": "zone-50",
+      "name": "Rozvoz 50 Kc",
+      "fee_czk": 50,
+      "min_pizzas": 0
+    },
+    {
+      "id": 5,
+      "code": "zone-60",
+      "name": "Rozvoz 60 Kc",
+      "fee_czk": 60,
+      "min_pizzas": 0
+    },
+    {
+      "id": 6,
+      "code": "zone-80",
+      "name": "Rozvoz 80 Kc",
+      "fee_czk": 80,
+      "min_pizzas": 0
+    },
+    {
+      "id": 7,
+      "code": "zone-100",
+      "name": "Rozvoz 100 Kc",
+      "fee_czk": 100,
+      "min_pizzas": 0
+    },
+    {
+      "id": 8,
+      "code": "zone-120",
+      "name": "Rozvoz 120 Kc",
+      "fee_czk": 120,
+      "min_pizzas": 0
+    }
+  ],
+  "municipalities": [
+    { "code": 531057, "name": "Beroun", "default_zone": "beroun-free" },
+    { "code": 533203, "name": "Králův Dvůr", "default_zone": "zone-20" },
+    { "code": 533106, "name": "Trubín", "default_zone": "zone-40" },
+    { "code": 531243, "name": "Hýskov", "default_zone": "zone-50" },
+    { "code": 531839, "name": "Tetín", "default_zone": "zone-50" },
+    { "code": 531880, "name": "Trubská", "default_zone": "zone-50" },
+    { "code": 531332, "name": "Koněprusy", "default_zone": "zone-60" },
+    { "code": 599417, "name": "Železná", "default_zone": "zone-60" },
+    { "code": 531596, "name": "Nižbor", "default_zone": "zone-80" },
+    { "code": 531464, "name": "Loděnice", "default_zone": "zone-80" },
+    { "code": 531227, "name": "Hudlice", "default_zone": "zone-80" },
+    { "code": 532011, "name": "Zdice", "default_zone": "zone-80" },
+    { "code": 531758, "name": "Srbsko", "default_zone": "zone-80" },
+    { "code": 531294, "name": "Chyňava", "default_zone": "zone-80" },
+    { "code": 533670, "name": "Chrustenice", "default_zone": "zone-100" },
+    { "code": 531669, "name": "Otročiněves", "default_zone": "zone-100" },
+    { "code": 531855, "name": "Tmaň", "default_zone": "zone-100" },
+    { "code": 531103, "name": "Bubovice", "default_zone": "zone-100", "aliases": ["Budovice"] },
+    { "code": 531791, "name": "Svatá", "default_zone": "zone-100" },
+    { "code": 531740, "name": "Skuhrov", "default_zone": "zone-100" },
+    { "code": 533963, "name": "Skřipel", "default_zone": "zone-100" },
+    { "code": 531804, "name": "Svatý Jan pod Skalou", "default_zone": "zone-100", "aliases": ["Svatý Jan"] },
+    { "code": 531600, "name": "Nový Jáchymov", "default_zone": "zone-120" }
+  ],
+  "overrides": [
+    {
+      "priority": 300,
+      "municipality_code": 531057,
+      "street": "Lištice",
+      "zone": "zone-20",
+      "label": "Lištice"
+    },
+    {
+      "priority": 200,
+      "municipality_code": 533203,
+      "city_part": "Křižatky",
+      "zone": "zone-50",
+      "label": "Křižatky"
+    },
+    {
+      "priority": 200,
+      "municipality_code": 531057,
+      "city_part": "Beroun-Zdejcina",
+      "zone": "zone-50",
+      "label": "Zdejcina"
+    },
+    {
+      "priority": 200,
+      "municipality_code": 532011,
+      "city_part": "Černín",
+      "zone": "zone-60",
+      "label": "Černín"
+    },
+    {
+      "priority": 200,
+      "municipality_code": 531057,
+      "city_part": "Beroun-Hostim",
+      "zone": "zone-60",
+      "label": "Hostim"
+    },
+    {
+      "priority": 200,
+      "municipality_code": 531294,
+      "city_part": "Malé Přílepy",
+      "zone": "zone-80",
+      "label": "Malé Přílepy"
+    },
+    {
+      "priority": 200,
+      "municipality_code": 531596,
+      "city_part": "Stradonice",
+      "zone": "zone-100",
+      "label": "Stradonice"
+    },
+    {
+      "priority": 200,
+      "municipality_code": 531596,
+      "city_part": "Žloukovice",
+      "zone": "zone-100",
+      "label": "Žloukovice"
+    }
+  ]
+}
